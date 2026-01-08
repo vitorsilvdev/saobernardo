@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>SÃO BERNARDO - STAFF</title>
+    <title>SÃO BERNARDO - PAINEL OFICIAL</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -44,7 +44,11 @@
         .modal-box { background: #0d0e12; padding: 40px; border-radius: 30px; border: 1px solid var(--primary); text-align: center; width: 400px; }
         .modal-box input { width: 100%; background: #000; border: 1px solid var(--border); padding: 15px; border-radius: 12px; color: #fff; margin-bottom: 10px; text-align: center; }
         
-        .btn-main { background: var(--primary); color: #000; padding: 15px 30px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100% }
+        .btn-main { background: var(--primary); color: #000; padding: 16px 32px; border-radius: 14px; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; text-decoration: none; display: inline-block; }
+        .btn-main:hover { filter: brightness(1.2); letter-spacing: 1px; }
+
+        .copy-box { background: #000; border: 1px solid var(--border); padding: 20px; border-radius: 15px; position: relative; color: #00ff88; font-family: monospace; margin-top: 10px; }
+        .copy-btn { position: absolute; right: 15px; top: 15px; background: var(--primary); border: none; padding: 6px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; color: #000; font-weight: bold; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -54,15 +58,15 @@
         <h2 style="font-family: 'Syncopate'; margin-bottom: 20px;">STAFF <span style="color:var(--primary)">LOGIN</span></h2>
         <input type="text" id="user-in" placeholder="USUÁRIO">
         <input type="password" id="pass-in" placeholder="SENHA">
-        <button class="btn-main" onclick="login()">ENTRAR</button>
-        <p style="margin-top:20px; font-size:12px; color:var(--dim); cursor:pointer" onclick="toggleAuth(true)">REGISTRE-SE</p>
+        <button class="btn-main" onclick="login()">ACESSAR SISTEMA</button>
+        <p style="margin-top:20px; font-size:12px; color:var(--dim); cursor:pointer" onclick="toggleAuth(true)">NÃO TEM CONTA? REGISTRE-SE</p>
         <p style="margin-top:10px; font-size:11px; color:red; cursor:pointer" onclick="fecharModal()">CANCELAR</p>
     </div>
 
     <div class="modal-box" id="reg-form" style="display:none">
         <h2 style="font-family: 'Syncopate'; margin-bottom: 20px;">SOLICITAR <span style="color:var(--primary)">ACESSO</span></h2>
-        <input type="text" id="user-reg" placeholder="USUÁRIO">
-        <input type="password" id="pass-reg" placeholder="SENHA">
+        <input type="text" id="user-reg" placeholder="ESCOLHA UM USUÁRIO">
+        <input type="password" id="pass-reg" placeholder="CRIE UMA SENHA">
         <button class="btn-main" onclick="registrar()">ENVIAR PEDIDO</button>
         <p style="margin-top:20px; font-size:12px; color:var(--dim); cursor:pointer" onclick="toggleAuth(false)">VOLTAR AO LOGIN</p>
     </div>
@@ -79,15 +83,16 @@
         <p id="txt-role" style="color:var(--dim); font-size:10px; margin-top:5px">OFFLINE</p>
     </div>
     
-    <span class="nav-label">Menu</span>
+    <span class="nav-label">Dashboard</span>
     <div class="nav-link active" onclick="go('inicio', this)">🏠 <span>Início</span></div>
     <div class="nav-link" onclick="go('forms', this)">📋 <span>Recrutamento</span></div>
     
     <div id="nav-restrito" style="display:none">
-        <span class="nav-label">Staff</span>
+        <span class="nav-label">Staff Interno</span>
         <div class="nav-link" onclick="go('hierarquia', this)">🏛️ <span>Hierarquia</span></div>
         <div class="nav-link" onclick="go('conduta', this)">⚖️ <span>Conduta</span></div>
         <div class="nav-link" onclick="go('tickets', this)">🎫 <span>Tickets</span></div>
+        <div class="nav-link" onclick="go('punicoes', this)">🚨 <span>Punições</span></div>
     </div>
 
     <div id="nav-dono" style="display:none">
@@ -101,51 +106,84 @@
 <main>
     <section id="inicio" class="active">
         <div class="hero">
-            <h2>SÃO BERNARDO <span style="color:var(--primary)">PAINEL</span></h2>
-            <p>Seja bem-vindo à central administrativa.</p>
+            <h2>SÃO BERNARDO <span style="color:var(--primary)">OFFICIAL</span></h2>
+            <p>Seja bem-vindo. Este é o site oficial do São Bernardo RP. Mantenha a ética e bom trabalho.</p>
         </div>
-        <div class="card"><h3>📢 Avisos</h3><p style="color:var(--dim)">Nenhum aviso no momento.</p></div>
+        <div class="card">
+            <h3>📢 Avisos Recentes</h3>
+            <p style="color:var(--dim)">• Sistema de contas integrado com Realtime Database.<br>• Painel de gerenciamento exclusivo para Donos.<br>• Mantenha seus dados de login em segurança.</p>
+        </div>
     </section>
 
     <section id="forms">
         <div class="hero" style="text-align:center">
-            <h2>RECRUTAMENTO</h2><br>
-            <a href="https://docs.google.com/forms/d/1M8Cx3Q5vvE-ASwhhHplxfKTimguoMrQ1szQoncluQO8/edit" target="_blank" class="btn-main" style="text-decoration:none">ABRIR FORMULÁRIO</a>
+            <h2 style="font-size:2rem">RECRUTAMENTO</h2>
+            <p>Envie sua candidatura oficial abaixo. O prazo de resposta é indefinido.</p><br>
+            <a href="https://docs.google.com/forms/d/1M8Cx3Q5vvE-ASwhhHplxfKTimguoMrQ1szQoncluQO8/edit" target="_blank" class="btn-main">ABRIR FORMULÁRIO</a>
         </div>
     </section>
 
     <section id="hierarquia">
-        <h2>Cargos e Poderes</h2>
-        <table>
-            <tr><th>Cargo</th><th>Nível</th><th>Responsabilidade</th></tr>
-            <tr><td style="color:red; font-weight:bold">DONO</td><td>10</td><td>Fundador / Geral</td></tr>
-            <tr><td style="color:#ff0055; font-weight:bold">MANAGER</td><td>09</td><td>Gestão da Cidade</td></tr>
-            <tr><td style="color:#ff8c00; font-weight:bold">COORDENADOR</td><td>08</td><td>Líder de Equipe</td></tr>
-            <tr><td style="color:#f4c430; font-weight:bold">ADMINISTRADOR</td><td>07</td><td>Fiscalização / Eventos</td></tr>
-            <tr><td style="color:#00ffff; font-weight:bold">MODERADOR</td><td>06</td><td>Tickets / Suporte</td></tr>
-            <tr><td style="color:#9d00ff; font-weight:bold">HELPER</td><td>05</td><td>Auxílio a Novatos</td></tr>
-            <tr><td style="color:#00ff88; font-weight:bold">SUPORTE</td><td>04</td><td>Atendimento Básico</td></tr>
-        </table>
+        <h2>Estrutura de Cargos</h2>
+        <div class="card">
+            <table>
+                <tr><th>Cargo</th><th>Poder</th><th>Responsabilidade</th></tr>
+                <tr><td style="color:red; font-weight:bold">DONO</td><td>SUPREMO</td><td>Responsável STAFF</td></tr>
+                <tr><td style="color:#ff0055; font-weight:bold">MANAGER</td><td>MÁXIMO</td><td>Direção Geral</td></tr>
+                <tr><td style="color:#ff8c00; font-weight:bold">COORDENADOR</td><td>ALTO</td><td>Gestão de Equipe</td></tr>
+                <tr><td style="color:#f4c430; font-weight:bold">ADMINISTRADOR</td><td>MÉDIO</td><td>Eventos e Denúncias</td></tr>
+                <tr><td style="color:#00ffff; font-weight:bold">MODERADOR</td><td>PADRÃO</td><td>Jogo e Suporte</td></tr>
+                <tr><td style="color:#9d00ff; font-weight:bold">HELPER</td><td>AUXILIAR</td><td>Apoio a novatos</td></tr>
+                <tr><td style="color:#00ff88; font-weight:bold">SUPORTE</td><td>SUPORTE</td><td>Tickets e Atendimentos</td></tr>
+            </table>
+        </div>
     </section>
 
     <section id="conduta">
-        <h2>Código de Ética</h2>
-        <div class="card"><h3>1. Respeito</h3><p>Trate todos os membros com educação.</p></div>
-        <div class="card"><h3>2. Sigilo</h3><p>Informações internas não devem ser vazadas.</p></div>
+        <h2>Regras de Ouro</h2>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+            <div class="card"><h3>01. Respeito</h3><p>Mesmo com players tóxicos, mantenha a calma. Você representa a imagem da cidade.</p></div>
+            <div class="card"><h3>02. Sigilo</h3><p>Vazar prints de chats administrativos resulta em banimento imediato e Blacklist.</p></div>
+            <div class="card"><h3>03. Abuso</h3><p>Comandos de Staff são para TRABALHO. Usar para benefício próprio é expulsão.</p></div>
+            <div class="card"><h3>04. Proatividade</h3><p>Não espere ordens. Viu algo errado ou um ticket aberto? Atenda.</p></div>
+        </div>
     </section>
 
     <section id="tickets">
-        <h2>Atalhos</h2>
+        <h2>Agilidade no Atendimento</h2>
         <div class="card">
-            <p>"Olá, sou da Staff São Bernardo. Como posso ajudar?"</p>
+            <h4 style="margin-bottom:10px">Saudação Inicial</h4>
+            <div class="copy-box" id="c1">
+                "Olá! Sou membro da Staff do São Bernardo. Como posso te ajudar hoje?"
+                <button class="copy-btn" onclick="cp('c1')">COPIAR</button>
+            </div>
+            <br>
+            <h4 style="margin-bottom:10px">Finalização</h4>
+            <div class="copy-box" id="c2">
+                "Obrigado pelo contato! Se tiver mais dúvidas, sinta-se à vontade. Bom RP!"
+                <button class="copy-btn" onclick="cp('c2')">COPIAR</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="punicoes">
+        <h2>Tabela de Crimes Internos</h2>
+        <div class="card">
+            <table>
+                <tr><th>Motivo</th><th>Punição</th></tr>
+                <tr><td>Inatividade injustificada</td><td>Advertência / Rebaixamento</td></tr>
+                <tr><td>Corrupção Staff</td><td>Remoção + Banimento Permanente</td></tr>
+                <tr><td>Mentir para Coordenação</td><td>Suspensão de 7 dias</td></tr>
+                <tr><td>Discussão em Chat Staff</td><td>Advertência Verbal</td></tr>
+            </table>
         </div>
     </section>
 
     <section id="gestao">
-        <h2>Gerenciar Equipe</h2>
+        <h2>Gerenciamento de Membros</h2>
         <div class="card">
             <table>
-                <thead><tr><th>Usuário</th><th>Cargo Atual</th><th>Novo Cargo</th><th>Ação</th></tr></thead>
+                <thead><tr><th>Usuário</th><th>Cargo</th><th>Novo Cargo</th><th>Ação</th></tr></thead>
                 <tbody id="lista-equipe"></tbody>
             </table>
         </div>
@@ -178,7 +216,7 @@
         const p = document.getElementById('pass-reg').value.trim();
         if(!u || !p) return alert("Preencha tudo!");
         await db.ref('contas').push({ usuario: u, senha: p, cargo: "Pendente" });
-        alert("Enviado! Peça para um Dono aprovar.");
+        alert("Solicitação enviada! Peça para um Dono aprovar.");
         location.reload();
     }
 
@@ -216,16 +254,17 @@
                     <td><span class="badge">${d.cargo}</span></td>
                     <td>
                         <select id="sel-${c.key}" style="background:#000; color:#fff; border:1px solid #333">
+                            <option value="Pendente">Pendente</option>
                             <option value="Suporte">Suporte</option>
                             <option value="Helper">Helper</option>
                             <option value="Moderador">Moderador</option>
-                            <option value="Administrador">Admin</option>
+                            <option value="Administrador">Administrador</option>
                             <option value="Coordenador">Coordenador</option>
                             <option value="Manager">Manager</option>
                             <option value="Dono">Dono</option>
                         </select>
                     </td>
-                    <td><button onclick="mudarCargo('${c.key}')" style="background:var(--primary); border:none; padding:5px; cursor:pointer">SALVAR</button></td>
+                    <td><button onclick="mudarCargo('${c.key}')" style="background:var(--primary); border:none; padding:5px; cursor:pointer; font-weight:bold; border-radius:4px">SALVAR</button></td>
                 </tr>`;
             });
         });
@@ -234,7 +273,7 @@
     function mudarCargo(id) {
         const n = document.getElementById('sel-'+id).value;
         db.ref('contas/'+id).update({ cargo: n });
-        alert("Atualizado!");
+        alert("Cargo atualizado com sucesso!");
     }
 
     function go(id, el) {
@@ -243,6 +282,16 @@
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
         if(el) el.classList.add('active');
     }
+
+    function cp(id) {
+        const text = document.getElementById(id).innerText.replace('COPIAR', '').trim();
+        navigator.clipboard.writeText(text);
+        alert("Texto Copiado!");
+    }
+
+    document.onkeydown = function(e) {
+        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) return false;
+    };
 </script>
 </body>
 </html>
