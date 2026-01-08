@@ -2,201 +2,275 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Staff Hub | São Bernardo RP</title>
+    <title>SÃO BERNARDO | STAFF HUB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --p: #f4c430; --bg: #08090d; --c: #111420; --s: #0d0f1a; --t: #e2e8f0; --d: #94a3b8; --w: 280px;
+            --primary: #f4c430;
+            --accent: #ff0055;
+            --bg: #050507;
+            --card: #0d0e12;
+            --border: #1f2029;
+            --text: #ffffff;
+            --dim: #888;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
-        body { background: var(--bg); color: var(--t); font-family: 'Inter', sans-serif; display: flex; overflow-x: hidden; }
-        
-        /* Sidebar Leve */
-        .sidebar { width: var(--w); background: var(--s); border-right: 1px solid #1e293b; position: fixed; height: 100vh; z-index: 100; padding: 20px 10px; }
-        .sidebar-header { text-align: center; padding-bottom: 30px; }
-        .sidebar img { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--p); margin-bottom: 10px; }
-        .nav-label { font-size: 10px; color: var(--d); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 10px 15px; display: block; }
-        .sidebar a { display: block; padding: 12px 15px; color: var(--d); text-decoration: none; border-radius: 10px; margin-bottom: 4px; cursor: pointer; font-size: 14px; transition: 0.1s; }
-        .sidebar a:hover { background: #1a1d2e; color: var(--p); }
-        .sidebar a.active-link { background: var(--p); color: #000; font-weight: 600; }
 
-        /* Conteúdo Otimizado */
-        main { margin-left: var(--w); flex-grow: 1; padding: 30px; max-width: 1100px; }
-        section { display: none; }
-        section.active { display: block; animation: fade 0.2s linear; }
-        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        body { 
+            background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; 
+            display: flex; min-height: 100vh; user-select: none;
+        }
 
-        .hero { background: linear-gradient(135deg, #111420 0%, #08090d 100%); padding: 50px; border-radius: 20px; border: 1px solid #1e293b; margin-bottom: 25px; }
-        .hero h2 { font-family: 'Oswald'; font-size: 3rem; text-transform: uppercase; line-height: 1; }
-        .glass-card { background: var(--c); padding: 25px; border-radius: 15px; border: 1px solid #1e293b; margin-bottom: 20px; }
-        
-        .btn-form { background: var(--p); color: #000; padding: 15px 30px; border-radius: 10px; font-weight: 800; text-decoration: none; display: inline-block; margin-top: 15px; transition: 0.2s; }
-        .btn-form:hover { transform: scale(1.03); }
+        /* SIDEBAR ESTILIZADA */
+        .sidebar {
+            width: 280px; background: #000; border-right: 2px solid var(--border);
+            height: 100vh; position: fixed; display: flex; flex-direction: column;
+            padding: 30px 20px; z-index: 100;
+        }
 
-        .box-copy { background: #000; border: 1px solid #1e293b; padding: 15px; border-radius: 10px; margin-top: 10px; position: relative; color: var(--p); font-family: monospace; }
-        .btn-copy { position: absolute; right: 10px; top: 10px; background: var(--p); border: none; padding: 5px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .logo-area { text-align: center; margin-bottom: 40px; }
+        .logo-area img { width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--primary); padding: 5px; margin-bottom: 10px; }
+        .logo-area h1 { font-family: 'Syncopate', sans-serif; font-size: 14px; letter-spacing: 2px; color: var(--primary); }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; padding: 12px; color: var(--p); border-bottom: 2px solid #1e293b; font-size: 13px; }
-        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        .nav-label { font-size: 10px; text-transform: uppercase; color: var(--dim); letter-spacing: 2px; margin: 25px 0 10px 10px; }
+        .nav-link {
+            display: flex; align-items: center; padding: 14px 18px; color: var(--dim);
+            text-decoration: none; border-radius: 12px; margin-bottom: 6px;
+            cursor: pointer; font-weight: 500; transition: all 0.2s;
+        }
+        .nav-link:hover { background: #16171d; color: #fff; }
+        .nav-link.active { background: var(--primary); color: #000; font-weight: 700; box-shadow: 0 4px 15px rgba(244,196,48,0.2); }
 
-        /* Modal Sem Lag */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .modal-content { background: var(--c); padding: 35px; border-radius: 20px; border: 2px solid var(--p); text-align: center; width: 340px; }
-        input { width: 100%; background: #000; border: 1px solid #2d334d; padding: 15px; border-radius: 10px; color: #fff; text-align: center; font-size: 1.1rem; margin: 15px 0; outline: none; }
-        .btn-auth { background: var(--p); color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
-        .btn-cancel { color: var(--d); background: none; border: none; margin-top: 15px; cursor: pointer; font-size: 12px; text-transform: uppercase; }
+        /* ÁREA PRINCIPAL */
+        main { margin-left: 280px; flex: 1; padding: 50px; }
+        section { display: none; max-width: 1000px; animation: slideUp 0.3s ease-out; }
+        section.active { display: block; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hero { 
+            position: relative; padding: 60px; border-radius: 30px; 
+            background: linear-gradient(45deg, #0d0e12, #1a1c24);
+            border: 1px solid var(--border); margin-bottom: 30px; overflow: hidden;
+        }
+        .hero h2 { font-family: 'Syncopate', sans-serif; font-size: 3rem; margin-bottom: 10px; }
+        .hero p { color: var(--dim); max-width: 600px; line-height: 1.6; }
+
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .card { 
+            background: var(--card); border: 1px solid var(--border); 
+            padding: 30px; border-radius: 20px; transition: 0.3s;
+        }
+        .card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .card h3 { color: var(--primary); margin-bottom: 15px; font-size: 1.2rem; }
+
+        /* TABELAS MODERNAS */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #08090b; border-radius: 15px; overflow: hidden; }
+        th { background: #16171d; padding: 18px; text-align: left; font-size: 11px; text-transform: uppercase; color: var(--primary); }
+        td { padding: 18px; border-bottom: 1px solid var(--border); font-size: 14px; color: #ccc; }
+
+        /* BOTÕES */
+        .btn-main {
+            background: var(--primary); color: #000; padding: 16px 32px; 
+            border-radius: 14px; font-weight: 800; text-decoration: none;
+            display: inline-block; transition: 0.3s; margin-top: 20px;
+        }
+        .btn-main:hover { filter: brightness(1.2); letter-spacing: 1px; }
+
+        .copy-box {
+            background: #000; border: 1px solid var(--border); padding: 20px;
+            border-radius: 15px; position: relative; color: #00ff88; font-family: monospace;
+        }
+        .copy-btn {
+            position: absolute; right: 15px; top: 15px; background: var(--primary);
+            border: none; padding: 6px 12px; border-radius: 6px; font-size: 10px; cursor: pointer;
+        }
+
+        /* MODAL DE SENHA */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); display: none; align-items: center; 
+            justify-content: center; z-index: 1000;
+        }
+        .modal-box { 
+            background: #0d0e12; padding: 50px; border-radius: 30px; 
+            border: 1px solid var(--primary); text-align: center; width: 400px;
+        }
+        .modal-box input {
+            width: 100%; background: #000; border: 1px solid var(--border);
+            padding: 18px; border-radius: 15px; color: #fff; text-align: center;
+            font-size: 1.2rem; margin: 20px 0;
+        }
 
         @media (max-width: 768px) {
-            .sidebar { width: 70px; padding: 10px 5px; }
-            .sidebar h3, .nav-label, .sidebar span { display: none; }
-            main { margin-left: 70px; padding: 15px; }
-            .hero h2 { font-size: 2rem; }
+            .sidebar { width: 80px; } .sidebar h1, .nav-label, .nav-link span { display: none; }
+            main { margin-left: 80px; padding: 20px; }
+            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-<div class="modal-overlay" id="m">
-    <div class="modal-content">
-        <h3 style="font-family: 'Oswald'; color: var(--p);">ACESSO RESTRITO</h3>
-        <input type="password" id="ps" placeholder="SENHA STAFF">
-        <button class="btn-auth" id="bt">ENTRAR</button>
-        <button class="btn-cancel" onclick="cl()">CANCELAR</button>
+<div class="modal" id="modal">
+    <div class="modal-box">
+        <h2 style="font-family: 'Syncopate';">RESTRITO</h2>
+        <input type="password" id="pass" placeholder="SENHA DA STAFF">
+        <button class="btn-main" style="width:100%" onclick="v()">ACESSAR SISTEMA</button>
+        <p onclick="cl()" style="margin-top:20px; cursor:pointer; font-size:12px; color:var(--dim)">VOLTAR</p>
     </div>
 </div>
 
 <aside class="sidebar">
-    <div class="sidebar-header">
+    <div class="logo-area">
         <img src="https://i.imgur.com/pUWtuIB.png">
-        <h3 style="font-family: 'Oswald'; color: #fff; font-size: 18px;">SÃO BERNARDO</h3>
+        <h1>SÃO BERNARDO</h1>
     </div>
-    <nav>
-        <span class="nav-label">Público</span>
-        <a id="l-inicio" class="active-link">🏠 Início</a>
-        <a id="l-formularios">📋 Formulários</a>
-        <span class="nav-label">Staff</span>
-        <a id="l-hierarquia">🏛️ Hierarquia</a>
-        <a id="l-conduta">⚖️ Conduta</a>
-        <a id="l-tickets">🎫 Tickets</a>
-        <a id="l-punicoes">🚨 Punições</a>
-    </nav>
+    
+    <span class="nav-label">Dashboard</span>
+    <div class="nav-link active" onclick="go('inicio', this)">🏠 <span>Início</span></div>
+    <div class="nav-link" onclick="go('forms', this)">📋 <span>Recrutamento</span></div>
+    
+    <span class="nav-label">Staff Interno</span>
+    <div class="nav-link" onclick="ask('hierarquia', this)">🏛️ <span>Hierarquia</span></div>
+    <div class="nav-link" onclick="ask('conduta', this)">⚖️ <span>Conduta</span></div>
+    <div class="nav-link" onclick="ask('tickets', this)">🎫 <span>Tickets</span></div>
+    <div class="nav-link" onclick="ask('punicoes', this)">🚨 <span>Punições</span></div>
 </aside>
 
 <main>
     <section id="inicio" class="active">
         <div class="hero">
-            <h2>CENTRAL DA <span style="color: var(--p);">STAFF</span></h2>
-            <p>Manual oficial de normas e procedimentos do São Bernardo RP.</p>
+            <h2>STAFF <span style="color:var(--primary)">PANEL</span></h2>
+            <p>Seja bem-vindo, colaborador. Este é o seu portal de suporte e diretrizes. Mantenha a ética e bom trabalho.</p>
         </div>
-        <div class="glass-card">
-            <h3 style="color: var(--p);">Nossa Filosofia</h3>
-            <p>A staff não é autoridade, é suporte. Respeito acima de tudo.</p>
+        <div class="grid">
+            <div class="card">
+                <h3>📢 Avisos Recentes</h3>
+                <p style="color:var(--dim)">• Reunião Geral Domingo às 20h.<br>• Novos comandos de log adicionados.<br>• Fiquem atentos ao tempo de resposta.</p>
+            </div>
+            <div class="card">
+                <h3>🏆 Metas Semanais</h3>
+                <p style="color:var(--dim)">• 50 Tickets por Moderador.<br>• Participação em 2 eventos.<br>• Relatórios de bugs preenchidos.</p>
+            </div>
         </div>
     </section>
 
-    <section id="formularios">
-        <div class="hero" style="text-align: center;">
-            <h2>RECRUTAMENTO <span style="color: var(--p);">ABERTO</span></h2>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSe8IxIIeSMRy1Yiw9uC0IZLIp04FX8Q1dE2lY2HyuaB004FIA/viewform" target="_blank" class="btn-form">INICIAR FORMULÁRIO</a>
+    <section id="forms">
+        <div class="hero" style="text-align:center">
+            <h2 style="font-size:2rem">RECRUTAMENTO</h2>
+            <p>Envie sua candidatura oficial abaixo. O prazo de resposta é de até 48 horas.</p>
+            <a href="SUA_URL_AQUI" target="_blank" class="btn-main">ABRIR FORMULÁRIO GOOGLE</a>
         </div>
     </section>
 
     <section id="hierarquia">
-        <h2>Hierarquia Administrativa</h2>
-        <div class="glass-card">
+        <h2>Estrutura de Cargos</h2>
+        <div class="card" style="margin-top:20px">
             <table>
-                <tr><th>Cargo</th><th>Responsabilidade</th></tr>
-                <tr><td><strong>Manager</strong></td><td>Direção Geral</td></tr>
-                <tr><td><strong>Coordenador</strong></td><td>Promoções e Punições</td></tr>
-                <tr><td><strong>Moderador</strong></td><td>Suporte e Tickets</td></tr>
-                <tr><td><strong>Helper</strong></td><td>Auxílio Novatos</td></tr>
+                <tr><th>Cargo</th><th>Poder</th><th>Responsabilidade</th></tr>
+                <tr><td style="color:#fff">Manager</td><td style="color:red">Máximo</td><td>Direção e Finanças</td></tr>
+                <tr><td style="color:#fff">Coordenador</td><td style="color:orange">Alto</td><td>Gestão de Equipe</td></tr>
+                <tr><td style="color:#fff">Administrador</td><td style="color:yellow">Médio</td><td>Eventos e Denúncias</td></tr>
+                <tr><td style="color:#fff">Moderador</td><td style="color:cyan">Padrão</td><td>Tickets e Suporte</td></tr>
+                <tr><td style="color:#fff">Helper</td><td style="color:lime">Auxiliar</td><td>Apoio a novatos</td></tr>
             </table>
         </div>
     </section>
 
     <section id="conduta">
-        <h2>Código de Conduta</h2>
-        <div class="glass-card">
-            <p>1. Proibido xingar players.<br>2. Sigilo total das informações.<br>3. Proibido abuso de comandos.</p>
+        <h2>Regras de Ouro</h2>
+        <div class="grid" style="margin-top:20px">
+            <div class="card">
+                <h3>01. Respeito</h3>
+                <p>Mesmo com players tóxicos, mantenha a calma. Você representa a imagem da cidade.</p>
+            </div>
+            <div class="card">
+                <h3>02. Sigilo</h3>
+                <p>Vazar prints de chats administrativos resulta em banimento imediato e Blacklist.</p>
+            </div>
+            <div class="card">
+                <h3>03. Abuso</h3>
+                <p>Comandos de Staff são para TRABALHO. Usar para benefício próprio é expulsão.</p>
+            </div>
+            <div class="card">
+                <h3>04. Proatividade</h3>
+                <p>Não espere ordens. Viu algo errado ou um ticket aberto? Atenda.</p>
+            </div>
         </div>
     </section>
 
     <section id="tickets">
-        <h2>Protocolos de Ticket</h2>
-        <div class="glass-card">
-            <p style="color: var(--p); font-weight: bold; font-size: 12px;">SAUDAÇÃO:</p>
-            <div class="box-copy" id="txt1">
-                "Olá! Sou membro da Staff do São Bernardo RP. Como posso te ajudar?"
-                <button class="btn-copy" onclick="cp('txt1')">COPIAR</button>
+        <h2>Agilidade no Atendimento</h2>
+        <div class="card" style="margin-top:20px">
+            <h4 style="margin-bottom:10px">Saudação Inicial</h4>
+            <div class="copy-box" id="c1">
+                "Olá! Sou membro da Staff do São Bernardo. Como posso te ajudar hoje?"
+                <button class="copy-btn" onclick="cp('c1')">COPIAR</button>
+            </div>
+            <br>
+            <h4 style="margin-bottom:10px">Finalização</h4>
+            <div class="copy-box" id="c2">
+                "Obrigado pelo contato! Se tiver mais dúvidas, sinta-se à vontade. Bom RP!"
+                <button class="copy-btn" onclick="cp('c2')">COPIAR</button>
             </div>
         </div>
     </section>
 
     <section id="punicoes">
-        <h2>Tabela de Punições</h2>
-        <div class="glass-card">
+        <h2>Tabela de Crimes Internos</h2>
+        <div class="card" style="margin-top:20px">
             <table>
-                <tr><th>Infração</th><th>Punição</th></tr>
-                <tr><td>Desrespeito Staff</td><td>Suspensão 2 dias</td></tr>
-                <tr><td>Anti-RP Staff</td><td>Remoção</td></tr>
+                <tr><th>Motivo</th><th>Punição</th></tr>
+                <tr><td>Inatividade injustificada</td><td>Advertência / Rebaixamento</td></tr>
+                <tr><td>Corrupção Staff</td><td>Remoção + Banimento Permanente</td></tr>
+                <tr><td>Mentir para Coordenação</td><td>Suspensão de 7 dias</td></tr>
+                <tr><td>Discussão em Chat Staff</td><td>Advertência Verbal</td></tr>
             </table>
         </div>
     </section>
 </main>
 
 <script>
-    // Sistema de Proteção e Navegação Ultrarápido
-    (function(){
-        const _s = "beststaff";
-        let _t = "";
+    const pass = "beststaff";
+    let target = "";
 
-        const nav = (id) => {
-            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('aside a').forEach(a => a.classList.remove('active-link'));
-            document.getElementById('l-' + id).classList.add('active-link');
-            window.scrollTo(0,0);
-        };
+    function go(id, el) {
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+        if(el) el.classList.add('active');
+        window.scrollTo(0,0);
+    }
 
-        window.cl = () => { document.getElementById('m').style.display = 'none'; document.getElementById('ps').value = ''; };
+    function ask(id, el) {
+        target = {id, el};
+        document.getElementById('modal').style.display = 'flex';
+        document.getElementById('pass').focus();
+    }
 
-        const auth = () => {
-            if(document.getElementById('ps').value === _s) {
-                cl(); nav(_t);
-            } else {
-                alert("Senha Incorreta!");
-                document.getElementById('ps').value = '';
-            }
-        };
+    function cl() { 
+        document.getElementById('modal').style.display = 'none'; 
+        document.getElementById('pass').value = ''; 
+    }
 
-        document.querySelectorAll('aside a').forEach(el => {
-            el.addEventListener('click', () => {
-                const id = el.id.replace('l-', '');
-                if(['inicio', 'formularios'].includes(id)) {
-                    nav(id);
-                } else {
-                    _t = id;
-                    document.getElementById('m').style.display = 'flex';
-                    document.getElementById('ps').focus();
-                }
-            });
-        });
+    function v() {
+        if(document.getElementById('pass').value === pass) {
+            cl(); go(target.id, target.el);
+        } else {
+            alert("ACESSO NEGADO!");
+        }
+    }
 
-        document.getElementById('bt').addEventListener('click', auth);
-        document.getElementById('ps').addEventListener('keypress', (e) => { if(e.key === 'Enter') auth(); });
+    function cp(id) {
+        const text = document.getElementById(id).innerText.replace('COPIAR', '').trim();
+        navigator.clipboard.writeText(text);
+        alert("Texto Copiado!");
+    }
 
-        window.cp = (id) => {
-            const t = document.getElementById(id).innerText.replace('COPIAR', '').trim();
-            navigator.clipboard.writeText(t);
-            alert("Copiado!");
-        };
-    })();
-
-    // Bloqueio F12 e Atalhos
+    // Bloqueio de Teclas (F12, Inspecionar)
     document.onkeydown = function(e) {
-        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) return false;
+        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) return false;
     };
 </script>
 </body>
