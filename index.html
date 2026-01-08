@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Hub | São Bernardo RP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --p: #f4c430; --bg: #08090d; --c: #111420; --s: #0d0f1a; --t: #e2e8f0; --d: #94a3b8; --w: 280px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: var(--t); font-family: 'Inter', sans-serif; display: flex; overflow-x: hidden; }
+        
+        /* Sidebar Leve */
+        .sidebar { width: var(--w); background: var(--s); border-right: 1px solid #1e293b; position: fixed; height: 100vh; z-index: 100; padding: 20px 10px; }
+        .sidebar-header { text-align: center; padding-bottom: 30px; }
+        .sidebar img { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--p); margin-bottom: 10px; }
+        .nav-label { font-size: 10px; color: var(--d); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 10px 15px; display: block; }
+        .sidebar a { display: block; padding: 12px 15px; color: var(--d); text-decoration: none; border-radius: 10px; margin-bottom: 4px; cursor: pointer; font-size: 14px; transition: 0.1s; }
+        .sidebar a:hover { background: #1a1d2e; color: var(--p); }
+        .sidebar a.active-link { background: var(--p); color: #000; font-weight: 600; }
+
+        /* Conteúdo Otimizado */
+        main { margin-left: var(--w); flex-grow: 1; padding: 30px; max-width: 1100px; }
+        section { display: none; }
+        section.active { display: block; animation: fade 0.2s linear; }
+        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+        .hero { background: linear-gradient(135deg, #111420 0%, #08090d 100%); padding: 50px; border-radius: 20px; border: 1px solid #1e293b; margin-bottom: 25px; }
+        .hero h2 { font-family: 'Oswald'; font-size: 3rem; text-transform: uppercase; line-height: 1; }
+        .glass-card { background: var(--c); padding: 25px; border-radius: 15px; border: 1px solid #1e293b; margin-bottom: 20px; }
+        
+        .btn-form { background: var(--p); color: #000; padding: 15px 30px; border-radius: 10px; font-weight: 800; text-decoration: none; display: inline-block; margin-top: 15px; transition: 0.2s; }
+        .btn-form:hover { transform: scale(1.03); }
+
+        .box-copy { background: #000; border: 1px solid #1e293b; padding: 15px; border-radius: 10px; margin-top: 10px; position: relative; color: var(--p); font-family: monospace; }
+        .btn-copy { position: absolute; right: 10px; top: 10px; background: var(--p); border: none; padding: 5px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; color: var(--p); border-bottom: 2px solid #1e293b; font-size: 13px; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+
+        /* Modal Sem Lag */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: var(--c); padding: 35px; border-radius: 20px; border: 2px solid var(--p); text-align: center; width: 340px; }
+        input { width: 100%; background: #000; border: 1px solid #2d334d; padding: 15px; border-radius: 10px; color: #fff; text-align: center; font-size: 1.1rem; margin: 15px 0; outline: none; }
+        .btn-auth { background: var(--p); color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
+        .btn-cancel { color: var(--d); background: none; border: none; margin-top: 15px; cursor: pointer; font-size: 12px; text-transform: uppercase; }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 70px; padding: 10px 5px; }
+            .sidebar h3, .nav-label, .sidebar span { display: none; }
+            main { margin-left: 70px; padding: 15px; }
+            .hero h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div class="modal-overlay" id="m">
+    <div class="modal-content">
+        <h3 style="font-family: 'Oswald'; color: var(--p);">ACESSO RESTRITO</h3>
+        <input type="password" id="ps" placeholder="SENHA STAFF">
+        <button class="btn-auth" id="bt">ENTRAR</button>
+        <button class="btn-cancel" onclick="cl()">CANCELAR</button>
+    </div>
+</div>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <img src="https://i.imgur.com/pUWtuIB.png">
+        <h3 style="font-family: 'Oswald'; color: #fff; font-size: 18px;">SÃO BERNARDO</h3>
+    </div>
+    <nav>
+        <span class="nav-label">Público</span>
+        <a id="l-inicio" class="active-link">🏠 Início</a>
+        <a id="l-formularios">📋 Formulários</a>
+        <span class="nav-label">Staff</span>
+        <a id="l-hierarquia">🏛️ Hierarquia</a>
+        <a id="l-conduta">⚖️ Conduta</a>
+        <a id="l-tickets">🎫 Tickets</a>
+        <a id="l-punicoes">🚨 Punições</a>
+    </nav>
+</aside>
+
+<main>
+    <section id="inicio" class="active">
+        <div class="hero">
+            <h2>CENTRAL DA <span style="color: var(--p);">STAFF</span></h2>
+            <p>Manual oficial de normas e procedimentos do São Bernardo RP.</p>
+        </div>
+        <div class="glass-card">
+            <h3 style="color: var(--p);">Nossa Filosofia</h3>
+            <p>A staff não é autoridade, é suporte. Respeito acima de tudo.</p>
+        </div>
+    </section>
+
+    <section id="formularios">
+        <div class="hero" style="text-align: center;">
+            <h2>RECRUTAMENTO <span style="color: var(--p);">ABERTO</span></h2>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSe8IxIIeSMRy1Yiw9uC0IZLIp04FX8Q1dE2lY2HyuaB004FIA/viewform" target="_blank" class="btn-form">INICIAR FORMULÁRIO</a>
+        </div>
+    </section>
+
+    <section id="hierarquia">
+        <h2>Hierarquia Administrativa</h2>
+        <div class="glass-card">
+            <table>
+                <tr><th>Cargo</th><th>Responsabilidade</th></tr>
+                <tr><td><strong>Manager</strong></td><td>Direção Geral</td></tr>
+                <tr><td><strong>Coordenador</strong></td><td>Promoções e Punições</td></tr>
+                <tr><td><strong>Moderador</strong></td><td>Suporte e Tickets</td></tr>
+                <tr><td><strong>Helper</strong></td><td>Auxílio Novatos</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <section id="conduta">
+        <h2>Código de Conduta</h2>
+        <div class="glass-card">
+            <p>1. Proibido xingar players.<br>2. Sigilo total das informações.<br>3. Proibido abuso de comandos.</p>
+        </div>
+    </section>
+
+    <section id="tickets">
+        <h2>Protocolos de Ticket</h2>
+        <div class="glass-card">
+            <p style="color: var(--p); font-weight: bold; font-size: 12px;">SAUDAÇÃO:</p>
+            <div class="box-copy" id="txt1">
+                "Olá! Sou membro da Staff do São Bernardo RP. Como posso te ajudar?"
+                <button class="btn-copy" onclick="cp('txt1')">COPIAR</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="punicoes">
+        <h2>Tabela de Punições</h2>
+        <div class="glass-card">
+            <table>
+                <tr><th>Infração</th><th>Punição</th></tr>
+                <tr><td>Desrespeito Staff</td><td>Suspensão 2 dias</td></tr>
+                <tr><td>Anti-RP Staff</td><td>Remoção</td></tr>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script>
+    // Sistema de Proteção e Navegação Ultrarápido
+    (function(){
+        const _s = "beststaff";
+        let _t = "";
+
+        const nav = (id) => {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('aside a').forEach(a => a.classList.remove('active-link'));
+            document.getElementById('l-' + id).classList.add('active-link');
+            window.scrollTo(0,0);
+        };
+
+        window.cl = () => { document.getElementById('m').style.display = 'none'; document.getElementById('ps').value = ''; };
+
+        const auth = () => {
+            if(document.getElementById('ps').value === _s) {
+                cl(); nav(_t);
+            } else {
+                alert("Senha Incorreta!");
+                document.getElementById('ps').value = '';
+            }
+        };
+
+        document.querySelectorAll('aside a').forEach(el => {
+            el.addEventListener('click', () => {
+                const id = el.id.replace('l-', '');
+                if(['inicio', 'formularios'].includes(id)) {
+                    nav(id);
+                } else {
+                    _t = id;
+                    document.getElementById('m').style.display = 'flex';
+                    document.getElementById('ps').focus();
+                }
+            });
+        });
+
+        document.getElementById('bt').addEventListener('click', auth);
+        document.getElementById('ps').addEventListener('keypress', (e) => { if(e.key === 'Enter') auth(); });
+
+        window.cp = (id) => {
+            const t = document.getElementById(id).innerText.replace('COPIAR', '').trim();
+            navigator.clipboard.writeText(t);
+            alert("Copiado!");
+        };
+    })();
+
+    // Bloqueio F12 e Atalhos
+    document.onkeydown = function(e) {
+        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) return false;
+    };
+</script>
+</body>
+</html>
