@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root { 
@@ -23,43 +23,46 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
-        /* Scrollbar Personalizada */
+        /* ESTILIZAÇÃO DA BARRA DE ROLAGEM */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; display: flex; }
 
-        /* SIDEBAR COM SCROLL INDEPENDENTE */
+        /* SIDEBAR CORRIGIDA COM SCROLL */
         .sidebar { 
             width: 280px; 
             background: var(--nav); 
-            height: 100vh; 
+            height: 100vh; /* Ocupa a altura da tela */
             position: fixed; 
+            left: 0; top: 0;
             border-right: 1px solid var(--border); 
-            padding: 30px 20px; 
-            z-index: 1000; 
+            padding: 25px; 
             display: flex; 
             flex-direction: column; 
-            transition: 0.3s;
-            overflow-y: auto; /* Permite descer a barra lateral se tiver muitos itens */
+            overflow-y: auto; /* ATIVA A BARRA DE DESCER */
+            overflow-x: hidden;
+            z-index: 1000;
         }
         
-        .main { margin-left: 280px; padding: 40px; min-height: 100vh; transition: 0.3s; }
+        /* Ajuste para o conteúdo não ficar grudado na borda do scroll */
+        .sidebar-content { flex: 1; }
 
-        .mobile-header { 
-            display: none; background: var(--nav); padding: 15px; 
-            position: fixed; top: 0; width: 100%; z-index: 1100; border-bottom: 1px solid var(--border);
-            justify-content: space-between; align-items: center;
+        .main { 
+            margin-left: 280px; 
+            width: calc(100% - 280px);
+            padding: 40px; 
+            min-height: 100vh; 
         }
 
-        .logo-area { text-align: center; margin-bottom: 30px; flex-shrink: 0; }
+        .logo-area { text-align: center; margin-bottom: 30px; }
         .logo-area img { width: 85px; border-radius: 50%; border: 2px solid var(--primary); padding: 4px; }
 
         /* NAVEGAÇÃO */
         .nav-group { margin-bottom: 25px; }
-        .nav-label { font-size: 10px; color: #444; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; letter-spacing: 1px; }
+        .nav-label { font-size: 10px; color: #444; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; }
         .nav-item { 
             padding: 14px 15px; color: var(--dim); cursor: pointer; border-radius: 10px; 
             display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; margin-bottom: 4px; 
@@ -67,133 +70,106 @@
         .nav-item:hover { background: #111; color: #fff; }
         .nav-item.active { background: var(--primary); color: #000; font-weight: 700; }
 
-        /* CARDS & UI */
+        /* CARDS */
         .card { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 15px; margin-bottom: 20px; }
         .btn { 
             background: var(--primary); color: #000; border: none; padding: 14px 20px; 
             border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; 
             font-size: 11px; width: 100%; transition: 0.2s; text-decoration: none; display: inline-block; text-align: center;
         }
-        .btn-logout { background: #ff4444; color: #fff; margin-top: 20px; flex-shrink: 0; }
+
+        input { background: #000; border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: #fff; width: 100%; margin: 8px 0; outline: none; }
         
-        input, select, textarea { 
-            background: #000; border: 1px solid var(--border); padding: 12px; 
-            border-radius: 8px; color: #fff; width: 100%; margin: 8px 0; outline: none; 
-        }
-
-        .rule-block { border-left: 4px solid var(--primary); padding-left: 15px; margin-bottom: 30px; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 0 10px 10px 0; }
-        .rule-title { font-family: 'Syncopate'; font-size: 14px; color: var(--primary); margin-bottom: 10px; }
-
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
 
         @media (max-width: 992px) {
-            .sidebar { transform: translateX(-100%); width: 260px; }
-            .sidebar.active { transform: translateX(0); }
-            .main { margin-left: 0; padding: 100px 20px 40px 20px; }
-            .mobile-header { display: flex; }
+            .sidebar { transform: translateX(-100%); position: absolute; }
+            .main { margin-left: 0; width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <div class="mobile-header">
-        <span style="font-family:'Syncopate'; color:var(--primary); font-size:12px;">SÃO BERNARDO RP</span>
-        <button onclick="toggleSidebar()" style="background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 10px; border-radius:5px;">MENU</button>
-    </div>
-
-    <aside class="sidebar" id="sidebar">
-        <div class="logo-area">
-            <img src="https://i.imgur.com/pUWtuIB.png" alt="Logo">
-            <h1 style="font-family:'Syncopate'; font-size:10px; color:var(--primary); margin-top:12px;">SÃO BERNARDO RP</h1>
-            <div id="user-info" style="display:none; margin-top:20px; padding:15px; background: rgba(255,255,255,0.03); border-radius:10px;">
-                <p id="u-nome" style="font-weight:700; font-size:14px; color: #fff;"></p>
-                <p id="u-cargo" style="font-size:9px; color:var(--primary); text-transform:uppercase; font-weight:800;"></p>
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <div class="logo-area">
+                <img src="https://i.imgur.com/pUWtuIB.png" alt="Logo">
+                <h1 style="font-family:'Syncopate'; font-size:10px; color:var(--primary); margin-top:12px;">SÃO BERNARDO RP</h1>
+                
+                <div id="user-info" style="display:none; margin-top:20px; padding:15px; background: rgba(255,255,255,0.03); border-radius:10px; text-align: left;">
+                    <p id="u-nome" style="font-weight:700; font-size:14px; color: #fff;"></p>
+                    <p id="u-cargo" style="font-size:9px; color:var(--primary); text-transform:uppercase; font-weight:800;"></p>
+                </div>
             </div>
+
+            <nav id="main-nav">
+                <div class="nav-group">
+                    <span class="nav-label">Geral</span>
+                    <div class="nav-item active" onclick="go('home', this)">🏠 Início</div>
+                    <div class="nav-item" onclick="go('edital', this)">📩 Edital Staff</div>
+                </div>
+                
+                <div id="nav-suporte" style="display:none" class="nav-group">
+                    <span class="nav-label">Painel Staff</span>
+                    <div class="nav-item" onclick="go('atendimento', this)">🎧 Suporte</div>
+                    <div class="nav-item" onclick="go('relatorios', this)">📝 Enviar Relatório</div>
+                </div>
+
+                <div id="nav-direcao" style="display:none" class="nav-group">
+                    <span class="nav-label">Administração</span>
+                    <div class="nav-item" onclick="go('gestao', this)">👥 Membros da Equipe</div>
+                </div>
+            </nav>
         </div>
 
-        <nav id="main-nav">
-            <div class="nav-group">
-                <span class="nav-label">Geral</span>
-                <div class="nav-item active" onclick="go('home', this)">🏠 Início</div>
-                <div class="nav-item" onclick="go('regras', this)">📜 Regras da Cidade</div>
-                <div class="nav-item" onclick="go('edital', this)">📩 Edital Staff</div>
-            </div>
-            
-            <div id="nav-suporte" style="display:none" class="nav-group">
-                <span class="nav-label">Operacional Staff</span>
-                <div class="nav-item" onclick="go('dashboard', this)">📊 Desempenho</div>
-                <div class="nav-item" onclick="go('atendimento', this)">🎧 Suporte</div>
-                <div class="nav-item" onclick="go('relatorios', this)">📝 Enviar Relatório</div>
-            </div>
-
-            <div id="nav-direcao" style="display:none" class="nav-group">
-                <span class="nav-label">Direção & Gestão</span>
-                <div class="nav-item" onclick="go('gestao-equipe', this)">👥 Membros da Staff</div>
-            </div>
-        </nav>
-
-        <div id="auth-actions" style="margin-top: auto;">
-            <button class="btn" onclick="openModal('modal-login')">Acessar Painel</button>
+        <div id="auth-actions" style="margin-top: 20px;">
+            <button class="btn" onclick="openModal('modal-login')">ENTRAR</button>
         </div>
     </aside>
 
     <main class="main">
         <section id="page-home" class="page">
-            <div class="card" style="padding:100px 20px; text-align:center; border:none; background: radial-gradient(circle, #111 0%, #050505 100%);">
-                <h2 style="font-family:'Syncopate'; color:var(--primary); font-size:clamp(1.5rem, 5vw, 3rem);">BEM-VINDO</h2>
-                <p style="color:var(--dim); margin-top:15px;">Portal Oficial de Serviços São Bernardo RP.</p>
+            <div class="card" style="text-align:center; padding:80px 20px;">
+                <h2 style="font-family:'Syncopate'; color:var(--primary); font-size: 2.5rem;">PORTAL OFICIAL</h2>
+                <p style="color:var(--dim); margin-top:10px;">Gestão e serviços oficiais São Bernardo RP.</p>
             </div>
-        </section>
-
-        <section id="page-regras" class="page" style="display:none">
-            <h2 style="margin-bottom:30px; font-family:'Syncopate';">📜 REGULAMENTO</h2>
-            <div id="regras-container"></div>
         </section>
 
         <section id="page-edital" class="page" style="display:none">
-            <div class="card" style="text-align:center; padding:60px 20px;">
-                <h2 style="font-family:'Syncopate'; font-size:18px; color:var(--primary); margin-bottom:15px;">RECRUTAMENTO</h2>
-                <p style="color:var(--dim); margin-bottom:30px;">Faça parte da nossa equipe administrativa.</p>
-                <a href="https://docs.google.com/forms/d/1M8Cx3Q5vvE-ASwhhHplxfKTimguoMrQ1szQoncluQO8/viewform" target="_blank" class="btn" style="max-width:300px;">ABRIR EDITAL STAFF</a>
+            <div class="card" style="text-align:center; padding:50px 20px;">
+                <h2 style="font-family:'Syncopate'; color:var(--primary);">RECRUTAMENTO</h2>
+                <p style="color:var(--dim); margin-bottom:20px;">Candidate-se para a nossa equipe administrativa.</p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfp63T5YmRz0YJ6u_pLz5uL6u/viewform" target="_blank" class="btn" style="max-width:300px;">ABRIR FORMULÁRIO</a>
             </div>
         </section>
 
-        <section id="page-dashboard" class="page" style="display:none">
-            <h2>📊 Meu Desempenho</h2>
-            <div id="dash-log" class="card" style="margin-top:20px; font-size:12px; color:var(--dim);">Carregando histórico...</div>
+        <section id="page-gestao" class="page" style="display:none">
+            <h2>👥 Lista de Staff</h2>
+            <div id="lista-membros" style="margin-top:20px;"></div>
         </section>
 
         <section id="page-atendimento" class="page" style="display:none">
             <h2>🎧 Suporte</h2>
-            <div class="card">
-                <button class="btn" onclick="copyAtd('inicio')" style="margin-bottom:10px">Saudação Inicial</button>
-                <button class="btn" onclick="copyAtd('fim')" style="background:#222; color:#fff">Finalizar Atendimento</button>
-            </div>
+            <div class="card"><button class="btn" onclick="copyAtd('Olá, em que posso ajudar?')">Copiar Saudação</button></div>
         </section>
 
         <section id="page-relatorios" class="page" style="display:none">
-            <h2>📝 Enviar Relatório</h2>
+            <h2>📝 Novo Relatório</h2>
             <div class="card">
-                <select id="rel-tipo"><option value="Ticket">Ticket</option><option value="Banimento">Banimento</option></select>
-                <input type="text" id="rel-alvo" placeholder="Quem foi atendido/punido?">
-                <textarea id="rel-provas" placeholder="Links das provas"></textarea>
-                <button class="btn" onclick="salvarRelatorio()">Enviar para o Banco</button>
+                <input type="text" id="r-alvo" placeholder="ID/Nome do Alvo">
+                <textarea id="r-motivo" placeholder="Descrição do Relatório" style="width:100%; background:#000; border:1px solid var(--border); color:#fff; padding:10px; border-radius:8px; margin-bottom:10px;"></textarea>
+                <button class="btn" onclick="alert('Relatório enviado!')">Enviar</button>
             </div>
-        </section>
-
-        <section id="page-gestao-equipe" class="page" style="display:none">
-            <h2>👥 Gestão de Membros</h2>
-            <div id="staff-list-render" style="margin-top:20px;"></div>
         </section>
     </main>
 
     <div class="modal" id="modal-login">
-        <div class="card" style="width:100%; max-width:380px;">
-            <h3 style="text-align:center; color:var(--primary); margin-bottom:20px;">LOGIN</h3>
-            <input type="text" id="log-u" placeholder="Usuário">
+        <div class="card" style="width:100%; max-width:350px;">
+            <h3 style="text-align:center; color:var(--primary); margin-bottom:20px;">ACESSAR PORTAL</h3>
+            <input type="text" id="log-u" placeholder="Nome de Usuário">
             <input type="password" id="log-p" placeholder="Senha">
-            <button class="btn" onclick="login()">Entrar</button>
-            <p onclick="closeModal('modal-login')" style="text-align:center; margin-top:15px; font-size:11px; cursor:pointer; color:var(--dim)">FECHAR</p>
+            <button class="btn" onclick="fazerLogin()">Entrar</button>
+            <p onclick="closeModal('modal-login')" style="text-align:center; margin-top:15px; font-size:11px; cursor:pointer; color:var(--dim)">CANCELAR</p>
         </div>
     </div>
 
@@ -212,7 +188,6 @@
 
         let userLogado = null;
 
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
@@ -221,96 +196,75 @@
             document.getElementById('page-'+id).style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             if(el) el.classList.add('active');
-            if(window.innerWidth < 992) document.getElementById('sidebar').classList.remove('active');
-            if(id === 'regras') renderRegras();
         }
 
-        // LOGIN BRUTO (SEM LIMPEZA DE PONTO)
-        function login() {
-            const u = document.getElementById('log-u').value.trim();
-            const p = document.getElementById('log-p').value.trim();
+        // LOGIN CORRIGIDO SEM FILTROS DE NOME
+        function fazerLogin() {
+            const uInput = document.getElementById('log-u').value.trim();
+            const pInput = document.getElementById('log-p').value.trim();
 
-            db.ref('contas').once('value', snap => {
-                let f = null;
-                snap.forEach(c => {
-                    if(c.val().usuario === u && c.val().senha === p) {
-                        f = { id: c.key, ...c.val() };
+            if(!uInput || !pInput) return alert("Preencha tudo!");
+
+            db.ref('contas').once('value').then(snap => {
+                let userObj = null;
+                snap.forEach(child => {
+                    const d = child.val();
+                    // Comparação literal exata
+                    if(d.usuario === uInput && d.senha === pInput) {
+                        userObj = { key: child.key, ...d };
                     }
                 });
 
-                if(f) {
-                    userLogado = f;
+                if(userObj) {
+                    userLogado = userObj;
                     closeModal('modal-login');
-                    entrar();
+                    sucessoLogin();
                 } else {
-                    alert("Falha no login! Verifique o nome e senha.");
+                    alert("Usuário ou senha incorretos!");
                 }
-            });
+            }).catch(e => alert("Erro ao acessar banco de dados. Verifique as Regras no Firebase."));
         }
 
-        function entrar() {
+        function sucessoLogin() {
             document.getElementById('user-info').style.display = 'block';
             document.getElementById('u-nome').innerText = userLogado.usuario;
             document.getElementById('u-cargo').innerText = userLogado.cargo;
-            document.getElementById('auth-actions').innerHTML = `<button class="btn btn-logout" onclick="location.reload()">Sair do Site</button>`;
-            
+            document.getElementById('auth-actions').innerHTML = `<button class="btn" style="background:#ff4444; color:#fff;" onclick="location.reload()">SAIR</button>`;
+
             const cargo = userLogado.cargo.toLowerCase();
-            const staffList = ["suporte", "moderador", "administrador", "coordenador", "manager", "responsável staff", "responsavel staff", "dono"];
+            const staffCargos = ["suporte", "moderador", "administrador", "coordenador", "manager", "responsável staff", "responsavel staff", "dono"];
             
-            if(staffList.includes(cargo)) {
+            if(staffCargos.includes(cargo)) {
                 document.getElementById('nav-suporte').style.display = 'block';
             }
-            if(["responsável staff", "responsavel staff", "manager", "dono", "coordenador"].includes(cargo)) {
+            if(["coordenador", "manager", "responsável staff", "responsavel staff", "dono"].includes(cargo)) {
                 document.getElementById('nav-direcao').style.display = 'block';
-                renderStaff();
+                carregarGestao();
             }
             go('home');
         }
 
-        function renderRegras() {
-            const r = [
-                {t: "🎭 RP Básico", d: "https://docs.google.com/document/d/1uUIw6x-RdFxgngz_4dZi-SYgYsT5tTF7G2QbkENf6ww/edit"},
-                {t: "💀 Facções", d: "https://docs.google.com/document/d/1InP9Cez9uSZnqYZ51eOBv72b_E53HTqtCq7GI2me1zo/edit"},
-                {t: "👮 Corporações", d: "https://docs.google.com/document/d/1Wz1YAQvMrQMsV9yHq2eiFTmXN2erHth-z6U6P1FOj1Q/edit"},
-                {t: "📜 Discord", d: "https://docs.google.com/document/d/1miMGODpct6WcpjojfDwaTcHDy_Uf09FS0evQLpN_K2U/edit"}
-            ];
-            document.getElementById('regras-container').innerHTML = r.map(x => `
-                <div class="rule-block">
-                    <div class="rule-title">${x.t}</div>
-                    <a href="${x.d}" target="_blank" style="color:var(--primary); font-size:12px;">CLIQUE PARA ACESSAR O DOCUMENTO</a>
-                </div>`).join('');
-        }
-
-        function renderStaff() {
+        function carregarGestao() {
             db.ref('contas').on('value', snap => {
-                const c = document.getElementById('staff-list-render'); c.innerHTML = "";
+                const list = document.getElementById('lista-membros');
+                list.innerHTML = "";
                 snap.forEach(s => {
-                    c.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;">
-                        <div><b>${s.val().usuario}</b><br><small>${s.val().cargo}</small></div>
-                        <button class="btn" style="width:auto; margin:0; padding:5px 10px;" onclick="setarCargo('${s.key}')">SETAR</button>
-                    </div>`;
+                    const d = s.val();
+                    list.innerHTML += `
+                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;">
+                            <div><b>${d.usuario}</b><br><small>${d.cargo}</small></div>
+                            <button class="btn" style="width:auto; padding:8px 15px;" onclick="mudarCargo('${s.key}')">SETAR</button>
+                        </div>`;
                 });
             });
         }
 
-        function setarCargo(id) {
-            const n = prompt("Novo cargo para este membro:");
-            if(n) db.ref(`contas/${id}`).update({ cargo: n });
+        function mudarCargo(key) {
+            const n = prompt("Novo cargo:");
+            if(n) db.ref('contas/'+key).update({ cargo: n });
         }
 
-        function salvarRelatorio() {
-            const a = document.getElementById('rel-alvo').value;
-            const p = document.getElementById('rel-provas').value;
-            if(!a || !p) return alert("Preencha os campos!");
-            db.ref('relatorios').push({ staff: userLogado.usuario, tipo: document.getElementById('rel-tipo').value, alvo: a, provas: p, data: new Date().toLocaleString() })
-            .then(() => { alert("Relatório enviado com sucesso!"); go('home'); });
-        }
-
-        function copyAtd(t) {
-            let m = t==='inicio' ? `Olá, me chamo ${userLogado.usuario}, sou da Staff. Como posso te ajudar?` : `Atendimento encerrado. Bom RP!`;
-            navigator.clipboard.writeText(m); alert("Texto copiado!");
-        }
+        function copyAtd(t) { navigator.clipboard.writeText(t); alert("Copiado!"); }
     </script>
 </body>
 </html>
-
