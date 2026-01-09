@@ -22,13 +22,28 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        /* Scrollbar Personalizada */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
         body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* SIDEBAR / MOBILE NAV */
+        /* SIDEBAR COM SCROLL INDEPENDENTE */
         .sidebar { 
-            width: 280px; background: var(--nav); height: 100vh; position: fixed; 
-            border-right: 1px solid var(--border); padding: 30px 20px; z-index: 1000; 
-            display: flex; flex-direction: column; transition: 0.3s;
+            width: 280px; 
+            background: var(--nav); 
+            height: 100vh; 
+            position: fixed; 
+            border-right: 1px solid var(--border); 
+            padding: 30px 20px; 
+            z-index: 1000; 
+            display: flex; 
+            flex-direction: column; 
+            transition: 0.3s;
+            overflow-y: auto; /* Permite descer a barra lateral se tiver muitos itens */
         }
         
         .main { margin-left: 280px; padding: 40px; min-height: 100vh; transition: 0.3s; }
@@ -39,12 +54,12 @@
             justify-content: space-between; align-items: center;
         }
 
-        .logo-area { text-align: center; margin-bottom: 30px; }
-        .logo-area img { width: 90px; border-radius: 50%; border: 2px solid var(--primary); padding: 4px; box-shadow: 0 0 15px rgba(244, 196, 48, 0.2); }
+        .logo-area { text-align: center; margin-bottom: 30px; flex-shrink: 0; }
+        .logo-area img { width: 85px; border-radius: 50%; border: 2px solid var(--primary); padding: 4px; }
 
         /* NAVEGAÇÃO */
         .nav-group { margin-bottom: 25px; }
-        .nav-label { font-size: 10px; color: #444; font-weight: 800; text-transform: uppercase; margin-left: 10px; margin-bottom: 8px; display: block; letter-spacing: 1px; }
+        .nav-label { font-size: 10px; color: #444; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; letter-spacing: 1px; }
         .nav-item { 
             padding: 14px 15px; color: var(--dim); cursor: pointer; border-radius: 10px; 
             display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; margin-bottom: 4px; 
@@ -57,34 +72,17 @@
         .btn { 
             background: var(--primary); color: #000; border: none; padding: 14px 20px; 
             border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; 
-            font-size: 11px; width: 100%; transition: 0.2s; margin-top: 10px; text-decoration: none; display: inline-block; text-align: center;
+            font-size: 11px; width: 100%; transition: 0.2s; text-decoration: none; display: inline-block; text-align: center;
         }
-        .btn:active { transform: scale(0.98); }
-        .btn-logout { background: #ff4444; color: #fff; margin-top: auto; }
+        .btn-logout { background: #ff4444; color: #fff; margin-top: 20px; flex-shrink: 0; }
         
         input, select, textarea { 
             background: #000; border: 1px solid var(--border); padding: 12px; 
             border-radius: 8px; color: #fff; width: 100%; margin: 8px 0; outline: none; 
-            font-size: 14px;
         }
 
-        /* REGRAS STYLE */
         .rule-block { border-left: 4px solid var(--primary); padding-left: 15px; margin-bottom: 30px; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 0 10px 10px 0; }
         .rule-title { font-family: 'Syncopate'; font-size: 14px; color: var(--primary); margin-bottom: 10px; }
-        .rule-desc { font-size: 13px; color: var(--dim); margin-bottom: 15px; line-height: 1.5; border-bottom: 1px solid #1a1a1a; padding-bottom: 10px; }
-        .rule-field { margin-top: 10px; }
-        .rule-field-name { font-size: 11px; font-weight: 800; color: #eee; text-transform: uppercase; display: block; margin-bottom: 5px; }
-        .rule-field-value { font-size: 13px; color: var(--dim); white-space: pre-line; }
-        .rule-link { color: #5865F2; text-decoration: none; font-weight: bold; }
-        .rule-footer { font-size: 10px; color: #444; margin-top: 20px; text-align: right; }
-
-        /* DASHBOARD */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; }
-        .stat-card h3 { color: var(--primary); font-size: 28px; }
-        .stat-card p { font-size: 10px; text-transform: uppercase; margin-top: 5px; color: #555; font-weight: 800; }
-
-        .report-preview { background: #000; padding: 15px; border-radius: 8px; border: 1px dashed var(--primary); font-family: monospace; white-space: pre-wrap; margin-top: 15px; font-size: 12px; color: #00ff7f; }
 
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
 
@@ -115,88 +113,77 @@
 
         <nav id="main-nav">
             <div class="nav-group">
-                <span class="nav-label">Portal Cidadão</span>
+                <span class="nav-label">Geral</span>
                 <div class="nav-item active" onclick="go('home', this)">🏠 Início</div>
                 <div class="nav-item" onclick="go('regras', this)">📜 Regras da Cidade</div>
                 <div class="nav-item" onclick="go('edital', this)">📩 Edital Staff</div>
             </div>
+            
             <div id="nav-suporte" style="display:none" class="nav-group">
                 <span class="nav-label">Operacional Staff</span>
                 <div class="nav-item" onclick="go('dashboard', this)">📊 Desempenho</div>
-                <div class="nav-item" onclick="go('atendimento', this)">🎧 Atendimento</div>
+                <div class="nav-item" onclick="go('atendimento', this)">🎧 Suporte</div>
                 <div class="nav-item" onclick="go('relatorios', this)">📝 Enviar Relatório</div>
             </div>
+
             <div id="nav-direcao" style="display:none" class="nav-group">
                 <span class="nav-label">Direção & Gestão</span>
-                <div class="nav-item" onclick="go('gestao-equipe', this)">👥 Controle de Staff</div>
+                <div class="nav-item" onclick="go('gestao-equipe', this)">👥 Membros da Staff</div>
             </div>
         </nav>
 
         <div id="auth-actions" style="margin-top: auto;">
-            <button class="btn" style="background:transparent; border:1px solid var(--primary); color:var(--primary); margin-bottom:8px;" onclick="openModal('modal-reg')">Criar Conta</button>
-            <button class="btn" onclick="openModal('modal-login')">Entrar</button>
+            <button class="btn" onclick="openModal('modal-login')">Acessar Painel</button>
         </div>
     </aside>
 
     <main class="main">
         <section id="page-home" class="page">
             <div class="card" style="padding:100px 20px; text-align:center; border:none; background: radial-gradient(circle, #111 0%, #050505 100%);">
-                <h2 style="font-family:'Syncopate'; color:var(--primary); font-size:clamp(1.5rem, 5vw, 3rem); letter-spacing: -2px;">SÃO BERNARDO RP</h2>
-                <p style="color:var(--dim); margin-top:15px;">Acesse informações, regras e ferramentas da staff.</p>
+                <h2 style="font-family:'Syncopate'; color:var(--primary); font-size:clamp(1.5rem, 5vw, 3rem);">BEM-VINDO</h2>
+                <p style="color:var(--dim); margin-top:15px;">Portal Oficial de Serviços São Bernardo RP.</p>
             </div>
         </section>
 
         <section id="page-regras" class="page" style="display:none">
-            <h2 style="margin-bottom:30px; font-family:'Syncopate'; font-size:18px;">📜 REGULAMENTO</h2>
+            <h2 style="margin-bottom:30px; font-family:'Syncopate';">📜 REGULAMENTO</h2>
             <div id="regras-container"></div>
         </section>
 
         <section id="page-edital" class="page" style="display:none">
             <div class="card" style="text-align:center; padding:60px 20px;">
-                <h2 style="font-family:'Syncopate'; font-size:18px; color:var(--primary); margin-bottom:15px;">QUER FAZER PARTE DA STAFF?</h2>
-                <p style="color:var(--dim); margin-bottom:30px; max-width:500px; margin-inline:auto;">Nosso edital está aberto! Clique no botão abaixo para preencher o formulário oficial de recrutamento.</p>
-                <a href="https://docs.google.com/forms/d/1M8Cx3Q5vvE-ASwhhHplxfKTimguoMrQ1szQoncluQO8/edit#responses" target="_blank" class="btn" style="max-width:300px; font-size:14px; padding:20px;">ABRIR EDITAL STAFF</a>
+                <h2 style="font-family:'Syncopate'; font-size:18px; color:var(--primary); margin-bottom:15px;">RECRUTAMENTO</h2>
+                <p style="color:var(--dim); margin-bottom:30px;">Faça parte da nossa equipe administrativa.</p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfp63T5YmRz0YJ6u_pLz5uL6u/viewform" target="_blank" class="btn" style="max-width:300px;">ABRIR EDITAL STAFF</a>
             </div>
         </section>
 
         <section id="page-dashboard" class="page" style="display:none">
-            <h2>📊 Desempenho</h2>
-            <div class="stats-grid">
-                <div class="stat-card"><h3 id="st-ticket">0</h3><p>Tickets</p></div>
-                <div class="stat-card"><h3 id="st-ban">0</h3><p>Banimentos</p></div>
-                <div class="stat-card"><h3 id="st-total">0</h3><p>Total</p></div>
-            </div>
-            <div class="card"><div id="dash-log" style="font-size:12px; color:var(--dim);">Nenhum registro.</div></div>
+            <h2>📊 Meu Desempenho</h2>
+            <div id="dash-log" class="card" style="margin-top:20px; font-size:12px; color:var(--dim);">Carregando histórico...</div>
         </section>
 
         <section id="page-atendimento" class="page" style="display:none">
             <h2>🎧 Suporte</h2>
             <div class="card">
-                <button class="btn" onclick="copyAtd('inicio')">Copiar: Iniciar Ticket</button>
-                <button class="btn" onclick="copyAtd('provas')">Copiar: Solicitar Provas</button>
-                <button class="btn" style="background:#222; color:#fff" onclick="copyAtd('fim')">Copiar: Finalizar</button>
+                <button class="btn" onclick="copyAtd('inicio')" style="margin-bottom:10px">Saudação Inicial</button>
+                <button class="btn" onclick="copyAtd('fim')" style="background:#222; color:#fff">Finalizar Atendimento</button>
             </div>
         </section>
 
         <section id="page-relatorios" class="page" style="display:none">
             <h2>📝 Enviar Relatório</h2>
             <div class="card">
-                <select id="rel-tipo" onchange="updatePreview()">
-                    <option value="Ticket">Atendimento Ticket</option>
-                    <option value="Banimento">Banimento</option>
-                    <option value="Promoção">Promoção</option>
-                    <option value="Demissão">Demissão</option>
-                </select>
-                <input type="text" id="rel-alvo" placeholder="Alvo / Atendido" oninput="updatePreview()">
-                <textarea id="rel-provas" placeholder="Link das provas" oninput="updatePreview()"></textarea>
-                <div class="report-preview" id="rel-preview">Aguardando dados...</div>
-                <button class="btn" onclick="salvarRelatorio()">Enviar</button>
+                <select id="rel-tipo"><option value="Ticket">Ticket</option><option value="Banimento">Banimento</option></select>
+                <input type="text" id="rel-alvo" placeholder="Quem foi atendido/punido?">
+                <textarea id="rel-provas" placeholder="Links das provas"></textarea>
+                <button class="btn" onclick="salvarRelatorio()">Enviar para o Banco</button>
             </div>
         </section>
 
         <section id="page-gestao-equipe" class="page" style="display:none">
-            <h2>👥 Gerenciar Staff</h2>
-            <div id="staff-list-render"></div>
+            <h2>👥 Gestão de Membros</h2>
+            <div id="staff-list-render" style="margin-top:20px;"></div>
         </section>
     </main>
 
@@ -206,17 +193,7 @@
             <input type="text" id="log-u" placeholder="Usuário">
             <input type="password" id="log-p" placeholder="Senha">
             <button class="btn" onclick="login()">Entrar</button>
-            <p onclick="closeModal('modal-login')" style="text-align:center; margin-top:15px; font-size:11px; cursor:pointer;">FECHAR</p>
-        </div>
-    </div>
-
-    <div class="modal" id="modal-reg">
-        <div class="card" style="width:100%; max-width:380px;">
-            <h3 style="text-align:center; color:var(--primary); margin-bottom:20px;">CADASTRAR</h3>
-            <input type="text" id="reg-u" placeholder="Usuário">
-            <input type="password" id="reg-p" placeholder="Senha">
-            <button class="btn" onclick="cadastrar()">Criar Conta</button>
-            <p onclick="closeModal('modal-reg')" style="text-align:center; margin-top:15px; font-size:11px; cursor:pointer;">VOLTAR</p>
+            <p onclick="closeModal('modal-login')" style="text-align:center; margin-top:15px; font-size:11px; cursor:pointer; color:var(--dim)">FECHAR</p>
         </div>
     </div>
 
@@ -233,14 +210,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const regrasDados = [
-            {"footer": {"text": "São Bernardo RP — Facções"}, "fields": [{"value": "[Acessar Regras das Facções](https://docs.google.com/document/d/1InP9Cez9uSZnqYZ51eOBv72b_E53HTqtCq7GI2me1zo/edit?usp=sharing)", "name": "📎 Documento Oficial"}, {"value": "• Respeitar hierarquia\n• Ações precisam de motivação RP\n• Quebras de acordo serão punidas", "name": "🔹 Conduta Criminosa"}], "title": "💀 Regras das Facções", "description": "Normas para organizações criminosas"},
-            {"footer": {"text": "São Bernardo RP — Corporações"}, "fields": [{"value": "[Acessar Regras das Corporações](https://docs.google.com/document/d/1Wz1YAQvMrQMsV9yHq2eiFTmXN2erHth-z6U6P1FOj1Q/edit?usp=sharing)", "name": "📎 Documento Oficial"}, {"value": "• Respeitar hierarquia\n• Uso proporcional da força\n• Abusos serão punidos", "name": "🔹 Conduta Institucional"}], "title": "👮‍♂️ Regras das Corporações", "description": "Normas para corporações oficiais"},
-            {"footer": {"text": "São Bernardo RP — RP Avançado"}, "fields": [{"value": "[Acessar Regras de RP Avançado](https://docs.google.com/document/d/15lCpc0_WGYCHaTwZDlrIEkf3GABh8oKkkCnTV-v9n5U/edit?usp=sharing)", "name": "📎 Documento Oficial"}, {"value": "• Valorize sua vida\n• Ações precisam de contexto RP\n• Abuso de mecânicas será punido", "name": "🔹 Situações Especiais"}], "title": "🧠 Regras de RP — Avançadas", "description": "Regras para situações complexas e ações especiais"},
-            {"footer": {"text": "São Bernardo RP — RP Básico"}, "fields": [{"value": "[Acessar Regras de RP Básico](https://docs.google.com/document/d/1uUIw6x-RdFxgngz_4dZi-SYgYsT5tTF7G2QbkENf6ww/edit?usp=sharing)", "name": "📎 Documento Oficial"}, {"value": "• Sempre interprete seu personagem\n• Proibido Meta Gaming e Power Gaming\n• Respeite a narrativa", "name": "🔹 Princípios Básicos"}], "title": "🎭 Regras de RP — Básicas", "description": "Regras essenciais para todos os jogadores"},
-            {"footer": {"text": "São Bernardo RP — Regras do Discord"}, "fields": [{"value": "[Acessar Regras do Discord](https://docs.google.com/document/d/1miMGODpct6WcpjojfDwaTcHDy_Uf09FS0evQLpN_K2U/edit?usp=sharing)", "name": "📎 Documento Oficial"}, {"value": "• Respeite todos os membros\n• Proibido ofensas, discriminação ou discurso de ódio\n• Flood, spam e divulgação não autorizada são proibidos", "name": "🔹 Conduta"}], "title": "📜 Regras do Discord", "description": "Diretrizes de convivência dentro do Discord"}
-        ];
-
         let userLogado = null;
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
@@ -256,27 +225,26 @@
             if(id === 'regras') renderRegras();
         }
 
-        function cadastrar() {
-            const u = document.getElementById('reg-u').value.trim();
-            const p = document.getElementById('reg-p').value.trim();
-            if(!u || !p) return alert("Preencha tudo!");
-            db.ref('contas').push({ usuario: u, senha: p, cargo: "Cidadão" }).then(() => {
-                alert("Cadastro feito!"); closeModal('modal-reg');
-            });
-        }
-
+        // LOGIN BRUTO (SEM LIMPEZA DE PONTO)
         function login() {
             const u = document.getElementById('log-u').value.trim();
             const p = document.getElementById('log-p').value.trim();
+
             db.ref('contas').once('value', snap => {
                 let f = null;
-                snap.forEach(c => { if(c.val().usuario === u && c.val().senha === p) f = { id: c.key, ...c.val() }; });
+                snap.forEach(c => {
+                    if(c.val().usuario === u && c.val().senha === p) {
+                        f = { id: c.key, ...c.val() };
+                    }
+                });
+
                 if(f) {
                     userLogado = f;
-                    if(!userLogado.cargo) userLogado.cargo = "Cidadão";
                     closeModal('modal-login');
                     entrar();
-                } else alert("Erro no login!");
+                } else {
+                    alert("Falha no login! Verifique o nome e senha.");
+                }
             });
         }
 
@@ -284,76 +252,64 @@
             document.getElementById('user-info').style.display = 'block';
             document.getElementById('u-nome').innerText = userLogado.usuario;
             document.getElementById('u-cargo').innerText = userLogado.cargo;
-            document.getElementById('auth-actions').innerHTML = `<button class="btn btn-logout" onclick="location.reload()">Sair</button>`;
+            document.getElementById('auth-actions').innerHTML = `<button class="btn btn-logout" onclick="location.reload()">Sair do Site</button>`;
             
-            const staff = ["Suporte", "Moderador", "Administrador", "Coordenador", "Manager", "Responsável Staff", "Dono"].includes(userLogado.cargo);
-            const direcao = ["Responsável Staff", "Manager", "Dono", "Coordenador"].includes(userLogado.cargo);
-
-            if(staff) { document.getElementById('nav-suporte').style.display='block'; loadDash(); }
-            if(direcao) { document.getElementById('nav-direcao').style.display='block'; renderStaff(); }
+            const cargo = userLogado.cargo.toLowerCase();
+            const staffList = ["suporte", "moderador", "administrador", "coordenador", "manager", "responsável staff", "responsavel staff", "dono"];
+            
+            if(staffList.includes(cargo)) {
+                document.getElementById('nav-suporte').style.display = 'block';
+            }
+            if(["responsável staff", "responsavel staff", "manager", "dono", "coordenador"].includes(cargo)) {
+                document.getElementById('nav-direcao').style.display = 'block';
+                renderStaff();
+            }
             go('home');
         }
 
         function renderRegras() {
-            document.getElementById('regras-container').innerHTML = regrasDados.map(r => `
+            const r = [
+                {t: "🎭 RP Básico", d: "https://docs.google.com/document/d/1uUIw6x-RdFxgngz_4dZi-SYgYsT5tTF7G2QbkENf6ww/edit"},
+                {t: "💀 Facções", d: "https://docs.google.com/document/d/1InP9Cez9uSZnqYZ51eOBv72b_E53HTqtCq7GI2me1zo/edit"},
+                {t: "👮 Corporações", d: "https://docs.google.com/document/d/1Wz1YAQvMrQMsV9yHq2eiFTmXN2erHth-z6U6P1FOj1Q/edit"},
+                {t: "📜 Discord", d: "https://docs.google.com/document/d/1miMGODpct6WcpjojfDwaTcHDy_Uf09FS0evQLpN_K2U/edit"}
+            ];
+            document.getElementById('regras-container').innerHTML = r.map(x => `
                 <div class="rule-block">
-                    <div class="rule-title">${r.title}</div>
-                    <div class="rule-desc">${r.description}</div>
-                    ${r.fields.map(f => `<div class="rule-field"><span class="rule-field-name">${f.name}</span><div class="rule-field-value">${f.value.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" class="rule-link">$1</a>')}</div></div>`).join('')}
-                    <div class="rule-footer">${r.footer.text}</div>
+                    <div class="rule-title">${x.t}</div>
+                    <a href="${x.d}" target="_blank" style="color:var(--primary); font-size:12px;">CLIQUE PARA ACESSAR O DOCUMENTO</a>
                 </div>`).join('');
-        }
-
-        function updatePreview() {
-            if(!userLogado) return;
-            const t = document.getElementById('rel-tipo').value;
-            const a = document.getElementById('rel-alvo').value || "---";
-            const p = document.getElementById('rel-provas').value || "---";
-            document.getElementById('rel-preview').innerText = `Responsável: ${userLogado.usuario}\nAlvo/Atendido: ${a}\nProvas: ${p}`;
-        }
-
-        function salvarRelatorio() {
-            const a = document.getElementById('rel-alvo').value;
-            const p = document.getElementById('rel-provas').value;
-            if(!a || !p) return alert("Preencha tudo!");
-            db.ref('relatorios').push({ staff: userLogado.usuario, staffId: userLogado.id, tipo: document.getElementById('rel-tipo').value, alvo: a, provas: p, data: new Date().toLocaleString() })
-            .then(() => { alert("Enviado!"); go('dashboard'); });
-        }
-
-        function loadDash() {
-            db.ref('relatorios').orderByChild('staffId').equalTo(userLogado.id).on('value', snap => {
-                let tk=0, bn=0, tt=0, html="";
-                snap.forEach(c => { 
-                    const r = c.val(); tt++; if(r.tipo==="Ticket") tk++; if(r.tipo==="Banimento") bn++;
-                    html = `<div>[${r.data}] ${r.tipo} em ${r.alvo}</div>` + html;
-                });
-                document.getElementById('st-ticket').innerText = tk; document.getElementById('st-ban').innerText = bn; document.getElementById('st-total').innerText = tt;
-                document.getElementById('dash-log').innerHTML = html || "Sem relatórios.";
-            });
-        }
-
-        function copyAtd(t) {
-            let m = t==='inicio' ? `Olá, me chamo ${userLogado.usuario}. Como posso ajudar?` : t==='provas' ? `Envie as provas para análise.` : `Atendimento encerrado. Bom RP!`;
-            navigator.clipboard.writeText(m); alert("Copiado!");
         }
 
         function renderStaff() {
             db.ref('contas').on('value', snap => {
                 const c = document.getElementById('staff-list-render'); c.innerHTML = "";
                 snap.forEach(s => {
-                    c.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+                    c.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;">
                         <div><b>${s.val().usuario}</b><br><small>${s.val().cargo}</small></div>
-                        <button class="btn" style="width:auto; margin:0;" onclick="setarCargo('${s.key}')">SETAR</button>
+                        <button class="btn" style="width:auto; margin:0; padding:5px 10px;" onclick="setarCargo('${s.key}')">SETAR</button>
                     </div>`;
                 });
             });
         }
 
         function setarCargo(id) {
-            const n = prompt("Novo cargo:");
+            const n = prompt("Novo cargo para este membro:");
             if(n) db.ref(`contas/${id}`).update({ cargo: n });
+        }
+
+        function salvarRelatorio() {
+            const a = document.getElementById('rel-alvo').value;
+            const p = document.getElementById('rel-provas').value;
+            if(!a || !p) return alert("Preencha os campos!");
+            db.ref('relatorios').push({ staff: userLogado.usuario, tipo: document.getElementById('rel-tipo').value, alvo: a, provas: p, data: new Date().toLocaleString() })
+            .then(() => { alert("Relatório enviado com sucesso!"); go('home'); });
+        }
+
+        function copyAtd(t) {
+            let m = t==='inicio' ? `Olá, me chamo ${userLogado.usuario}, sou da Staff. Como posso te ajudar?` : `Atendimento encerrado. Bom RP!`;
+            navigator.clipboard.writeText(m); alert("Texto copiado!");
         }
     </script>
 </body>
 </html>
-
