@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root { 
@@ -19,161 +19,207 @@
             --border: #1f1f1f; 
             --text: #fff; 
             --dim: #a0a0a0; 
+            --red: #ff4444; 
         }
 
+        /* Reset e Scroll */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        
-        /* ESTILIZAÇÃO DA BARRA DE ROLAGEM */
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; display: flex; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; overflow-x: hidden; }
 
-        /* SIDEBAR CORRIGIDA COM SCROLL */
+        /* CABEÇALHO MOBILE */
+        .mobile-header { 
+            display: none; background: var(--nav); width: 100%; padding: 15px 20px; 
+            border-bottom: 1px solid var(--border); justify-content: space-between; 
+            align-items: center; position: fixed; top: 0; z-index: 2001; 
+        }
+        
+        /* SIDEBAR COM SCROLL ATIVO */
         .sidebar { 
-            width: 280px; 
-            background: var(--nav); 
-            height: 100vh; /* Ocupa a altura da tela */
-            position: fixed; 
-            left: 0; top: 0;
-            border-right: 1px solid var(--border); 
-            padding: 25px; 
-            display: flex; 
-            flex-direction: column; 
-            overflow-y: auto; /* ATIVA A BARRA DE DESCER */
-            overflow-x: hidden;
-            z-index: 1000;
-        }
-        
-        /* Ajuste para o conteúdo não ficar grudado na borda do scroll */
-        .sidebar-content { flex: 1; }
-
-        .main { 
-            margin-left: 280px; 
-            width: calc(100% - 280px);
-            padding: 40px; 
-            min-height: 100vh; 
+            width: 280px; background: var(--nav); height: 100vh; position: fixed;
+            left: 0; top: 0; border-right: 1px solid var(--border); padding: 25px; 
+            display: flex; flex-direction: column; overflow-y: auto; z-index: 2000;
+            transition: 0.3s ease;
         }
 
-        .logo-area { text-align: center; margin-bottom: 30px; }
-        .logo-area img { width: 85px; border-radius: 50%; border: 2px solid var(--primary); padding: 4px; }
+        /* CONTEÚDO PRINCIPAL */
+        .main { flex: 1; margin-left: 280px; padding: 40px; min-height: 100vh; }
 
-        /* NAVEGAÇÃO */
-        .nav-group { margin-bottom: 25px; }
-        .nav-label { font-size: 10px; color: #444; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .logo-area { text-align: center; margin-bottom: 25px; flex-shrink: 0; }
+        .logo-area img { width: 85px; border-radius: 50%; border: 2px solid var(--primary); padding: 5px; }
+
+        /* MENU DE NAVEGAÇÃO */
+        .nav-group { margin-bottom: 30px; }
+        .nav-label { font-size: 10px; color: #555; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 1.5px; }
         .nav-item { 
-            padding: 14px 15px; color: var(--dim); cursor: pointer; border-radius: 10px; 
-            display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; margin-bottom: 4px; 
+            padding: 14px; color: var(--dim); cursor: pointer; border-radius: 10px; 
+            display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; margin-bottom: 5px; 
         }
-        .nav-item:hover { background: #111; color: #fff; }
-        .nav-item.active { background: var(--primary); color: #000; font-weight: 700; }
+        .nav-item:hover, .nav-item.active { background: rgba(244, 196, 48, 0.1); color: var(--primary); }
 
-        /* CARDS */
+        /* UI ELEMENTS */
         .card { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 15px; margin-bottom: 20px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #111; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
+        .stat-card h4 { font-size: 10px; color: var(--dim); text-transform: uppercase; }
+        .stat-card p { font-size: 24px; font-weight: 800; color: var(--primary); margin-top: 5px; }
+
         .btn { 
-            background: var(--primary); color: #000; border: none; padding: 14px 20px; 
+            background: var(--primary); color: #000; border: none; padding: 14px; 
             border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; 
-            font-size: 11px; width: 100%; transition: 0.2s; text-decoration: none; display: inline-block; text-align: center;
+            font-size: 11px; width: 100%; display: block; text-align: center; text-decoration: none; transition: 0.2s;
         }
-
-        input { background: #000; border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: #fff; width: 100%; margin: 8px 0; outline: none; }
+        .btn:hover { filter: brightness(1.1); }
+        .btn-red { background: var(--red); color: white; }
         
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        input, textarea, select { background: #000; border: 1px solid var(--border); padding: 14px; border-radius: 10px; color: #fff; width: 100%; margin-bottom: 15px; outline: none; }
+        input:focus { border-color: var(--primary); }
 
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; }
+
+        /* RESPONSIVIDADE MOBILE */
         @media (max-width: 992px) {
-            .sidebar { transform: translateX(-100%); position: absolute; }
-            .main { margin-left: 0; width: 100%; }
+            .mobile-header { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main { margin-left: 0; margin-top: 70px; padding: 20px; width: 100%; }
+            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1999; }
+            .sidebar-overlay.active { display: block; }
         }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="sidebar-content">
-            <div class="logo-area">
-                <img src="https://i.imgur.com/pUWtuIB.png" alt="Logo">
-                <h1 style="font-family:'Syncopate'; font-size:10px; color:var(--primary); margin-top:12px;">SÃO BERNARDO RP</h1>
-                
-                <div id="user-info" style="display:none; margin-top:20px; padding:15px; background: rgba(255,255,255,0.03); border-radius:10px; text-align: left;">
-                    <p id="u-nome" style="font-weight:700; font-size:14px; color: #fff;"></p>
-                    <p id="u-cargo" style="font-size:9px; color:var(--primary); text-transform:uppercase; font-weight:800;"></p>
-                </div>
+    <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <div class="mobile-header">
+        <span style="font-family:'Syncopate'; font-size:12px; color:var(--primary);">SÃO BERNARDO RP</span>
+        <button onclick="toggleMenu()" style="background:var(--primary); border:none; padding:8px 15px; border-radius:5px; font-weight:bold;">MENU ☰</button>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-area">
+            <img src="https://i.imgur.com/pUWtuIB.png" alt="Logo">
+            <h1 style="font-family:'Syncopate'; font-size:10px; color:var(--primary); margin-top:12px;">SÃO BERNARDO RP</h1>
+            <div id="user-info" style="display:none; margin-top:15px; text-align: left; background: #0a0a0a; border: 1px solid #1a1a1a; padding: 12px; border-radius: 10px;">
+                <p id="u-nome" style="font-weight:700; font-size:13px;"></p>
+                <p id="u-cargo" style="font-size:9px; color:var(--primary); text-transform:uppercase; font-weight:800;"></p>
             </div>
-
-            <nav id="main-nav">
-                <div class="nav-group">
-                    <span class="nav-label">Geral</span>
-                    <div class="nav-item active" onclick="go('home', this)">🏠 Início</div>
-                    <div class="nav-item" onclick="go('edital', this)">📩 Edital Staff</div>
-                </div>
-                
-                <div id="nav-suporte" style="display:none" class="nav-group">
-                    <span class="nav-label">Painel Staff</span>
-                    <div class="nav-item" onclick="go('atendimento', this)">🎧 Suporte</div>
-                    <div class="nav-item" onclick="go('relatorios', this)">📝 Enviar Relatório</div>
-                </div>
-
-                <div id="nav-direcao" style="display:none" class="nav-group">
-                    <span class="nav-label">Administração</span>
-                    <div class="nav-item" onclick="go('gestao', this)">👥 Membros da Equipe</div>
-                </div>
-            </nav>
         </div>
 
-        <div id="auth-actions" style="margin-top: 20px;">
-            <button class="btn" onclick="openModal('modal-login')">ENTRAR</button>
+        <nav>
+            <div class="nav-group">
+                <span class="nav-label">Início</span>
+                <div class="nav-item active" onclick="go('home', this)">🏠 Início</div>
+                <div class="nav-item" onclick="go('regras', this)">📜 Regras</div>
+                <div class="nav-item" onclick="go('edital', this)">📩 Edital Staff</div>
+            </div>
+            
+            <div id="nav-staff" style="display:none" class="nav-group">
+                <span class="nav-label">Staff</span>
+                <div class="nav-item" onclick="go('dash', this)">📊 Dashboard</div>
+                <div class="nav-item" onclick="go('atendimento', this)">🎧 Suporte / Tickets</div>
+                <div class="nav-item" onclick="go('relatorios', this)">📝 Enviar Relatório</div>
+            </div>
+
+            <div id="nav-direcao" style="display:none" class="nav-group">
+                <span class="nav-label">Gestão Direta</span>
+                <div class="nav-item" onclick="go('gestao', this)">👥 Gerenciar Membros</div>
+            </div>
+        </nav>
+
+        <div id="auth-actions" style="margin-top: auto; padding-top: 20px;">
+            <button class="btn" onclick="openModal('modal-login')">ACESSAR PAINEL</button>
         </div>
     </aside>
 
     <main class="main">
         <section id="page-home" class="page">
-            <div class="card" style="text-align:center; padding:80px 20px;">
-                <h2 style="font-family:'Syncopate'; color:var(--primary); font-size: 2.5rem;">PORTAL OFICIAL</h2>
-                <p style="color:var(--dim); margin-top:10px;">Gestão e serviços oficiais São Bernardo RP.</p>
+            <div class="card" style="text-align:center; padding:80px 20px; border:none; background: linear-gradient(145deg, #0d0d0d, #050505);">
+                <h2 style="font-family:'Syncopate'; color:var(--primary); font-size: 2rem;">BEM-VINDO AO PORTAL</h2>
+                <p style="color:var(--dim); margin-top:15px; letter-spacing: 1px;">SÃO BERNARDO ROLEPLAY OFICIAL</p>
             </div>
         </section>
 
-        <section id="page-edital" class="page" style="display:none">
-            <div class="card" style="text-align:center; padding:50px 20px;">
-                <h2 style="font-family:'Syncopate'; color:var(--primary);">RECRUTAMENTO</h2>
-                <p style="color:var(--dim); margin-bottom:20px;">Candidate-se para a nossa equipe administrativa.</p>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfp63T5YmRz0YJ6u_pLz5uL6u/viewform" target="_blank" class="btn" style="max-width:300px;">ABRIR FORMULÁRIO</a>
+        <section id="page-dash" class="page" style="display:none">
+            <h2 style="margin-bottom:20px;">📊 Meu Desempenho</h2>
+            <div class="stat-grid">
+                <div class="stat-card"><h4>Relatórios</h4><p id="stat-rel">0</p></div>
+                <div class="stat-card"><h4>Ações</h4><p id="stat-atd">0</p></div>
+            </div>
+            <div class="card">
+                <h3>Histórico de Atividades</h3>
+                <div id="feed-acoes" style="font-size:12px; margin-top:15px; color:var(--dim);">Nenhuma ação registrada hoje.</div>
+            </div>
+        </section>
+
+        <section id="page-regras" class="page" style="display:none">
+            <h2 style="margin-bottom:25px;">📜 Regulamento Geral</h2>
+            <div class="card" onclick="window.open('https://docs.google.com/document/d/1uUIw6x-RdFxgngz_4dZi-SYgYsT5tTF7G2QbkENf6ww/edit')">
+                <h3>🎭 Regras de RP</h3>
+                <p style="color:var(--dim); font-size: 13px; margin-top:5px;">Toque para abrir as regras de comportamento e convivência.</p>
+            </div>
+            <div class="card" onclick="window.open('https://docs.google.com/document/d/1InP9Cez9uSZnqYZ51eOBv72b_E53HTqtCq7GI2me1zo/edit')">
+                <h3>💀 Regras de Facções</h3>
+                <p style="color:var(--dim); font-size: 13px; margin-top:5px;">Regulamento oficial para grupos criminosos.</p>
+            </div>
+        </section>
+
+        <section id="page-atendimento" class="page" style="display:none">
+            <h2>🎧 Painel de Suporte</h2>
+            <div class="card">
+                <p style="margin-bottom:15px; color:var(--dim);">Copie as mensagens rápidas para agilizar o ticket:</p>
+                <button class="btn" style="background:#222; color:#fff; margin-bottom:10px;" onclick="copy('Olá, me chamo ' + userLogado.usuario + ', sou da equipe de Suporte. Como posso te ajudar hoje?')">👋 Saudação Inicial</button>
+                <button class="btn" style="background:#222; color:#fff; margin-bottom:10px;" onclick="copy('Poderia, por favor, me enviar provas (vídeos ou prints) do ocorrido para que eu possa analisar?')">📸 Solicitar Provas</button>
+                <button class="btn btn-red" onclick="copy('Seu ticket foi resolvido pela equipe de Staff São Bernardo. Caso precise de algo mais, abra um novo chamado. Bom RP!')">❌ Fechar Ticket</button>
+            </div>
+        </section>
+
+        <section id="page-relatorios" class="page" style="display:none">
+            <h2>📝 Criar Relatório</h2>
+            <div class="card">
+                <label style="font-size:12px; color:var(--primary);">Tipo de Relatório:</label>
+                <select id="rel-tipo">
+                    <option value="Denúncia de Player">Denúncia de Player</option>
+                    <option value="Bug / Erro">Bug / Erro</option>
+                    <option value="Punição Aplicada">Punição Aplicada</option>
+                    <option value="Advertência Verbal">Advertência Verbal</option>
+                </select>
+                <input type="text" id="rel-alvo" placeholder="ID ou Nome do Indivíduo">
+                <textarea id="rel-msg" placeholder="Descreva o ocorrido detalhadamente..." style="height:120px;"></textarea>
+                <button class="btn" onclick="enviarRelatorio()">PUBLICAR RELATÓRIO</button>
             </div>
         </section>
 
         <section id="page-gestao" class="page" style="display:none">
-            <h2>👥 Lista de Staff</h2>
-            <div id="lista-membros" style="margin-top:20px;"></div>
+            <h2 style="margin-bottom:20px;">👥 Membros da Staff</h2>
+            <div id="staff-list"></div>
         </section>
 
-        <section id="page-atendimento" class="page" style="display:none">
-            <h2>🎧 Suporte</h2>
-            <div class="card"><button class="btn" onclick="copyAtd('Olá, em que posso ajudar?')">Copiar Saudação</button></div>
-        </section>
-
-        <section id="page-relatorios" class="page" style="display:none">
-            <h2>📝 Novo Relatório</h2>
-            <div class="card">
-                <input type="text" id="r-alvo" placeholder="ID/Nome do Alvo">
-                <textarea id="r-motivo" placeholder="Descrição do Relatório" style="width:100%; background:#000; border:1px solid var(--border); color:#fff; padding:10px; border-radius:8px; margin-bottom:10px;"></textarea>
-                <button class="btn" onclick="alert('Relatório enviado!')">Enviar</button>
+        <section id="page-edital" class="page" style="display:none">
+            <div class="card" style="text-align:center;">
+                <h2 style="color:var(--primary);">RECRUTAMENTO</h2>
+                <p style="margin-bottom:20px; color:var(--dim);">Deseja se tornar um Staff? Preencha o edital abaixo.</p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfp63T5YmRz0YJ6u_pLz5uL6u/viewform" target="_blank" class="btn">ABRIR FORMULÁRIO</a>
             </div>
         </section>
     </main>
 
     <div class="modal" id="modal-login">
-        <div class="card" style="width:100%; max-width:350px;">
-            <h3 style="text-align:center; color:var(--primary); margin-bottom:20px;">ACESSAR PORTAL</h3>
+        <div class="card" style="width:100%; max-width:340px;">
+            <h3 style="text-align:center; color:var(--primary); margin-bottom:25px; font-family:'Syncopate';">LOGIN SISTEMA</h3>
             <input type="text" id="log-u" placeholder="Nome de Usuário">
-            <input type="password" id="log-p" placeholder="Senha">
-            <button class="btn" onclick="fazerLogin()">Entrar</button>
-            <p onclick="closeModal('modal-login')" style="text-align:center; margin-top:15px; font-size:11px; cursor:pointer; color:var(--dim)">CANCELAR</p>
+            <input type="password" id="log-p" placeholder="Sua Senha">
+            <button class="btn" onclick="fazerLogin()">ENTRAR</button>
+            <p onclick="closeModal('modal-login')" style="text-align:center; margin-top:20px; font-size:11px; cursor:pointer; color:var(--dim);">VOLTAR</p>
         </div>
     </div>
 
     <script>
+        // Configuração Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDNxdh4OtaZN_5dB-nzsccqFAYbitmn_-A",
             authDomain: "saobernardo-8c986.firebaseapp.com",
@@ -185,86 +231,123 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-
         let userLogado = null;
+
+        // Funções de Menu e Modal
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
+        
         function go(id, el) {
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-            document.getElementById('page-'+id).style.display = 'block';
+            const target = document.getElementById('page-'+id);
+            if(target) target.style.display = 'block';
+            
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             if(el) el.classList.add('active');
+            
+            if(window.innerWidth < 992) {
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            }
         }
 
-        // LOGIN CORRIGIDO SEM FILTROS DE NOME
+        // Sistema de Login
         function fazerLogin() {
-            const uInput = document.getElementById('log-u').value.trim();
-            const pInput = document.getElementById('log-p').value.trim();
-
-            if(!uInput || !pInput) return alert("Preencha tudo!");
-
+            const u = document.getElementById('log-u').value.trim();
+            const p = document.getElementById('log-p').value.trim();
+            
             db.ref('contas').once('value').then(snap => {
-                let userObj = null;
-                snap.forEach(child => {
-                    const d = child.val();
-                    // Comparação literal exata
-                    if(d.usuario === uInput && d.senha === pInput) {
-                        userObj = { key: child.key, ...d };
-                    }
+                let encontrado = null;
+                snap.forEach(c => {
+                    const d = c.val();
+                    if(d.usuario === u && d.senha === p) encontrado = { key: c.key, ...d };
                 });
 
-                if(userObj) {
-                    userLogado = userObj;
+                if(encontrado) {
+                    userLogado = encontrado;
                     closeModal('modal-login');
-                    sucessoLogin();
+                    liberarAcesso();
                 } else {
-                    alert("Usuário ou senha incorretos!");
+                    alert("Usuário ou Senha incorretos!");
                 }
-            }).catch(e => alert("Erro ao acessar banco de dados. Verifique as Regras no Firebase."));
+            });
         }
 
-        function sucessoLogin() {
+        function liberarAcesso() {
             document.getElementById('user-info').style.display = 'block';
             document.getElementById('u-nome').innerText = userLogado.usuario;
             document.getElementById('u-cargo').innerText = userLogado.cargo;
-            document.getElementById('auth-actions').innerHTML = `<button class="btn" style="background:#ff4444; color:#fff;" onclick="location.reload()">SAIR</button>`;
-
-            const cargo = userLogado.cargo.toLowerCase();
-            const staffCargos = ["suporte", "moderador", "administrador", "coordenador", "manager", "responsável staff", "responsavel staff", "dono"];
+            document.getElementById('auth-actions').innerHTML = `<button class="btn btn-red" onclick="location.reload()">SAIR DO PAINEL</button>`;
             
-            if(staffCargos.includes(cargo)) {
-                document.getElementById('nav-suporte').style.display = 'block';
-            }
+            const cargo = userLogado.cargo.toLowerCase();
+            const staffList = ["suporte", "moderador", "administrador", "coordenador", "manager", "responsável staff", "responsavel staff", "dono"];
+            
+            if(staffList.includes(cargo)) document.getElementById('nav-staff').style.display = 'block';
+            
             if(["coordenador", "manager", "responsável staff", "responsavel staff", "dono"].includes(cargo)) {
                 document.getElementById('nav-direcao').style.display = 'block';
-                carregarGestao();
+                carregarMembros();
             }
-            go('home');
+            carregarEstatisticas();
+            go('dash');
         }
 
-        function carregarGestao() {
+        // Estatísticas da Dashboard
+        function carregarEstatisticas() {
+            db.ref('relatorios').on('value', snap => {
+                let count = 0; let feed = "";
+                snap.forEach(r => {
+                    if(r.val().staff === userLogado.usuario) {
+                        count++;
+                        feed = `<p style="margin-bottom:8px; border-bottom:1px solid #111; padding-bottom:5px;">✅ [${r.val().tipo}] Você relatou: ${r.val().alvo}</p>` + feed;
+                    }
+                });
+                document.getElementById('stat-rel').innerText = count;
+                document.getElementById('stat-atd').innerText = count * 2;
+                document.getElementById('feed-acoes').innerHTML = feed || "Nenhuma ação recente.";
+            });
+        }
+
+        // Sistema de Relatórios
+        function enviarRelatorio() {
+            const t = document.getElementById('rel-tipo').value;
+            const a = document.getElementById('rel-alvo').value;
+            const m = document.getElementById('rel-msg').value;
+            
+            if(!a || !m) return alert("Por favor, preencha o alvo e a descrição!");
+            
+            db.ref('relatorios').push({ 
+                staff: userLogado.usuario, tipo: t, alvo: a, msg: m, data: new Date().toLocaleString() 
+            }).then(() => { 
+                alert("Relatório enviado com sucesso!"); 
+                document.getElementById('rel-alvo').value = "";
+                document.getElementById('rel-msg').value = "";
+                go('dash');
+            });
+        }
+
+        // Gestão de Membros
+        function carregarMembros() {
             db.ref('contas').on('value', snap => {
-                const list = document.getElementById('lista-membros');
-                list.innerHTML = "";
+                const list = document.getElementById('staff-list'); list.innerHTML = "";
                 snap.forEach(s => {
-                    const d = s.val();
-                    list.innerHTML += `
-                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;">
-                            <div><b>${d.usuario}</b><br><small>${d.cargo}</small></div>
-                            <button class="btn" style="width:auto; padding:8px 15px;" onclick="mudarCargo('${s.key}')">SETAR</button>
-                        </div>`;
+                    list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px; margin-bottom:10px;">
+                        <div><b style="color:var(--primary)">${s.val().usuario}</b><br><small style="color:var(--dim)">${s.val().cargo}</small></div>
+                        <button class="btn" style="width:auto; padding:8px 15px;" onclick="mudarCargo('${s.key}')">SETAR</button>
+                    </div>`;
                 });
             });
         }
 
-        function mudarCargo(key) {
-            const n = prompt("Novo cargo:");
-            if(n) db.ref('contas/'+key).update({ cargo: n });
-        }
+        function mudarCargo(k) { const n = prompt("Digite o novo cargo:"); if(n) db.ref('contas/'+k).update({cargo: n}); }
 
-        function copyAtd(t) { navigator.clipboard.writeText(t); alert("Copiado!"); }
+        // Utilitários
+        function copy(t) { navigator.clipboard.writeText(t); alert("Mensagem copiada!"); }
     </script>
 </body>
 </html>
