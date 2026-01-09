@@ -3,223 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SÃO BERNARDO RP | PORTAL OFICIAL</title>
+    <title>SÃO BERNARDO RP | SITE OFICIAL</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { 
-            --primary: #f4c430; 
-            --bg: #050505; 
-            --card: #0d0d0d; 
-            --nav: #080808; 
-            --border: #1f1f1f; 
-            --text: #fff; 
-            --dim: #a0a0a0; 
-            --red: #ff4444; 
-        }
-
-        /* Reset e Scroll */
+        :root { --primary: #f4c430; --bg: #050505; --card: #0d0d0d; --nav: #080808; --border: #1f1f1f; --text: #fff; --dim: #a0a0a0; --red: #ff4444; --green: #2ecc71; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
         ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
         body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; overflow-x: hidden; }
 
-        /* CABEÇALHO MOBILE */
-        .mobile-header { 
-            display: none; background: var(--nav); width: 100%; padding: 15px 20px; 
-            border-bottom: 1px solid var(--border); justify-content: space-between; 
-            align-items: center; position: fixed; top: 0; z-index: 2001; 
-        }
+        /* MOBILE HEADER */
+        .mobile-header { display: none; background: var(--nav); width: 100%; padding: 15px 20px; border-bottom: 1px solid var(--border); position: fixed; top: 0; z-index: 2001; justify-content: space-between; align-items: center; }
         
-        /* SIDEBAR COM SCROLL ATIVO */
-        .sidebar { 
-            width: 280px; background: var(--nav); height: 100vh; position: fixed;
-            left: 0; top: 0; border-right: 1px solid var(--border); padding: 25px; 
-            display: flex; flex-direction: column; overflow-y: auto; z-index: 2000;
-            transition: 0.3s ease;
-        }
+        /* SIDEBAR */
+        .sidebar { width: 280px; background: var(--nav); height: 100vh; position: fixed; left: 0; top: 0; border-right: 1px solid var(--border); padding: 25px; display: flex; flex-direction: column; overflow-y: auto; z-index: 2000; transition: 0.3s; }
+        .main { flex: 1; margin-left: 280px; padding: 40px; min-height: 100vh; width: 100%; }
 
-        /* CONTEÚDO PRINCIPAL */
-        .main { flex: 1; margin-left: 280px; padding: 40px; min-height: 100vh; }
+        /* LOGO */
+        .logo-area { text-align: center; margin-bottom: 25px; }
+        .logo-area img { width: 90px; border-radius: 50%; border: 2px solid var(--primary); padding: 5px; box-shadow: 0 0 15px rgba(244, 196, 48, 0.2); }
 
-        .logo-area { text-align: center; margin-bottom: 25px; flex-shrink: 0; }
-        .logo-area img { width: 85px; border-radius: 50%; border: 2px solid var(--primary); padding: 5px; }
-
-        /* MENU DE NAVEGAÇÃO */
-        .nav-group { margin-bottom: 30px; }
-        .nav-label { font-size: 10px; color: #555; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 1.5px; }
-        .nav-item { 
-            padding: 14px; color: var(--dim); cursor: pointer; border-radius: 10px; 
-            display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; margin-bottom: 5px; 
-        }
+        .nav-group { margin-bottom: 25px; }
+        .nav-label { font-size: 10px; color: #555; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; letter-spacing: 1px; }
+        .nav-item { padding: 12px; color: var(--dim); cursor: pointer; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 4px; transition: 0.2s; }
         .nav-item:hover, .nav-item.active { background: rgba(244, 196, 48, 0.1); color: var(--primary); }
 
-        /* UI ELEMENTS */
-        .card { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 15px; margin-bottom: 20px; }
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: #111; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
-        .stat-card h4 { font-size: 10px; color: var(--dim); text-transform: uppercase; }
-        .stat-card p { font-size: 24px; font-weight: 800; color: var(--primary); margin-top: 5px; }
-
-        .btn { 
-            background: var(--primary); color: #000; border: none; padding: 14px; 
-            border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; 
-            font-size: 11px; width: 100%; display: block; text-align: center; text-decoration: none; transition: 0.2s;
-        }
-        .btn:hover { filter: brightness(1.1); }
-        .btn-red { background: var(--red); color: white; }
+        /* UI CARDS */
+        .card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 15px; }
+        .hero { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.imgur.com/G5zGvV5.png'); background-size: cover; background-position: center; padding: 60px 20px; text-align: center; border-radius: 15px; border: 1px solid var(--primary); }
         
-        input, textarea, select { background: #000; border: 1px solid var(--border); padding: 14px; border-radius: 10px; color: #fff; width: 100%; margin-bottom: 15px; outline: none; }
-        input:focus { border-color: var(--primary); }
+        .btn { background: var(--primary); color: #000; border: none; padding: 12px; border-radius: 6px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 11px; width: 100%; text-align: center; display: block; transition: 0.2s; text-decoration: none; }
+        .btn:hover { filter: brightness(1.2); transform: scale(1.02); }
+        .btn-red { background: var(--red); color: #fff; }
 
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        /* GESTÃO & METAS */
+        .meta-container { background: #000; padding: 15px; border-radius: 10px; border: 1px solid #1a1a1a; margin-top: 10px; }
+        .meta-bar { width: 100%; background: #222; height: 8px; border-radius: 4px; margin-top: 8px; overflow: hidden; }
+        .meta-progress { background: var(--primary); height: 100%; width: 0%; transition: 1s ease-in-out; }
 
-        /* RESPONSIVIDADE MOBILE */
+        /* HIERARQUIA VISUAL */
+        .rank-box { padding: 15px; background: #111; border-left: 4px solid var(--primary); margin-bottom: 10px; border-radius: 0 8px 8px 0; display: flex; justify-content: space-between; align-items: center; }
+        .rank-tag { font-size: 10px; background: var(--primary); color: #000; padding: 2px 8px; border-radius: 4px; font-weight: 900; }
+
+        /* TABLES */
+        .table-wrap { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 12px; }
+        th { text-align: left; padding: 12px; color: var(--primary); border-bottom: 2px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--dim); }
+
         @media (max-width: 992px) {
             .mobile-header { display: flex; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
-            .main { margin-left: 0; margin-top: 70px; padding: 20px; width: 100%; }
-            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1999; }
-            .sidebar-overlay.active { display: block; }
+            .main { margin-left: 0; margin-top: 70px; padding: 20px; }
+            .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1999; }
+            .overlay.active { display: block; }
         }
     </style>
 </head>
 <body>
 
-    <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
     <div class="mobile-header">
-        <span style="font-family:'Syncopate'; font-size:12px; color:var(--primary);">SÃO BERNARDO RP</span>
-        <button onclick="toggleMenu()" style="background:var(--primary); border:none; padding:8px 15px; border-radius:5px; font-weight:bold;">MENU ☰</button>
+        <span style="font-family:'Syncopate'; font-size:12px; color:var(--primary);">SÃO BERNARDO</span>
+        <button onclick="toggleMenu()" style="background:var(--primary); border:none; padding:8px 12px; border-radius:5px; font-weight:bold;">MENU ☰</button>
     </div>
 
     <aside class="sidebar" id="sidebar">
         <div class="logo-area">
-            <img src="https://i.imgur.com/pUWtuIB.png" alt="Logo">
+            <img src="https://i.imgur.com/pUWtuIB.png">
             <h1 style="font-family:'Syncopate'; font-size:10px; color:var(--primary); margin-top:12px;">SÃO BERNARDO RP</h1>
-            <div id="user-info" style="display:none; margin-top:15px; text-align: left; background: #0a0a0a; border: 1px solid #1a1a1a; padding: 12px; border-radius: 10px;">
-                <p id="u-nome" style="font-weight:700; font-size:13px;"></p>
+            
+            <div id="user-info" style="display:none; margin-top:15px; background:#000; padding:12px; border-radius:10px; border:1px solid #1a1a1a; text-align: left;">
+                <p id="u-nome" style="font-size:13px; font-weight:bold;"></p>
                 <p id="u-cargo" style="font-size:9px; color:var(--primary); text-transform:uppercase; font-weight:800;"></p>
+                
+                <div class="meta-container">
+                    <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:bold;">
+                        <span>META SEMANAL</span>
+                        <span id="perc-txt">0%</span>
+                    </div>
+                    <div class="meta-bar"><div class="meta-progress" id="meta-prog"></div></div>
+                </div>
             </div>
         </div>
 
         <nav>
             <div class="nav-group">
-                <span class="nav-label">Início</span>
+                <span class="nav-label">Portal Oficial</span>
                 <div class="nav-item active" onclick="go('home', this)">🏠 Início</div>
-                <div class="nav-item" onclick="go('regras', this)">📜 Regras</div>
+                <div class="nav-item" onclick="go('hierarquia', this)">👑 Hierarquia Staff</div>
+                <div class="nav-item" onclick="go('regras', this)">📜 Regras do Servidor</div>
                 <div class="nav-item" onclick="go('edital', this)">📩 Edital Staff</div>
             </div>
-            
+
             <div id="nav-staff" style="display:none" class="nav-group">
-                <span class="nav-label">Staff</span>
-                <div class="nav-item" onclick="go('dash', this)">📊 Dashboard</div>
+                <span class="nav-label">Área Restrita</span>
                 <div class="nav-item" onclick="go('atendimento', this)">🎧 Suporte / Tickets</div>
                 <div class="nav-item" onclick="go('relatorios', this)">📝 Enviar Relatório</div>
             </div>
 
             <div id="nav-direcao" style="display:none" class="nav-group">
-                <span class="nav-label">Gestão Direta</span>
+                <span class="nav-label">Direção Suprema</span>
                 <div class="nav-item" onclick="go('gestao', this)">👥 Gerenciar Membros</div>
+                <div class="nav-item" onclick="go('log-rel', this)">📂 Logs de Relatórios</div>
+                <div class="nav-item" onclick="go('log-car', this)">🔑 Logs de Cargos</div>
+                <div class="nav-item" onclick="go('avisos', this)">📢 Postar Avisos</div>
             </div>
         </nav>
 
-        <div id="auth-actions" style="margin-top: auto; padding-top: 20px;">
-            <button class="btn" onclick="openModal('modal-login')">ACESSAR PAINEL</button>
+        <div id="auth-actions" style="margin-top:auto;">
+            <button class="btn" onclick="document.getElementById('m-login').style.display='flex'">ACESSAR PAINEL</button>
         </div>
     </aside>
 
     <main class="main">
-        <section id="page-home" class="page">
-            <div class="card" style="text-align:center; padding:80px 20px; border:none; background: linear-gradient(145deg, #0d0d0d, #050505);">
-                <h2 style="font-family:'Syncopate'; color:var(--primary); font-size: 2rem;">BEM-VINDO AO PORTAL</h2>
-                <p style="color:var(--dim); margin-top:15px; letter-spacing: 1px;">SÃO BERNARDO ROLEPLAY OFICIAL</p>
+        <section id="p-home" class="page">
+            <div class="hero">
+                <h1 style="font-family:'Syncopate'; font-size: 2.5rem; color:var(--primary);">SÃO BERNARDO</h1>
+                <p style="letter-spacing: 3px; font-weight: 300; margin-top: 10px;">O MELHOR ROLEPLAY DO BRASIL</p>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h3 style="color:var(--primary); margin-bottom: 10px;">📢 COMUNICADOS OFICIAIS</h3>
+                <div id="aviso-publico" style="color:var(--dim); font-size: 14px; line-height: 1.6;">
+                    Nenhum aviso importante no momento. Fique atento ao nosso Discord!
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div class="card" style="text-align:center">
+                    <h4 style="color:var(--primary)">DISCORD</h4>
+                    <a href="https://discord.gg/saobernardorp" target="_blank" class="btn" style="margin-top:10px">ENTRAR</a>
+                </div>
+                <div class="card" style="text-align:center">
+                    <h4 style="color:var(--primary)">LOJA</h4>
+                    <a href="#" class="btn" style="margin-top:10px">VER PRODUTOS</a>
+                </div>
             </div>
         </section>
 
-        <section id="page-dash" class="page" style="display:none">
-            <h2 style="margin-bottom:20px;">📊 Meu Desempenho</h2>
-            <div class="stat-grid">
-                <div class="stat-card"><h4>Relatórios</h4><p id="stat-rel">0</p></div>
-                <div class="stat-card"><h4>Ações</h4><p id="stat-atd">0</p></div>
-            </div>
-            <div class="card">
-                <h3>Histórico de Atividades</h3>
-                <div id="feed-acoes" style="font-size:12px; margin-top:15px; color:var(--dim);">Nenhuma ação registrada hoje.</div>
-            </div>
+        <section id="p-hierarquia" class="page" style="display:none">
+            <h2 style="font-family:'Syncopate'; margin-bottom: 20px;">👑 QUADRO DE HIERARQUIA</h2>
+            <div class="rank-box"><span>Dono & Fundador</span> <span class="rank-tag">SUPREMO</span></div>
+            <div class="rank-box"><span>Manager</span> <span class="rank-tag">DIREÇÃO</span></div>
+            <div class="rank-box"><span>Responsável Staff</span> <span class="rank-tag">DIREÇÃO</span></div>
+            <div class="rank-box"><span>Coordenador</span> <span class="rank-tag">DIREÇÃO</span></div>
+            <div class="rank-box"><span>Administrador</span> <span class="rank-tag">STAFF</span></div>
+            <div class="rank-box"><span>Moderador</span> <span class="rank-tag">STAFF</span></div>
+            <div class="rank-box"><span>Suporte</span> <span class="rank-tag">STAFF</span></div>
         </section>
 
-        <section id="page-regras" class="page" style="display:none">
-            <h2 style="margin-bottom:25px;">📜 Regulamento Geral</h2>
+        <section id="p-regras" class="page" style="display:none">
+            <h2 style="margin-bottom: 20px;">📜 REGRAS DO SERVIDOR</h2>
             <div class="card" onclick="window.open('https://docs.google.com/document/d/1uUIw6x-RdFxgngz_4dZi-SYgYsT5tTF7G2QbkENf6ww/edit')">
-                <h3>🎭 Regras de RP</h3>
-                <p style="color:var(--dim); font-size: 13px; margin-top:5px;">Toque para abrir as regras de comportamento e convivência.</p>
+                <h3>🎭 Regras de Roleplay</h3>
+                <p style="color:var(--dim); font-size: 12px; margin-top:5px;">Clique para visualizar o regulamento completo.</p>
             </div>
             <div class="card" onclick="window.open('https://docs.google.com/document/d/1InP9Cez9uSZnqYZ51eOBv72b_E53HTqtCq7GI2me1zo/edit')">
                 <h3>💀 Regras de Facções</h3>
-                <p style="color:var(--dim); font-size: 13px; margin-top:5px;">Regulamento oficial para grupos criminosos.</p>
+                <p style="color:var(--dim); font-size: 12px; margin-top:5px;">Regras específicas para o crime organizado.</p>
             </div>
         </section>
 
-        <section id="page-atendimento" class="page" style="display:none">
-            <h2>🎧 Painel de Suporte</h2>
+        <section id="p-atendimento" class="page" style="display:none">
+            <h2>🎧 FERRAMENTAS DE SUPORTE</h2>
             <div class="card">
-                <p style="margin-bottom:15px; color:var(--dim);">Copie as mensagens rápidas para agilizar o ticket:</p>
-                <button class="btn" style="background:#222; color:#fff; margin-bottom:10px;" onclick="copy('Olá, me chamo ' + userLogado.usuario + ', sou da equipe de Suporte. Como posso te ajudar hoje?')">👋 Saudação Inicial</button>
-                <button class="btn" style="background:#222; color:#fff; margin-bottom:10px;" onclick="copy('Poderia, por favor, me enviar provas (vídeos ou prints) do ocorrido para que eu possa analisar?')">📸 Solicitar Provas</button>
-                <button class="btn btn-red" onclick="copy('Seu ticket foi resolvido pela equipe de Staff São Bernardo. Caso precise de algo mais, abra um novo chamado. Bom RP!')">❌ Fechar Ticket</button>
+                <button class="btn" style="margin-bottom:10px" onclick="copy('Olá, me chamo ' + userLogado.usuario + ', como posso ajudar?')">Copia Saudação</button>
+                <button class="btn btn-red" onclick="copy('Obrigado pelo contato! Seu problema foi resolvido. Atendimento finalizado.')">Copia Fechar Ticket</button>
             </div>
         </section>
 
-        <section id="page-relatorios" class="page" style="display:none">
-            <h2>📝 Criar Relatório</h2>
+        <section id="p-relatorios" class="page" style="display:none">
+            <h2>📝 ENVIAR RELATÓRIO</h2>
             <div class="card">
-                <label style="font-size:12px; color:var(--primary);">Tipo de Relatório:</label>
                 <select id="rel-tipo">
-                    <option value="Denúncia de Player">Denúncia de Player</option>
-                    <option value="Bug / Erro">Bug / Erro</option>
-                    <option value="Punição Aplicada">Punição Aplicada</option>
-                    <option value="Advertência Verbal">Advertência Verbal</option>
+                    <option>Denúncia</option>
+                    <option>Bug Report</option>
+                    <option>Punição Aplicada</option>
+                    <option>Atendimento Suporte</option>
                 </select>
-                <input type="text" id="rel-alvo" placeholder="ID ou Nome do Indivíduo">
-                <textarea id="rel-msg" placeholder="Descreva o ocorrido detalhadamente..." style="height:120px;"></textarea>
-                <button class="btn" onclick="enviarRelatorio()">PUBLICAR RELATÓRIO</button>
+                <input id="rel-alvo" placeholder="ID ou Nome do Envolvido">
+                <textarea id="rel-msg" placeholder="Descreva o que aconteceu..." style="height: 120px;"></textarea>
+                <button class="btn" onclick="enviarRelatorio()">ENVIAR PARA O SISTEMA</button>
             </div>
         </section>
 
-        <section id="page-gestao" class="page" style="display:none">
-            <h2 style="margin-bottom:20px;">👥 Membros da Staff</h2>
-            <div id="staff-list"></div>
+        <section id="p-gestao" class="page" style="display:none">
+            <h2>👥 GERENCIAR EQUIPE</h2>
+            <div id="staff-list" style="margin-top:15px;"></div>
         </section>
 
-        <section id="page-edital" class="page" style="display:none">
+        <section id="p-log-rel" class="page" style="display:none">
+            <h2>📂 LOGS DE RELATÓRIOS</h2>
+            <div class="card table-wrap">
+                <table>
+                    <thead><tr><th>Staff</th><th>Tipo</th><th>Alvo</th><th>Mensagem</th><th>Data</th></tr></thead>
+                    <tbody id="t-rel"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="p-log-car" class="page" style="display:none">
+            <h2>🔑 LOGS DE CARGOS</h2>
+            <div class="card table-wrap">
+                <table>
+                    <thead><tr><th>Autor</th><th>Para</th><th>Novo Cargo</th><th>Data</th></tr></thead>
+                    <tbody id="t-car"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="p-avisos" class="page" style="display:none">
+            <h2>📢 POSTAR AVISO OFICIAL</h2>
+            <div class="card">
+                <textarea id="new-aviso" placeholder="Escreva o aviso que aparecerá na home para todos..." style="height:100px;"></textarea>
+                <button class="btn" onclick="postarAviso()">ATUALIZAR AVISO NO SITE</button>
+            </div>
+        </section>
+        
+        <section id="p-edital" class="page" style="display:none">
             <div class="card" style="text-align:center;">
-                <h2 style="color:var(--primary);">RECRUTAMENTO</h2>
-                <p style="margin-bottom:20px; color:var(--dim);">Deseja se tornar um Staff? Preencha o edital abaixo.</p>
+                <h2>📩 RECRUTAMENTO STAFF</h2>
+                <p style="margin: 15px 0; color:var(--dim);">Quer fazer parte da nossa equipe? Preencha o edital agora.</p>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSfp63T5YmRz0YJ6u_pLz5uL6u/viewform" target="_blank" class="btn">ABRIR FORMULÁRIO</a>
             </div>
         </section>
     </main>
 
-    <div class="modal" id="modal-login">
+    <div class="modal" id="m-login" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:3000; align-items:center; justify-content:center; padding:20px;">
         <div class="card" style="width:100%; max-width:340px;">
-            <h3 style="text-align:center; color:var(--primary); margin-bottom:25px; font-family:'Syncopate';">LOGIN SISTEMA</h3>
-            <input type="text" id="log-u" placeholder="Nome de Usuário">
-            <input type="password" id="log-p" placeholder="Sua Senha">
-            <button class="btn" onclick="fazerLogin()">ENTRAR</button>
-            <p onclick="closeModal('modal-login')" style="text-align:center; margin-top:20px; font-size:11px; cursor:pointer; color:var(--dim);">VOLTAR</p>
+            <h3 style="text-align:center; color:var(--primary); margin-bottom:20px; font-family:'Syncopate';">LOGIN STAFF</h3>
+            <input id="l-u" placeholder="Usuário">
+            <input id="l-p" type="password" placeholder="Senha">
+            <button class="btn" onclick="fazerLogin()">ENTRAR NO PAINEL</button>
+            <p onclick="document.getElementById('m-login').style.display='none'" style="text-align:center; margin-top:20px; font-size:11px; cursor:pointer; color:var(--dim);">VOLTAR AO SITE</p>
         </div>
     </div>
 
     <script>
-        // Configuração Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDNxdh4OtaZN_5dB-nzsccqFAYbitmn_-A",
             authDomain: "saobernardo-8c986.firebaseapp.com",
@@ -232,122 +261,123 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         let userLogado = null;
+        let metaSemanal = 20; // Meta padrão de 20 relatórios
 
-        // Funções de Menu e Modal
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
         function go(id, el) {
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-            const target = document.getElementById('page-'+id);
-            if(target) target.style.display = 'block';
-            
+            document.getElementById('p-'+id).style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             if(el) el.classList.add('active');
-            
-            if(window.innerWidth < 992) {
-                document.getElementById('sidebar').classList.remove('active');
-                document.getElementById('overlay').classList.remove('active');
-            }
+            if(window.innerWidth < 992) toggleMenu();
         }
 
-        // Sistema de Login
         function fazerLogin() {
-            const u = document.getElementById('log-u').value.trim();
-            const p = document.getElementById('log-p').value.trim();
-            
-            db.ref('contas').once('value').then(snap => {
-                let encontrado = null;
-                snap.forEach(c => {
-                    const d = c.val();
-                    if(d.usuario === u && d.senha === p) encontrado = { key: c.key, ...d };
-                });
-
-                if(encontrado) {
-                    userLogado = encontrado;
-                    closeModal('modal-login');
-                    liberarAcesso();
-                } else {
-                    alert("Usuário ou Senha incorretos!");
-                }
+            const u = document.getElementById('l-u').value.trim();
+            const p = document.getElementById('l-p').value.trim();
+            db.ref('contas').once('value', snap => {
+                let f = null;
+                snap.forEach(c => { if(c.val().usuario === u && c.val().senha === p) f = { key: c.key, ...c.val() }; });
+                if(f) { userLogado = f; document.getElementById('m-login').style.display='none'; liberar(); }
+                else alert("Acesso negado: Usuário ou Senha incorretos!");
             });
         }
 
-        function liberarAcesso() {
+        function liberar() {
             document.getElementById('user-info').style.display = 'block';
             document.getElementById('u-nome').innerText = userLogado.usuario;
             document.getElementById('u-cargo').innerText = userLogado.cargo;
             document.getElementById('auth-actions').innerHTML = `<button class="btn btn-red" onclick="location.reload()">SAIR DO PAINEL</button>`;
             
             const cargo = userLogado.cargo.toLowerCase();
-            const staffList = ["suporte", "moderador", "administrador", "coordenador", "manager", "responsável staff", "responsavel staff", "dono"];
+            const staff = ["suporte", "moderador", "administrador", "coordenador", "manager", "responsável staff", "responsavel staff", "dono"];
             
-            if(staffList.includes(cargo)) document.getElementById('nav-staff').style.display = 'block';
+            if(staff.includes(cargo)) document.getElementById('nav-staff').style.display = 'block';
             
             if(["coordenador", "manager", "responsável staff", "responsavel staff", "dono"].includes(cargo)) {
                 document.getElementById('nav-direcao').style.display = 'block';
-                carregarMembros();
+                carregarGestao();
+                carregarLogs();
             }
-            carregarEstatisticas();
-            go('dash');
+            atualizarMeta();
+            go('atendimento');
         }
 
-        // Estatísticas da Dashboard
-        function carregarEstatisticas() {
+        function atualizarMeta() {
             db.ref('relatorios').on('value', snap => {
-                let count = 0; let feed = "";
-                snap.forEach(r => {
-                    if(r.val().staff === userLogado.usuario) {
-                        count++;
-                        feed = `<p style="margin-bottom:8px; border-bottom:1px solid #111; padding-bottom:5px;">✅ [${r.val().tipo}] Você relatou: ${r.val().alvo}</p>` + feed;
-                    }
-                });
-                document.getElementById('stat-rel').innerText = count;
-                document.getElementById('stat-atd').innerText = count * 2;
-                document.getElementById('feed-acoes').innerHTML = feed || "Nenhuma ação recente.";
+                let count = 0;
+                snap.forEach(r => { if(r.val().staff === userLogado.usuario) count++; });
+                let perc = Math.min((count / metaSemanal) * 100, 100);
+                document.getElementById('meta-prog').style.width = perc + "%";
+                document.getElementById('perc-txt').innerText = Math.floor(perc) + "%";
             });
         }
 
-        // Sistema de Relatórios
+        function postarAviso() {
+            const txt = document.getElementById('new-aviso').value;
+            if(!txt) return;
+            db.ref('configuracoes/aviso').set(txt).then(() => alert("Site oficial atualizado!"));
+        }
+
+        db.ref('configuracoes/aviso').on('value', snap => {
+            if(snap.exists()) document.getElementById('aviso-publico').innerText = snap.val();
+        });
+
         function enviarRelatorio() {
             const t = document.getElementById('rel-tipo').value;
             const a = document.getElementById('rel-alvo').value;
             const m = document.getElementById('rel-msg').value;
-            
-            if(!a || !m) return alert("Por favor, preencha o alvo e a descrição!");
-            
-            db.ref('relatorios').push({ 
-                staff: userLogado.usuario, tipo: t, alvo: a, msg: m, data: new Date().toLocaleString() 
+            if(!a || !m) return alert("Erro: Preencha todos os campos.");
+            db.ref('relatorios').push({
+                staff: userLogado.usuario, tipo: t, alvo: a, msg: m, data: new Date().toLocaleString()
             }).then(() => { 
-                alert("Relatório enviado com sucesso!"); 
+                alert("Relatório salvo no sistema!");
                 document.getElementById('rel-alvo').value = "";
                 document.getElementById('rel-msg').value = "";
-                go('dash');
             });
         }
 
-        // Gestão de Membros
-        function carregarMembros() {
+        function carregarGestao() {
             db.ref('contas').on('value', snap => {
                 const list = document.getElementById('staff-list'); list.innerHTML = "";
                 snap.forEach(s => {
-                    list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px; margin-bottom:10px;">
-                        <div><b style="color:var(--primary)">${s.val().usuario}</b><br><small style="color:var(--dim)">${s.val().cargo}</small></div>
-                        <button class="btn" style="width:auto; padding:8px 15px;" onclick="mudarCargo('${s.key}')">SETAR</button>
+                    list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span><b>${s.val().usuario}</b><br><small>${s.val().cargo}</small></span>
+                        <button class="btn" style="width:auto; padding:5px 10px;" onclick="mudarCargo('${s.key}', '${s.val().usuario}')">SETAR</button>
                     </div>`;
                 });
             });
         }
 
-        function mudarCargo(k) { const n = prompt("Digite o novo cargo:"); if(n) db.ref('contas/'+k).update({cargo: n}); }
+        function mudarCargo(k, nomeAfetado) {
+            const n = prompt("Novo cargo para " + nomeAfetado + ":");
+            if(n) {
+                db.ref('contas/'+k).update({cargo: n});
+                db.ref('logs_cargos').push({ responsavel: userLogado.usuario, afetado: nomeAfetado, novo_cargo: n, data: new Date().toLocaleString() });
+                alert("Hierarquia atualizada!");
+            }
+        }
 
-        // Utilitários
-        function copy(t) { navigator.clipboard.writeText(t); alert("Mensagem copiada!"); }
+        function carregarLogs() {
+            db.ref('relatorios').on('value', snap => {
+                const t = document.getElementById('t-rel'); t.innerHTML = "";
+                snap.forEach(r => {
+                    t.innerHTML = `<tr><td>${r.val().staff}</td><td>${r.val().tipo}</td><td>${r.val().alvo}</td><td>${r.val().msg}</td><td>${r.val().data}</td></tr>` + t.innerHTML;
+                });
+            });
+            db.ref('logs_cargos').on('value', snap => {
+                const t = document.getElementById('t-car'); t.innerHTML = "";
+                snap.forEach(l => {
+                    t.innerHTML = `<tr><td>${l.val().responsavel}</td><td>${l.val().afetado}</td><td>${l.val().novo_cargo}</td><td>${l.val().data}</td></tr>` + t.innerHTML;
+                });
+            });
+        }
+
+        function copy(t) { navigator.clipboard.writeText(t); alert("Texto copiado!"); }
     </script>
 </body>
 </html>
