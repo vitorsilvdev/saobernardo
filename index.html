@@ -3,133 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SÃO BERNARDO RP | SITE OFICIAL</title>
+    <title>SÃO BERNARDO RP | PORTAL OFICIAL</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary: #f4c430; --bg: #050505; --card: #0d0d0d; --nav: #080808; --border: #1f1f1f; --text: #fff; --dim: #a0a0a0; --error: #ff4444; }
+        :root { 
+            --primary: #f4c430; 
+            --bg: #050505; 
+            --card: #0d0d0d; 
+            --nav: #080808; 
+            --border: #1f1f1f; 
+            --text: #fff; 
+            --dim: #a0a0a0; 
+            --error: #ff4444; 
+            --success: #00ff7f;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        .sidebar { width: 280px; background: var(--nav); height: 100vh; position: fixed; border-right: 1px solid var(--border); padding: 30px 20px; z-index: 1000; display: flex; flex-direction: column; }
-        .main { margin-left: 280px; padding: 40px; min-height: 100vh; }
+        /* SIDEBAR / MOBILE NAV */
+        .sidebar { 
+            width: 280px; background: var(--nav); height: 100vh; position: fixed; 
+            border-right: 1px solid var(--border); padding: 30px 20px; z-index: 1000; 
+            display: flex; flex-direction: column; transition: 0.3s;
+        }
         
-        .logo-area { text-align: center; margin-bottom: 30px; }
-        .logo-area img { width: 80px; border-radius: 50%; border: 2px solid var(--primary); padding: 3px; }
+        .main { margin-left: 280px; padding: 40px; min-height: 100vh; transition: 0.3s; }
 
+        /* MENU MOBILE */
+        .mobile-header { 
+            display: none; background: var(--nav); padding: 15px; 
+            position: fixed; top: 0; width: 100%; z-index: 1100; border-bottom: 1px solid var(--border);
+            justify-content: space-between; align-items: center;
+        }
+
+        .logo-area { text-align: center; margin-bottom: 30px; }
+        .logo-area img { width: 90px; border-radius: 50%; border: 2px solid var(--primary); padding: 4px; box-shadow: 0 0 15px rgba(244, 196, 48, 0.2); }
+
+        /* NAVEGAÇÃO */
         .nav-group { margin-bottom: 25px; }
-        .nav-label { font-size: 10px; color: #444; font-weight: 800; text-transform: uppercase; margin-left: 10px; margin-bottom: 8px; display: block; }
-        .nav-item { padding: 12px 15px; color: var(--dim); cursor: pointer; border-radius: 10px; display: flex; align-items: center; gap: 10px; transition: 0.2s; font-size: 14px; margin-bottom: 4px; }
+        .nav-label { font-size: 10px; color: #444; font-weight: 800; text-transform: uppercase; margin-left: 10px; margin-bottom: 8px; display: block; letter-spacing: 1px; }
+        .nav-item { 
+            padding: 14px 15px; color: var(--dim); cursor: pointer; border-radius: 10px; 
+            display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; margin-bottom: 4px; 
+        }
         .nav-item:hover { background: #111; color: #fff; }
         .nav-item.active { background: var(--primary); color: #000; font-weight: 700; }
 
+        /* CARDS & UI */
         .card { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 15px; margin-bottom: 20px; }
-        .btn { background: var(--primary); color: #000; border: none; padding: 14px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 11px; width: 100%; transition: 0.2s; margin-top: 10px; }
+        .btn { 
+            background: var(--primary); color: #000; border: none; padding: 14px 20px; 
+            border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; 
+            font-size: 11px; width: 100%; transition: 0.2s; margin-top: 10px;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-logout { background: #ff4444; color: #fff; margin-top: auto; }
         
-        input, select, textarea { background: #000; border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: #fff; width: 100%; margin: 8px 0; outline: none; }
-        
-        .report-preview { background: #000; padding: 20px; border-radius: 10px; border: 1px dashed var(--primary); font-family: monospace; white-space: pre-wrap; margin-top: 15px; color: #eee; }
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        input, select, textarea { 
+            background: #000; border: 1px solid var(--border); padding: 12px; 
+            border-radius: 8px; color: #fff; width: 100%; margin: 8px 0; outline: none; 
+            font-size: 14px;
+        }
 
-        /* Estilo para o JSON de Regras */
-        .regra-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #1a1a1a; }
-        .regra-titulo { color: var(--primary); font-weight: 700; text-transform: uppercase; font-size: 13px; }
-        .regra-desc { color: var(--dim); font-size: 14px; margin-top: 5px; }
+        /* REGRAS STYLE (JSON) */
+        .rule-block { border-left: 4px solid var(--primary); padding-left: 15px; margin-bottom: 30px; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 0 10px 10px 0; }
+        .rule-title { font-family: 'Syncopate'; font-size: 14px; color: var(--primary); margin-bottom: 10px; }
+        .rule-desc { font-size: 13px; color: var(--dim); margin-bottom: 15px; line-height: 1.5; border-bottom: 1px solid #1a1a1a; padding-bottom: 10px; }
+        .rule-field { margin-top: 10px; }
+        .rule-field-name { font-size: 11px; font-weight: 800; color: #eee; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .rule-field-value { font-size: 13px; color: var(--dim); white-space: pre-line; }
+        .rule-link { color: #5865F2; text-decoration: none; font-weight: bold; }
+        .rule-footer { font-size: 10px; color: #444; margin-top: 20px; text-align: right; }
+
+        /* DASHBOARD */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; }
+        .stat-card h3 { color: var(--primary); font-size: 28px; }
+        .stat-card p { font-size: 10px; text-transform: uppercase; margin-top: 5px; color: #555; font-weight: 800; }
+
+        .report-preview { background: #000; padding: 15px; border-radius: 8px; border: 1px dashed var(--primary); font-family: monospace; white-space: pre-wrap; margin-top: 15px; font-size: 12px; color: #success; }
+
+        /* MODAIS */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); width: 260px; }
+            .sidebar.active { transform: translateX(0); }
+            .main { margin-left: 0; padding: 100px 20px 40px 20px; }
+            .mobile-header { display: flex; }
+        }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
+    <div class="mobile-header">
+        <span style="font-family:'Syncopate'; color:var(--primary); font-size:12px;">SÃO BERNARDO RP</span>
+        <button onclick="toggleSidebar()" style="background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 10px; border-radius:5px;">MENU</button>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
         <div class="logo-area">
-            <img src="https://i.imgur.com/pUWtuIB.png">
+            <img src="https://i.imgur.com/pUWtuIB.png" alt="Logo">
             <h1 style="font-family:'Syncopate'; font-size:10px; color:var(--primary); margin-top:12px;">SÃO BERNARDO RP</h1>
-            <div id="user-info" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #1a1a1a;">
-                <p id="u-nome" style="font-weight:700; font-size:14px;"></p>
-                <p id="u-cargo" style="font-size:9px; color:var(--primary); text-transform:uppercase;"></p>
+            
+            <div id="user-info" style="display:none; margin-top:20px; padding:15px; background: rgba(255,255,255,0.03); border-radius:10px;">
+                <p id="u-nome" style="font-weight:700; font-size:14px; color: #fff;"></p>
+                <p id="u-cargo" style="font-size:9px; color:var(--primary); text-transform:uppercase; font-weight:800;"></p>
             </div>
         </div>
 
         <nav id="main-nav">
             <div class="nav-group">
-                <span class="nav-label">Portal</span>
+                <span class="nav-label">Portal Cidadão</span>
                 <div class="nav-item active" onclick="go('home', this)">🏠 Início</div>
-                <div class="nav-item" onclick="go('regras', this)">📜 Regras</div>
+                <div class="nav-item" onclick="go('regras', this)">📜 Regras da Cidade</div>
                 <div class="nav-item" onclick="go('edital', this)">📩 Edital Staff</div>
             </div>
 
             <div id="nav-suporte" style="display:none" class="nav-group">
-                <span class="nav-label">Operacional</span>
+                <span class="nav-label">Operacional Staff</span>
+                <div class="nav-item" onclick="go('dashboard', this)">📊 Desempenho</div>
                 <div class="nav-item" onclick="go('atendimento', this)">🎧 Atendimento</div>
-                <div class="nav-item" onclick="go('relatorios', this)">📝 Relatórios</div>
+                <div class="nav-item" onclick="go('relatorios', this)">📝 Enviar Relatório</div>
             </div>
 
             <div id="nav-direcao" style="display:none" class="nav-group">
-                <span class="nav-label">Administração</span>
-                <div class="nav-item" onclick="go('gestao-equipe', this)">👥 Gestão Equipe</div>
+                <span class="nav-label">Direção & Gestão</span>
+                <div class="nav-item" onclick="go('gestao-equipe', this)">👥 Controle de Staff</div>
             </div>
         </nav>
 
-        <div style="margin-top:auto;" id="auth-actions">
-            <button class="btn" onclick="openModal('modal-login')">Acessar Sistema</button>
+        <div id="auth-actions" style="margin-top: auto;">
+            <button class="btn" style="background:transparent; border:1px solid var(--primary); color:var(--primary); margin-bottom:8px;" onclick="openModal('modal-reg')">Criar Conta</button>
+            <button class="btn" onclick="openModal('modal-login')">Entrar no Sistema</button>
         </div>
     </aside>
 
     <main class="main">
         <section id="page-home" class="page">
-            <div class="card" style="padding:100px 20px; text-align:center;">
-                <h2 style="font-family:'Syncopate'; color:var(--primary); font-size:2.5rem;">BEM-VINDO</h2>
-                <p style="color:var(--dim); margin-top:10px;">Portal Oficial São Bernardo RP.</p>
+            <div class="card" style="padding:100px 20px; text-align:center; border:none; background: radial-gradient(circle, #111 0%, #050505 100%);">
+                <h2 style="font-family:'Syncopate'; color:var(--primary); font-size:clamp(1.5rem, 5vw, 3rem); letter-spacing: -2px;">BEM-VINDO AO PORTAL</h2>
+                <p style="color:var(--dim); margin-top:15px; max-width: 600px; margin-inline: auto;">Acesse o regulamento, envie relatórios staff e acompanhe o edital oficial de São Bernardo Roleplay.</p>
             </div>
         </section>
 
         <section id="page-regras" class="page" style="display:none">
-            <h2>📜 Regulamento da Cidade</h2>
-            <div class="card" id="regras-content">Carregando regulamento...</div>
+            <h2 style="margin-bottom:30px; font-family:'Syncopate'; font-size:18px;">📜 REGULAMENTO INTERNO</h2>
+            <div id="regras-container"></div>
         </section>
 
         <section id="page-edital" class="page" style="display:none">
-            <h2>📩 Edital Staff</h2>
-            <div class="card" style="padding:0; overflow:hidden; height: 80vh;">
+            <div class="card" style="padding:0; height: 85vh; border:none; overflow: hidden;">
                 <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfp63T5YmRz0YJ6u_pLz5uL6u/viewform?embedded=true" width="100%" height="100%" frameborder="0">Carregando...</iframe>
+            </div>
+        </section>
+
+        <section id="page-dashboard" class="page" style="display:none">
+            <h2>📊 Meu Desempenho</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><h3 id="st-ticket">0</h3><p>Tickets</p></div>
+                <div class="stat-card"><h3 id="st-ban">0</h3><p>Banimentos</p></div>
+                <div class="stat-card"><h3 id="st-total">0</h3><p>Total Geral</p></div>
+            </div>
+            <div class="card">
+                <h3 style="font-size:14px; margin-bottom:15px;">Últimas Atividades</h3>
+                <div id="dash-log" style="font-size:12px; color:var(--dim); line-height: 2;">Nenhum registro encontrado.</div>
+            </div>
+        </section>
+
+        <section id="page-atendimento" class="page" style="display:none">
+            <h2>🎧 Suporte Rápido</h2>
+            <div class="card">
+                <button class="btn" onclick="copyAtd('inicio')">Copiar: Iniciar Ticket</button>
+                <button class="btn" onclick="copyAtd('provas')">Copiar: Solicitar Provas</button>
+                <button class="btn" style="background:#222; color:#fff" onclick="copyAtd('fim')">Copiar: Finalizar Ticket</button>
             </div>
         </section>
 
         <section id="page-relatorios" class="page" style="display:none">
             <h2>📝 Enviar Relatório</h2>
             <div class="card">
-                <select id="rel-tipo" onchange="renderPreview()">
+                <select id="rel-tipo" onchange="updatePreview()">
                     <option value="Ticket">Atendimento Ticket</option>
-                    <option value="Banimento">Solicitação Banimento</option>
-                    <option value="Promocao">Promoção</option>
-                    <option value="Rebaixamento">Rebaixamento</option>
-                    <option value="Demissao">Demissão</option>
+                    <option value="Banimento">Solicitação de Banimento</option>
+                    <option value="Inatividade">Aviso de Inatividade</option>
+                    <option value="Promoção">Promoção Staff</option>
+                    <option value="Demissão">Demissão Staff</option>
                 </select>
-                <input type="text" id="rel-alvo" placeholder="Atendido / Alvo" oninput="renderPreview()">
-                <textarea id="rel-provas" placeholder="Link das provas" oninput="renderPreview()"></textarea>
-                <div class="report-preview" id="rel-preview">Responsável: ---\nAtendido: ---\nProvas: ---</div>
-                <button class="btn" onclick="enviarRelatorio()">Enviar</button>
+                <input type="text" id="rel-alvo" placeholder="Nome ou ID do Atendido / Alvo" oninput="updatePreview()">
+                <textarea id="rel-provas" placeholder="Link das provas (YouTube/Imgur)" oninput="updatePreview()"></textarea>
+                
+                <div class="report-preview" id="rel-preview">Aguardando dados...</div>
+                <button class="btn" onclick="salvarRelatorio()">Registrar Relatório</button>
             </div>
         </section>
 
         <section id="page-gestao-equipe" class="page" style="display:none">
-            <h2>👥 Gestão de Equipe</h2>
-            <div id="staff-list"></div>
+            <h2>👥 Gestão de Hierarquia</h2>
+            <div id="staff-list-render" style="margin-top:20px;"></div>
         </section>
     </main>
 
     <div class="modal" id="modal-login">
-        <div class="card" style="width:350px;">
-            <h3 style="text-align:center; color:var(--primary);">LOGIN</h3>
+        <div class="card" style="width:100%; max-width:380px;">
+            <h3 style="text-align:center; color:var(--primary); margin-bottom:20px; font-family:'Syncopate'; font-size:14px;">ACESSO STAFF</h3>
             <input type="text" id="log-u" placeholder="Usuário">
             <input type="password" id="log-p" placeholder="Senha">
-            <button class="btn" onclick="login()">Entrar</button>
+            <button class="btn" onclick="login()">Logar</button>
+            <p onclick="closeModal('modal-login')" style="text-align:center; margin-top:15px; font-size:11px; color:#444; cursor:pointer;">CANCELAR</p>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-reg">
+        <div class="card" style="width:100%; max-width:380px;">
+            <h3 style="text-align:center; color:var(--primary); margin-bottom:20px; font-family:'Syncopate'; font-size:14px;">CRIAR REGISTRO</h3>
+            <input type="text" id="reg-u" placeholder="Nome de Usuário">
+            <input type="password" id="reg-p" placeholder="Senha de Acesso">
+            <button class="btn" onclick="cadastrar()">Cadastrar</button>
+            <p onclick="closeModal('modal-reg')" style="text-align:center; margin-top:15px; font-size:11px; color:#444; cursor:pointer;">VOLTAR</p>
         </div>
     </div>
 
     <script>
+        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDNxdh4OtaZN_5dB-nzsccqFAYbitmn_-A",
             authDomain: "saobernardo-8c986.firebaseapp.com",
@@ -142,43 +245,51 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // JSON DE REGRAS
-        const regrasJSON = [
-            { "t": "RDM", "d": "Matar outro jogador sem motivo aparente ou história prévia." },
-            { "t": "VDM", "d": "Utilizar o veículo como arma para atropelar jogadores." },
-            { "t": "Combat Log", "d": "Sair do jogo durante uma ação ou abordagem." },
-            { "t": "Meta Gaming", "d": "Utilizar informações de fora do jogo (Discord/Live) dentro do RP." }
+        // REGRAS JSON INTEGRADO
+        const regrasDados = [
+            {"footer": {"text": "São Bernardo RP — Facções"}, "fields": [{"value": "[Acessar Regras das Facções](https://docs.google.com/document/d/1InP9Cez9uSZnqYZ51eOBv72b_E53HTqtCq7GI2me1zo/edit?usp=sharing)", "name": "📎 Documento Oficial"}, {"value": "• Respeitar hierarquia\n• Ações precisam de motivação RP\n• Quebras de acordo serão punidas", "name": "🔹 Conduta Criminosa"}], "title": "💀 Regras das Facções", "description": "Normas para organizações criminosas"},
+            {"footer": {"text": "São Bernardo RP — Corporações"}, "fields": [{"value": "[Acessar Regras das Corporações](https://docs.google.com/document/d/1Wz1YAQvMrQMsV9yHq2eiFTmXN2erHth-z6U6P1FOj1Q/edit?usp=sharing)", "name": "📎 Documento Oficial"}, {"value": "• Respeitar hierarquia\n• Uso proporcional da força\n• Abusos serão punidos", "name": "🔹 Conduta Institucional"}], "title": "👮‍♂️ Regras das Corporações", "description": "Normas para corporações oficiais"},
+            {"footer": {"text": "São Bernardo RP — RP Avançado"}, "fields": [{"value": "[Acessar Regras de RP Avançado](https://docs.google.com/document/d/15lCpc0_WGYCHaTwZDlrIEkf3GABh8oKkkCnTV-v9n5U/edit?usp=sharing)", "name": "📎 Documento Oficial"}, {"value": "• Valorize sua vida\n• Ações precisam de contexto RP\n• Abuso de mecânicas será punido", "name": "🔹 Situações Especiais"}], "title": "🧠 Regras de RP — Avançadas", "description": "Regras para situações complexas e ações especiais"},
+            {"footer": {"text": "São Bernardo RP — RP Básico"}, "fields": [{"value": "[Acessar Regras de RP Básico](https://docs.google.com/document/d/1uUIw6x-RdFxgngz_4dZi-SYgYsT5tTF7G2QbkENf6ww/edit?usp=sharing)", "name": "📎 Documento Oficial"}, {"value": "• Sempre interprete seu personagem\n• Proibido Meta Gaming e Power Gaming\n• Respeite a narrativa", "name": "🔹 Princípios Básicos"}], "title": "🎭 Regras de RP — Básicas", "description": "Regras essenciais para todos os jogadores"},
+            {"footer": {"text": "São Bernardo RP — Regras do Discord"}, "fields": [{"value": "[Acessar Regras do Discord](https://docs.google.com/document/d/1miMGODpct6WcpjojfDwaTcHDy_Uf09FS0evQLpN_K2U/edit?usp=sharing)", "name": "📎 Documento Oficial"}, {"value": "• Respeite todos os membros\n• Proibido ofensas, discriminação ou discurso de ódio\n• Flood, spam e divulgação não autorizada são proibidos", "name": "🔹 Conduta"}], "title": "📜 Regras do Discord", "description": "Diretrizes de convivência dentro do Discord"}
         ];
-
-        function carregarRegras() {
-            const container = document.getElementById('regras-content');
-            container.innerHTML = regrasJSON.map(r => `
-                <div class="regra-item">
-                    <div class="regra-titulo">${r.t}</div>
-                    <div class="regra-desc">${r.d}</div>
-                </div>
-            `).join('');
-        }
 
         let userLogado = null;
 
+        // SISTEMA DE NAVEGAÇÃO E UI
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
         function go(id, el) {
-            document.querySelectorAll('.page').forEach(p => p.style.display='none');
-            document.getElementById('page-'+id).style.display='block';
-            if(el) {
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                el.classList.add('active');
-            }
-            if(id === 'regras') carregarRegras();
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById('page-'+id).style.display = 'block';
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            if(el) el.classList.add('active');
+            if(window.innerWidth < 992) toggleSidebar();
+            if(id === 'regras') renderRegras();
         }
 
-        function openModal(id) { document.getElementById(id).style.display='flex'; }
-        function closeModal(id) { document.getElementById(id).style.display='none'; }
+        // FIREBASE: REGISTRO E LOGIN
+        function cadastrar() {
+            const u = document.getElementById('reg-u').value.trim();
+            const p = document.getElementById('reg-p').value.trim();
+            if(!u || !p) return alert("Preencha todos os campos!");
+            
+            db.ref('contas').push({
+                usuario: u,
+                senha: p,
+                cargo: "Cidadão"
+            }).then(() => {
+                alert("Cadastro realizado! Aguarde a Staff te promover.");
+                closeModal('modal-reg');
+            });
+        }
 
         function login() {
             const u = document.getElementById('log-u').value.trim();
             const p = document.getElementById('log-p').value.trim();
-
+            
             db.ref('contas').once('value', snap => {
                 let found = null;
                 snap.forEach(c => {
@@ -188,64 +299,135 @@
 
                 if(found) {
                     userLogado = found;
+                    if(!userLogado.cargo) userLogado.cargo = "Cidadão";
                     closeModal('modal-login');
-                    liberarMenus();
-                } else { alert("Erro no login!"); }
+                    entrarNoSistema();
+                } else {
+                    alert("Usuário ou senha inválidos.");
+                }
             });
         }
 
-        function liberarMenus() {
-            document.getElementById('auth-actions').innerHTML = `<button class="btn" style="background:red;color:white" onclick="location.reload()">SAIR</button>`;
+        function entrarNoSistema() {
             document.getElementById('user-info').style.display = 'block';
             document.getElementById('u-nome').innerText = userLogado.usuario;
             document.getElementById('u-cargo').innerText = userLogado.cargo;
+            document.getElementById('auth-actions').innerHTML = `<button class="btn btn-logout" onclick="location.reload()">Sair do Sistema</button>`;
 
             const cargo = userLogado.cargo;
             const ehStaff = ["Suporte", "Moderador", "Administrador", "Coordenador", "Manager", "Responsável Staff", "Dono"].includes(cargo);
             const ehDirecao = ["Responsável Staff", "Manager", "Dono", "Coordenador"].includes(cargo);
 
-            if(ehStaff) document.getElementById('nav-suporte').style.display = 'block';
+            if(ehStaff) {
+                document.getElementById('nav-suporte').style.display = 'block';
+                loadDash();
+            }
             if(ehDirecao) {
                 document.getElementById('nav-direcao').style.display = 'block';
-                carregarStaff();
+                renderStaffList();
             }
             go('home');
         }
 
-        function renderPreview() {
-            if(!userLogado) return;
-            const tipo = document.getElementById('rel-tipo').value;
-            const alvo = document.getElementById('rel-alvo').value || "---";
-            const provas = document.getElementById('rel-provas').value || "---";
-            document.getElementById('rel-preview').innerText = `Responsável: ${userLogado.usuario}\n${tipo === 'Ticket' ? 'Atendido' : 'Alvo'}: ${alvo}\nProvas: ${provas}`;
+        // RENDERIZAÇÃO DE REGRAS
+        function renderRegras() {
+            const container = document.getElementById('regras-container');
+            container.innerHTML = regrasDados.map(r => `
+                <div class="rule-block">
+                    <div class="rule-title">${r.title}</div>
+                    <div class="rule-desc">${r.description}</div>
+                    ${r.fields.map(f => `
+                        <div class="rule-field">
+                            <span class="rule-field-name">${f.name}</span>
+                            <div class="rule-field-value">${f.value.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" class="rule-link">$1</a>')}</div>
+                        </div>
+                    `).join('')}
+                    <div class="rule-footer">${r.footer.text}</div>
+                </div>
+            `).join('');
         }
 
-        function enviarRelatorio() {
+        // STAFF: RELATÓRIOS E DASHBOARD
+        function updatePreview() {
+            if(!userLogado) return;
+            const t = document.getElementById('rel-tipo').value;
+            const a = document.getElementById('rel-alvo').value || "---";
+            const p = document.getElementById('rel-provas').value || "---";
+            const label = ["Promoção", "Demissão", "Banimento"].includes(t) ? "Alvo" : "Atendido";
+            document.getElementById('rel-preview').innerText = `Responsável: ${userLogado.usuario}\n${label}: ${a}\nProvas: ${p}`;
+        }
+
+        function salvarRelatorio() {
+            const alvo = document.getElementById('rel-alvo').value;
+            const provas = document.getElementById('rel-provas').value;
+            if(!alvo || !provas) return alert("Preencha todos os campos!");
+
             db.ref('relatorios').push({
                 staff: userLogado.usuario,
+                staffId: userLogado.id,
                 tipo: document.getElementById('rel-tipo').value,
-                alvo: document.getElementById('rel-alvo').value,
-                provas: document.getElementById('rel-provas').value,
+                alvo: alvo,
+                provas: provas,
                 data: new Date().toLocaleString()
-            }).then(() => { alert("Enviado!"); go('home'); });
+            }).then(() => {
+                alert("Relatório enviado com sucesso!");
+                document.getElementById('rel-alvo').value = "";
+                document.getElementById('rel-provas').value = "";
+                loadDash();
+                go('dashboard');
+            });
         }
 
-        function carregarStaff() {
-            db.ref('contas').on('value', snap => {
-                const div = document.getElementById('staff-list');
-                div.innerHTML = "";
+        function loadDash() {
+            db.ref('relatorios').orderByChild('staffId').equalTo(userLogado.id).on('value', snap => {
+                let tk = 0, bn = 0, total = 0, html = "";
                 snap.forEach(c => {
-                    div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between;">
-                        <span>${c.val().usuario} - <b>${c.val().cargo}</b></span>
-                        <button onclick="setar('${c.key}')" style="width:auto; padding:5px 10px; background:var(--primary); border:none; cursor:pointer">SETAR</button>
-                    </div>`;
+                    const r = c.val(); total++;
+                    if(r.tipo === "Ticket") tk++;
+                    if(r.tipo === "Banimento") bn++;
+                    html = `<div style="padding:5px 0; border-bottom:1px solid #111;">[${r.data}] <b>${r.tipo}</b> em ${r.alvo}</div>` + html;
+                });
+                document.getElementById('st-ticket').innerText = tk;
+                document.getElementById('st-ban').innerText = bn;
+                document.getElementById('st-total').innerText = total;
+                document.getElementById('dash-log').innerHTML = html || "Nenhum relatório enviado ainda.";
+            });
+        }
+
+        function copyAtd(t) {
+            let m = "";
+            if(t === 'inicio') m = `Olá, me chamo ${userLogado.usuario}. Como posso ser útil em seu ticket hoje?`;
+            if(t === 'provas') m = `Para que eu possa analisar sua situação, por favor envie as provas (vídeo ou imagem) do ocorrido.`;
+            if(t === 'fim') m = `Seu ticket foi finalizado pela Staff. Caso precise de algo mais, abra um novo ticket. Bom RP!`;
+            navigator.clipboard.writeText(m);
+            alert("Mensagem copiada!");
+        }
+
+        // DIREÇÃO: GESTÃO
+        function renderStaffList() {
+            db.ref('contas').on('value', snap => {
+                const container = document.getElementById('staff-list-render');
+                container.innerHTML = "";
+                snap.forEach(c => {
+                    const u = c.val();
+                    container.innerHTML += `
+                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;">
+                            <div>
+                                <span style="font-weight:bold; font-size:14px;">${u.usuario}</span><br>
+                                <span style="font-size:10px; color:var(--primary); text-transform:uppercase;">${u.cargo}</span>
+                            </div>
+                            <button class="btn" style="width:auto; margin:0; padding:8px 15px;" onclick="setarCargo('${c.key}')">SETAR</button>
+                        </div>
+                    `;
                 });
             });
         }
 
-        function setar(id) {
-            const n = prompt("Novo Cargo:");
-            if(n) db.ref(`contas/${id}`).update({ cargo: n });
+        function setarCargo(id) {
+            const novo = prompt("Digite o novo cargo:");
+            if(novo) {
+                db.ref(`contas/${id}`).update({ cargo: novo }).then(() => alert("Cargo atualizado!"));
+            }
         }
     </script>
 </body>
