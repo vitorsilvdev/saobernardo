@@ -3,179 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SÃO BERNARDO RP | OFICIAL</title>
+    <title>SÃO BERNARDO RP | COMPLEXO STYLE</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { 
-            --primary: #f4c430; --bg: #050505; --card: #0d0d0d; --nav: #080808; 
-            --border: #1f1f1f; --text: #fff; --dim: #a0a0a0; --red: #ff4444; 
-            --blue: #3498db; --green: #2ecc71; 
+        :root {
+            --primary: #f4c430;
+            --bg: #050505;
+            --glass: rgba(15, 15, 15, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --dim: #a0a0a0;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
-
-        /* --- LAYOUT DESKTOP (PC) --- */
-        @media (min-width: 1025px) {
-            .sidebar { width: 280px; background: var(--nav); height: 100vh; position: fixed; left: 0; top: 0; border-right: 1px solid var(--border); padding: 25px; display: flex; flex-direction: column; }
-            .main-content { margin-left: 280px; padding: 40px; }
-            .mobile-nav { display: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background: var(--bg);
+            background-image: radial-gradient(circle at top right, rgba(244, 196, 48, 0.05), transparent),
+                              url('https://i.imgur.com/Jnc3xf7.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text);
+            min-height: 100vh;
         }
 
-        /* --- LAYOUT MOBILE (CELULAR) --- */
+        /* --- SIDEBAR GLASS --- */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid var(--border);
+            padding: 40px 25px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .main-content { margin-left: 280px; padding: 50px; min-height: 100vh; }
+
+        /* --- LOGO --- */
+        .logo-box { text-align: center; margin-bottom: 50px; }
+        .logo-box img { width: 110px; border-radius: 50%; border: 3px solid var(--primary); padding: 5px; box-shadow: 0 0 20px rgba(244, 196, 48, 0.2); }
+        .logo-box h1 { font-family: 'Syncopate'; font-size: 12px; margin-top: 15px; letter-spacing: 2px; color: var(--primary); }
+
+        /* --- NAV --- */
+        .nav-item {
+            padding: 15px 20px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: var(--dim);
+            letter-spacing: 0.5px;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .nav-item.active { background: var(--primary); color: #000; box-shadow: 0 10px 20px rgba(244, 196, 48, 0.2); }
+
+        /* --- CARDS STYLE --- */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        /* --- DASHBOARD --- */
+        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .stat-card { text-align: center; }
+        .stat-val { font-size: 40px; font-weight: 800; color: var(--primary); font-family: 'Syncopate'; }
+
+        /* --- HIERARQUIA --- */
+        .rank-title { 
+            font-family: 'Syncopate'; font-size: 11px; color: var(--primary); 
+            margin: 40px 0 15px; display: flex; align-items: center; 
+        }
+        .rank-title::after { content: ""; flex: 1; height: 1px; background: var(--border); margin-left: 15px; }
+        .staff-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .staff-name { 
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            padding: 15px; border-radius: 12px; text-align: center; font-weight: 700;
+        }
+
+        /* --- MOBILE ADJUSTS --- */
         @media (max-width: 1024px) {
             .sidebar { display: none; }
-            .main-content { padding: 20px 20px 100px 20px; }
-            .mobile-nav { 
-                position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav); 
-                border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); 
-                padding: 10px; z-index: 2000; height: 75px;
+            .main-content { margin-left: 0; padding: 20px 20px 100px; }
+            .mobile-nav {
+                position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                width: 90%; background: rgba(10,10,10,0.9); backdrop-filter: blur(20px);
+                border-radius: 20px; border: 1px solid var(--border); height: 70px;
+                display: flex; justify-content: space-around; align-items: center; z-index: 2000;
             }
-            .mobile-item { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: var(--dim); cursor: pointer; text-transform: uppercase; font-weight: 700; text-align: center; }
-            .mobile-item.active { color: var(--primary); }
+            .mob-btn { color: var(--dim); font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+            .mob-btn.active { color: var(--primary); }
         }
 
-        /* DASHBOARD */
-        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .dash-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .dash-square { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
-
-        /* HIERARQUIA */
-        .rank-header { background: linear-gradient(90deg, var(--primary), transparent); color: #000; padding: 10px 15px; font-weight: 900; font-family: 'Syncopate'; font-size: 10px; border-radius: 4px; margin: 25px 0 10px; text-transform: uppercase; }
-        .rank-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-        .staff-tag { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 10px; text-align: center; font-size: 12px; font-weight: 700; border-bottom: 3px solid var(--primary); }
-
-        /* LOGS */
-        .log-item { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 10px; margin-bottom: 10px; font-size: 13px; }
-        .log-header { display: flex; justify-content: space-between; margin-bottom: 5px; color: var(--primary); font-weight: 800; font-size: 11px; }
-
-        /* METAS */
-        .meta-box { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; }
-        .bar-bg { flex: 1; height: 8px; background: #111; border-radius: 10px; margin: 0 15px; overflow: hidden; }
-        .bar-fill { height: 100%; background: var(--primary); border-radius: 10px; transition: 1s ease-in-out; }
-
-        /* REGRAS */
-        .regra-card { border-left: 4px solid var(--primary); padding: 15px; background: var(--card); margin-bottom: 12px; border-radius: 0 10px 10px 0; }
-        .regra-card b { color: var(--primary); font-family: 'Syncopate'; font-size: 11px; display: block; margin-bottom: 5px; }
-
-        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page { display: none; animation: slideUp 0.4s ease; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .btn { background: var(--primary); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; width: 100%; }
-        .btn-red { background: var(--red); color: #fff; }
-        input, textarea { width: 100%; padding: 14px; background: #000; color: #fff; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; outline: none; }
-        .card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 15px; }
+        input, textarea { 
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
+            padding: 15px; border-radius: 12px; color: #fff; margin-bottom: 15px; outline: none;
+        }
+        .btn-main { 
+            background: var(--primary); color: #000; border: none; padding: 18px; 
+            border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase;
+        }
 
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .nav-item { padding: 12px; color: var(--dim); cursor: pointer; border-radius: 8px; font-size: 14px; margin-bottom: 4px; font-weight: 600; }
-        .nav-item.active { background: rgba(244,196,48,0.1); color: var(--primary); }
+        .log-row { 
+            padding: 15px; border-bottom: 1px solid var(--border); display: flex; 
+            justify-content: space-between; font-size: 13px;
+        }
     </style>
 </head>
 <body>
 
     <aside class="sidebar">
-        <div style="text-align:center; margin-bottom:40px;">
-            <img src="https://i.imgur.com/wwe9yIs.png" style="width:100px; border:2px solid var(--primary); border-radius:50%; padding:5px;">
-            <h1 style="font-family:'Syncopate'; font-size:10px; color:var(--primary); margin-top:15px;">SÃO BERNARDO</h1>
+        <div class="logo-box">
+            <img src="https://i.imgur.com/wwe9yIs.png" alt="Logo">
+            <h1>SÃO BERNARDO</h1>
         </div>
-        <div class="nav-item active" onclick="go('home')">🏠 INÍCIO</div>
-        <div class="nav-item" onclick="go('regras')">📜 REGRAS</div>
-        <div id="pc-staff-area" style="display:none; margin-top:20px; border-top:1px solid #222; padding-top:20px;">
-            <div class="nav-item" onclick="go('dash')">📊 DASHBOARD</div>
-            <div class="nav-item" onclick="go('hierarquia')">👑 HIERARQUIA</div>
-            <div class="nav-item" onclick="go('logs')">📁 LOGS GERAIS</div>
-            <div class="nav-item" onclick="go('ticket')">📝 TICKET</div>
+        
+        <div class="nav-item active" onclick="go('home', this)">🏠 INÍCIO</div>
+        <div class="nav-item" onclick="go('regras', this)">📜 REGRAS</div>
+        
+        <div id="staff-menu" style="display:none; margin-top:30px;">
+            <p style="font-size:10px; color:var(--dim); margin-left:20px; margin-bottom:10px; font-family:'Syncopate'">PAINEL STAFF</p>
+            <div class="nav-item" onclick="go('dash', this)">📊 DASHBOARD</div>
+            <div class="nav-item" onclick="go('hierarquia', this)">👑 EQUIPE</div>
+            <div class="nav-item" onclick="go('logs', this)">📁 LOGS</div>
+            <div class="nav-item" onclick="go('ticket', this)">📝 TICKET</div>
         </div>
-        <div id="pc-admin-area" style="display:none; margin-top:10px;">
-            <div class="nav-item" onclick="go('gestao')">👥 EQUIPE</div>
-            <div class="nav-item" onclick="go('config')">⚙️ RESET</div>
+
+        <div id="admin-menu" style="display:none; margin-top:10px;">
+            <div class="nav-item" onclick="go('gestao', this)">👥 GESTÃO</div>
+            <div class="nav-item" onclick="go('config', this)">⚙️ RESET</div>
         </div>
-        <div style="margin-top:auto;"><button class="btn" id="btn-login-pc" onclick="openLogin()">LOGIN STAFF</button></div>
+
+        <button class="btn-main" id="login-trigger" style="margin-top:auto;" onclick="openModal()">LOGIN STAFF</button>
     </aside>
 
     <nav class="mobile-nav">
-        <div class="mobile-item active" onclick="go('home')">Início</div>
-        <div class="mobile-item" onclick="go('regras')">Regras</div>
-        <div class="mobile-item staff-only" style="display:none" onclick="go('dash')">Painel</div>
-        <div class="mobile-item staff-only" style="display:none" onclick="go('logs')">Logs</div>
-        <div class="mobile-item" id="mob-login-btn" onclick="openLogin()">Login</div>
+        <div class="mob-btn active" onclick="go('home', this)">Home</div>
+        <div class="mob-btn" onclick="go('regras', this)">Regras</div>
+        <div class="mob-btn staff-only" style="display:none" onclick="go('dash', this)">Painel</div>
+        <div class="mob-btn staff-only" style="display:none" onclick="go('logs', this)">Logs</div>
+        <div class="mob-btn" id="mob-login-trigger" onclick="openModal()">Login</div>
     </nav>
 
     <main class="main-content">
         <section id="p-home" class="page active">
-            <div style="height:350px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url('https://i.imgur.com/Jnc3xf7.png'); background-size:cover; background-position:center; border-radius:20px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; border:1px solid var(--border);">
-                <h1 style="font-family:'Syncopate'; font-size:2.5rem; color:var(--primary);">SÃO BERNARDO</h1>
-                <p style="letter-spacing:5px; font-weight:800; font-size:11px;">VENHA FAZER HISTÓRIA</p>
+            <div style="margin-top:10vh;">
+                <h2 style="font-family:'Syncopate'; font-size:12px; color:var(--primary); letter-spacing:5px;">BEM-VINDO À</h2>
+                <h1 style="font-family:'Syncopate'; font-size:4rem; line-height:1; margin:10px 0;">SÃO BERNARDO</h1>
+                <p style="color:var(--dim); max-width:500px; line-height:1.6;">O servidor de GTA RP onde sua história é levada a sério. Entre agora e viva a experiência máxima em Roleplay.</p>
             </div>
         </section>
 
-        <section id="p-regras" class="page"><h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">📜 REGRAS</h2><div id="render-regras"></div></section>
-
         <section id="p-dash" class="page">
-            <h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">📊 DASHBOARD</h2>
             <div class="dash-grid">
-                <div class="dash-card">
-                    <div><h4 style="font-size:9px; color:var(--dim)">TICKETS</h4><p>Total Geral</p></div>
-                    <div class="dash-square" style="background:var(--blue)" id="val-total">0</div>
+                <div class="glass-card stat-card">
+                    <p style="font-size:11px; color:var(--dim)">TICKETS TOTAIS</p>
+                    <div class="stat-val" id="total-tickets">0</div>
                 </div>
-                <div class="dash-card">
-                    <div><h4 style="font-size:9px; color:var(--dim)">EFICIÊNCIA</h4><p>Média Global</p></div>
-                    <div class="dash-square" style="background:var(--green)" id="val-media">0%</div>
+                <div class="glass-card stat-card">
+                    <p style="font-size:11px; color:var(--dim)">PRODUTIVIDADE</p>
+                    <div class="stat-val" id="total-meta">0%</div>
                 </div>
             </div>
             <div id="render-metas"></div>
         </section>
 
-        <section id="p-hierarquia" class="page"><div id="render-hierarquia"></div></section>
+        <section id="p-hierarquia" class="page">
+            <div id="render-hierarquia"></div>
+        </section>
 
         <section id="p-logs" class="page">
-            <h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">📁 LOGS DE ATENDIMENTO</h2>
-            <div id="render-logs"></div>
+            <h2 style="font-family:'Syncopate'; font-size:18px; margin-bottom:30px;">📁 HISTÓRICO DE LOGS</h2>
+            <div class="glass-card" style="padding:0;" id="render-logs"></div>
+        </section>
+
+        <section id="p-regras" class="page">
+            <h2 style="font-family:'Syncopate'; font-size:18px; margin-bottom:30px;">📜 REGRAS GERAIS</h2>
+            <div id="render-regras"></div>
         </section>
 
         <section id="p-ticket" class="page">
-            <h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">📝 REGISTRAR TICKET</h2>
-            <div class="card">
-                <input id="f-alvo" placeholder="Nome ou ID do Jogador">
-                <textarea id="f-desc" placeholder="Descreva o atendimento" style="height:100px"></textarea>
-                <button class="btn" onclick="saveTicket()">SALVAR ATENDIMENTO</button>
+            <div class="glass-card" style="max-width:600px;">
+                <h2 style="font-family:'Syncopate'; font-size:15px; margin-bottom:20px;">REGISTRAR ATENDIMENTO</h2>
+                <input id="f-alvo" placeholder="Nome ou ID do Cidadão">
+                <textarea id="f-desc" placeholder="Descreva o motivo do ticket..." style="height:150px;"></textarea>
+                <button class="btn-main" onclick="saveTicket()">SALVAR LOG</button>
             </div>
         </section>
 
-        <section id="p-gestao" class="page"><h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">👥 GESTÃO DE EQUIPE</h2><div id="render-gestao"></div></section>
+        <section id="p-gestao" class="page">
+            <h2 style="font-family:'Syncopate'; font-size:18px; margin-bottom:30px;">👥 EQUIPE</h2>
+            <div id="render-gestao"></div>
+        </section>
 
         <section id="p-config" class="page">
-            <h2 style="font-family:'Syncopate'; color:var(--red); margin-bottom:20px; font-size:18px;">⚙️ ZERAR SEMANA</h2>
-            <div class="card"><button class="btn btn-red" onclick="resetData()">RESETAR TUDO AGORA</button></div>
+            <div class="glass-card">
+                <h2 style="color:var(--red); font-family:'Syncopate'; font-size:15px;">ZONA DE PERIGO</h2>
+                <p style="margin:15px 0; color:var(--dim)">Ao clicar no botão abaixo, todos os tickets da semana serão apagados permanentemente.</p>
+                <button class="btn-main" style="background:var(--red); color:#fff;" onclick="resetData()">RESETAR SEMANA</button>
+            </div>
         </section>
     </main>
 
-    <div id="m-login" class="modal">
-        <div class="card" style="width:100%; max-width:350px;">
-            <div id="box-login">
-                <h3 style="text-align:center; font-family:'Syncopate'; margin-bottom:20px;">STAFF LOGIN</h3>
+    <div class="modal" id="modal-auth">
+        <div class="glass-card" style="width:100%; max-width:350px;">
+            <div id="login-box">
+                <h3 style="text-align:center; font-family:'Syncopate'; margin-bottom:25px;">ACESSO STAFF</h3>
                 <input id="l-u" placeholder="Usuário">
                 <input id="l-p" type="password" placeholder="Senha">
-                <button class="btn" onclick="doLogin()">ENTRAR</button>
-                <p style="text-align:center; margin-top:15px; font-size:12px; color:var(--dim); cursor:pointer;" onclick="toggleAuth()">Novo? <b>Crie uma conta</b></p>
+                <button class="btn-main" onclick="doLogin()">ENTRAR</button>
+                <p onclick="toggleAuth()" style="text-align:center; font-size:12px; margin-top:20px; cursor:pointer; color:var(--dim)">Criar conta</p>
             </div>
-            <div id="box-cad" style="display:none">
-                <h3 style="text-align:center; font-family:'Syncopate'; margin-bottom:20px;">CADASTRO</h3>
+            <div id="cad-box" style="display:none">
+                <h3 style="text-align:center; font-family:'Syncopate'; margin-bottom:25px;">NOVO STAFF</h3>
                 <input id="c-u" placeholder="Usuário">
                 <input id="c-p" type="password" placeholder="Senha">
-                <button class="btn" onclick="doCad()">CADASTRAR</button>
-                <p style="text-align:center; margin-top:15px; font-size:12px; color:var(--dim); cursor:pointer;" onclick="toggleAuth()">Já tem conta? <b>Login</b></p>
+                <button class="btn-main" onclick="doCad()">CADASTRAR</button>
+                <p onclick="toggleAuth()" style="text-align:center; font-size:12px; margin-top:20px; cursor:pointer; color:var(--dim)">Voltar ao login</p>
             </div>
-            <button class="btn btn-red" style="margin-top:10px; background:transparent;" onclick="closeLogin()">VOLTAR</button>
+            <button onclick="closeModal()" style="background:none; border:none; color:var(--red); width:100%; margin-top:15px; cursor:pointer; font-weight:700;">FECHAR</button>
         </div>
     </div>
 
     <script>
+        // CONFIG FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDNxdh4OtaZN_5dB-nzsccqFAYbitmn_-A",
             authDomain: "saobernardo-8c986.firebaseapp.com",
@@ -188,116 +260,133 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const DONO_NOME = "vhxprime."; 
+        const DONO_NOME = "vhxprime.";
         const CARGOS = ["Fundador & Dono", "Responsável Staff", "Manager", "Coordenador", "Administrador", "Moderador", "Suporte"];
         const PODER = { "fundador & dono": 100, "responsável staff": 90, "manager": 80, "coordenador": 70, "administrador": 60, "moderador": 50, "suporte": 40 };
 
         let userLogado = null;
 
-        function go(id) {
+        function go(id, btn) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item, .mob-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('p-'+id).classList.add('active');
-            document.querySelectorAll('.nav-item, .mobile-item').forEach(i => i.classList.remove('active'));
+            if(btn) btn.classList.add('active');
         }
 
-        function openLogin() { document.getElementById('m-login').style.display='flex'; }
-        function closeLogin() { document.getElementById('m-login').style.display='none'; }
+        function openModal() { document.getElementById('modal-auth').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal-auth').style.display = 'none'; }
         function toggleAuth() {
-            document.getElementById('box-login').style.display = document.getElementById('box-login').style.display === 'none' ? 'block' : 'none';
-            document.getElementById('box-cad').style.display = document.getElementById('box-cad').style.display === 'none' ? 'block' : 'none';
-        }
-
-        function doCad() {
-            const u = document.getElementById('c-u').value.trim();
-            const p = document.getElementById('c-p').value.trim();
-            if(!u || !p) return;
-            db.ref('contas').push({ usuario: u, senha: p, cargo: "Suporte" }).then(() => { alert("Criado! Peça para vhxprime. te setar."); toggleAuth(); });
+            document.getElementById('login-box').style.display = document.getElementById('login-box').style.display === 'none' ? 'block' : 'none';
+            document.getElementById('cad-box').style.display = document.getElementById('cad-box').style.display === 'none' ? 'block' : 'none';
         }
 
         function doLogin() {
             const u = document.getElementById('l-u').value.trim();
             const p = document.getElementById('l-p').value.trim();
             db.ref('contas').once('value', snap => {
-                let user = null;
-                snap.forEach(c => { if(c.val().usuario === u && c.val().senha === p) user = { key: c.key, ...c.val() }; });
-                if(user) {
-                    userLogado = user; closeLogin();
-                    document.getElementById('pc-staff-area').style.display = 'block';
-                    document.querySelectorAll('.staff-only').forEach(el => el.style.display='flex');
-                    document.getElementById('mob-login-btn').style.display='none';
-                    document.getElementById('btn-login-pc').innerText = "LOGOUT";
-                    document.getElementById('btn-login-pc').onclick = () => location.reload();
-                    if(PODER[user.cargo.toLowerCase()] >= 80) document.getElementById('pc-admin-area').style.display = 'block';
+                let found = null;
+                snap.forEach(c => { if(c.val().usuario === u && c.val().senha === p) found = { key: c.key, ...c.val() }; });
+                if(found) {
+                    userLogado = found;
+                    document.getElementById('staff-menu').style.display = 'block';
+                    document.querySelectorAll('.staff-only').forEach(el => el.style.display = 'block');
+                    document.getElementById('mob-login-trigger').style.display = 'none';
+                    if(PODER[found.cargo.toLowerCase()] >= 80) document.getElementById('admin-menu').style.display = 'block';
+                    document.getElementById('login-trigger').innerText = "LOGOUT";
+                    document.getElementById('login-trigger').onclick = () => location.reload();
+                    closeModal();
                     go('dash');
-                    mainSync();
-                } else alert("Incorreto!");
+                    startSync();
+                } else alert("Erro: Usuário ou senha inválidos.");
             });
         }
 
-        function carregarRegras() {
-            db.ref('regras').on('value', snap => {
-                const div = document.getElementById('render-regras'); div.innerHTML = "";
-                snap.forEach(r => {
-                    const d = r.val();
-                    div.innerHTML += `<div class="regra-card"><b>${d.titulo || 'Regra'}</b><p style="font-size:13px; color:var(--dim)">${d.descricao || d}</p></div>`;
-                });
+        function doCad() {
+            const u = document.getElementById('c-u').value.trim();
+            const p = document.getElementById('c-p').value.trim();
+            if(!u || !p) return;
+            db.ref('contas').push({ usuario: u, senha: p, cargo: "Suporte" }).then(() => {
+                alert("Cadastrado! Peça ao Dono para te promover.");
+                toggleAuth();
             });
         }
 
-        function mainSync() {
+        function startSync() {
             db.ref('relatorios').on('value', relSnap => {
                 db.ref('contas').on('value', staffSnap => {
-                    const hDiv = document.getElementById('render-hierarquia'); hDiv.innerHTML = `<h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">👑 HIERARQUIA</h2>`;
+                    const hDiv = document.getElementById('render-hierarquia'); hDiv.innerHTML = "";
                     const mDiv = document.getElementById('render-metas'); mDiv.innerHTML = "";
                     const gDiv = document.getElementById('render-gestao'); gDiv.innerHTML = "";
                     const lDiv = document.getElementById('render-logs'); lDiv.innerHTML = "";
-                    let total = 0; let somaP = 0; let nS = 0;
+                    let total = 0; let somaP = 0; let count = 0;
 
-                    // Logs Reais
+                    // Logs
                     let logsArr = [];
                     relSnap.forEach(r => logsArr.unshift(r.val()));
-                    logsArr.forEach(l => {
-                        lDiv.innerHTML += `<div class="log-item"><div class="log-header"><span>${l.staff}</span><span>ALVO: ${l.alvo}</span></div><p>${l.desc}</p></div>`;
+                    logsArr.slice(0, 20).forEach(l => {
+                        lDiv.innerHTML += `<div class="log-row"><b>${l.staff}</b><span>${l.alvo}</span><span style="color:var(--dim)">${l.desc}</span></div>`;
                     });
 
                     CARGOS.forEach(rank => {
-                        let mbs = [];
+                        let members = [];
                         staffSnap.forEach(s => {
                             if(s.val().cargo.toLowerCase() === rank.toLowerCase()) {
-                                mbs.push(s.val().usuario); nS++;
-                                let c = 0; relSnap.forEach(r => { if(r.val().staff === s.val().usuario) c++; });
-                                total += c; let p = Math.min((c/20)*100, 100); somaP += p;
-                                mDiv.innerHTML += `<div class="meta-box"><div style="width:100px; font-weight:800; font-size:12px;">${s.val().usuario}</div><div class="bar-bg"><div class="bar-fill" style="width:${p}%"></div></div><div style="font-weight:900;">${c}/20</div></div>`;
-                                gDiv.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><span>${s.val().usuario} (${s.val().cargo})</span><button class="btn" style="width:auto; padding:5px 15px;" ${s.val().usuario === DONO_NOME ? 'disabled' : `onclick="setarCargo('${s.key}','${s.val().cargo}')"`}>SETAR</button></div>`;
+                                members.push(s.val().usuario);
+                                count++;
+                                let tickets = 0; relSnap.forEach(r => { if(r.val().staff === s.val().usuario) tickets++; });
+                                total += tickets;
+                                let p = Math.min((tickets/20)*100, 100); somaP += p;
+                                mDiv.innerHTML += `<div class="glass-card" style="display:flex; align-items:center; padding:15px; margin-bottom:10px;">
+                                    <div style="width:120px; font-weight:800;">${s.val().usuario}</div>
+                                    <div style="flex:1; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:0 20px;">
+                                        <div style="width:${p}%; background:var(--primary); height:100%; border-radius:10px; box-shadow:0 0 10px var(--primary);"></div>
+                                    </div>
+                                    <div style="font-weight:900;">${tickets}/20</div>
+                                </div>`;
+                                gDiv.innerHTML += `<div class="glass-card" style="display:flex; justify-content:space-between; padding:15px; margin-bottom:10px;">
+                                    <span>${s.val().usuario} (${s.val().cargo})</span>
+                                    <button onclick="setRank('${s.key}', '${s.val().cargo}')" style="background:var(--primary); border:none; border-radius:5px; padding:5px 10px; font-weight:800; cursor:pointer;">SETAR</button>
+                                </div>`;
                             }
                         });
-                        if(mbs.length > 0 || rank === "Fundador & Dono") {
-                            hDiv.innerHTML += `<div class="rank-header">${rank}</div><div class="rank-grid">${mbs.map(m => `<div class="staff-tag">${m}</div>`).join("") || '<div class="staff-tag" style="opacity:0.2">Vago</div>'}</div>`;
+                        if(members.length > 0 || rank === "Fundador & Dono") {
+                            hDiv.innerHTML += `<div class="rank-title">${rank}</div><div class="staff-list">${members.map(m => `<div class="staff-name">${m}</div>`).join('') || '<div class="staff-name" style="opacity:0.3">Vago</div>'}</div>`;
                         }
                     });
-                    document.getElementById('val-total').innerText = total;
-                    document.getElementById('val-media').innerText = Math.floor(somaP/(nS||1)) + "%";
+                    document.getElementById('total-tickets').innerText = total;
+                    document.getElementById('total-meta').innerText = Math.floor(somaP / (count || 1)) + "%";
                 });
             });
         }
 
-        function setarCargo(key, atual) {
-            const pMeu = PODER[userLogado.cargo.toLowerCase()];
-            const n = prompt("Novo Cargo (Responsável Staff, Manager, Coordenador, Administrador, Moderador, Suporte):");
-            if(n && PODER[n.toLowerCase()] < pMeu) db.ref('contas/'+key).update({ cargo: n });
-            else alert("Acesso negado!");
+        function setRank(key, atual) {
+            const n = prompt("Novo cargo (Manager, Coordenador, Administrador, Moderador, Suporte):");
+            if(n && PODER[n.toLowerCase()]) db.ref('contas/'+key).update({ cargo: n });
         }
 
         function saveTicket() {
-            db.ref('relatorios').push({ staff: userLogado.usuario, alvo: document.getElementById('f-alvo').value, desc: document.getElementById('f-desc').value });
-            alert("Salvo!"); document.getElementById('f-alvo').value = ""; document.getElementById('f-desc').value = "";
+            const a = document.getElementById('f-alvo').value;
+            const d = document.getElementById('f-desc').value;
+            if(!a || !d) return alert("Preencha os campos!");
+            db.ref('relatorios').push({ staff: userLogado.usuario, alvo: a, desc: d }).then(() => {
+                alert("Ticket Enviado!");
+                document.getElementById('f-alvo').value = ""; document.getElementById('f-desc').value = "";
+            });
         }
 
         function resetData() {
-            if(userLogado.usuario === DONO_NOME && confirm("Resetar tudo?")) db.ref('relatorios').remove();
+            if(userLogado.usuario === DONO_NOME && confirm("Deseja mesmo zerar todos os tickets?")) {
+                db.ref('relatorios').remove();
+            }
         }
 
-        carregarRegras();
+        // Regras Iniciais
+        db.ref('regras').on('value', snap => {
+            const div = document.getElementById('render-regras'); div.innerHTML = "";
+            snap.forEach(r => {
+                div.innerHTML += `<div class="glass-card"><b>${r.val().titulo || 'REGRA'}</b><p style="color:var(--dim); margin-top:10px;">${r.val().descricao || r.val()}</p></div>`;
+            });
+        });
     </script>
 </body>
 </html>
