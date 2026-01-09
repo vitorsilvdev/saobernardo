@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>SÃO BERNARDO - PAINEL OFICIAL</title>
+    <title>SÃO BERNARDO RP - SITE OFICIAL</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -10,181 +10,185 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #f4c430; --accent: #ff0055; --bg: #050507; --card: #0d0e12; --border: #1f2029; --text: #ffffff; --dim: #888; }
+        :root { --primary: #f4c430; --bg: #050507; --card: #0d0e12; --border: #1f2029; --text: #ffffff; --dim: #888; }
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; min-height: 100vh; user-select: none; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        .sidebar { width: 280px; background: #000; border-right: 2px solid var(--border); height: 100vh; position: fixed; display: flex; flex-direction: column; padding: 30px 20px; z-index: 100; }
+        /* SIDEBAR PROFISSIONAL */
+        .sidebar { width: 280px; background: #000; border-right: 2px solid var(--border); height: 100vh; position: fixed; display: flex; flex-direction: column; padding: 30px 20px; z-index: 100; transition: 0.3s; }
         .logo-area { text-align: center; margin-bottom: 30px; }
-        .logo-area img { width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--primary); padding: 5px; margin-bottom: 10px; }
-        .logo-area h1 { font-family: 'Syncopate', sans-serif; font-size: 14px; letter-spacing: 2px; color: var(--primary); }
+        .logo-area img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); padding: 5px; box-shadow: 0 0 20px rgba(244,196,48,0.2); }
+        .logo-area h1 { font-family: 'Syncopate', sans-serif; font-size: 14px; margin-top: 15px; color: var(--primary); letter-spacing: 2px; }
 
-        .user-box { background: #0d0e12; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); font-size: 12px; }
-        .badge { background: var(--primary); color: #000; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 9px; margin-left: 5px; text-transform: uppercase; }
-
-        .nav-label { font-size: 10px; text-transform: uppercase; color: var(--dim); letter-spacing: 2px; margin: 20px 0 10px 10px; }
-        .nav-link { display: flex; align-items: center; padding: 14px 18px; color: var(--dim); text-decoration: none; border-radius: 12px; margin-bottom: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        .nav-label { font-size: 10px; text-transform: uppercase; color: var(--dim); letter-spacing: 2px; margin: 25px 0 10px 15px; }
+        .nav-link { display: flex; align-items: center; padding: 14px 18px; color: var(--dim); text-decoration: none; border-radius: 12px; margin-bottom: 6px; cursor: pointer; transition: 0.3s; font-weight: 500; }
         .nav-link:hover { background: #16171d; color: #fff; }
-        .nav-link.active { background: var(--primary); color: #000; font-weight: 700; box-shadow: 0 4px 15px rgba(244,196,48,0.2); }
+        .nav-link.active { background: var(--primary); color: #000; font-weight: 700; }
 
-        main { margin-left: 280px; flex: 1; padding: 50px; }
-        section { display: none; max-width: 1000px; animation: slideUp 0.3s ease-out; }
+        /* CONTEÚDO PRINCIPAL */
+        main { margin-left: 280px; flex: 1; padding: 60px; position: relative; }
+        section { display: none; max-width: 1200px; animation: fadeIn 0.5s ease; }
         section.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .hero { position: relative; padding: 60px; border-radius: 30px; background: linear-gradient(45deg, #0d0e12, #1a1c24); border: 1px solid var(--border); margin-bottom: 30px; }
-        .hero h2 { font-family: 'Syncopate', sans-serif; font-size: 2.5rem; margin-bottom: 10px; }
-        .card { background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: 20px; margin-bottom: 20px; }
+        /* CARDS E ELEMENTOS VISUAIS */
+        .hero { padding: 80px 40px; border-radius: 40px; background: linear-gradient(135deg, #0d0e12 0%, #1a1c24 100%); border: 1px solid var(--border); margin-bottom: 40px; position: relative; overflow: hidden; }
+        .hero::after { content: ''; position: absolute; top: -50%; right: -20%; width: 400px; height: 400px; background: var(--primary); filter: blur(150px); opacity: 0.05; }
+        .hero h2 { font-family: 'Syncopate', sans-serif; font-size: 3rem; margin-bottom: 20px; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #08090b; border-radius: 15px; overflow: hidden; }
-        th { background: #16171d; padding: 15px; text-align: left; font-size: 11px; color: var(--primary); text-transform: uppercase; }
-        td { padding: 15px; border-bottom: 1px solid var(--border); font-size: 14px; color: #ccc; }
+        .card { background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: 24px; margin-bottom: 20px; transition: 0.3s; }
+        .card:hover { border-color: var(--primary); }
 
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-box { background: #0d0e12; padding: 40px; border-radius: 30px; border: 1px solid var(--primary); text-align: center; width: 400px; }
-        .modal-box input { width: 100%; background: #000; border: 1px solid var(--border); padding: 15px; border-radius: 12px; color: #fff; margin-bottom: 10px; text-align: center; }
-        
-        .btn-main { background: var(--primary); color: #000; padding: 16px 32px; border-radius: 14px; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; text-decoration: none; display: inline-block; }
-        .btn-main:hover { filter: brightness(1.2); letter-spacing: 1px; }
+        /* TABELAS E FORMULÁRIOS */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 15px; overflow: hidden; }
+        th { background: #16171d; padding: 18px; text-align: left; font-size: 11px; color: var(--primary); text-transform: uppercase; }
+        td { padding: 18px; border-bottom: 1px solid var(--border); font-size: 14px; background: #0a0b0e; }
 
-        .copy-box { background: #000; border: 1px solid var(--border); padding: 20px; border-radius: 15px; position: relative; color: #00ff88; font-family: monospace; margin-top: 10px; }
-        .copy-btn { position: absolute; right: 15px; top: 15px; background: var(--primary); border: none; padding: 6px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; color: #000; font-weight: bold; }
+        .btn { background: var(--primary); color: #000; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; font-size: 12px; }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(244,196,48,0.3); }
+        .btn-red { background: #ff4444; color: #fff; }
+
+        input, select { background: #000; border: 1px solid var(--border); padding: 12px; border-radius: 10px; color: #fff; width: 100%; margin: 10px 0; }
+
+        /* MODAL DE LOGIN */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px); }
+        .modal-box { background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid var(--primary); width: 400px; text-align: center; }
+
+        /* BADGES */
+        .badge { background: var(--primary); color: #000; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; text-transform: uppercase; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
 <div class="modal" id="modal-auth">
     <div class="modal-box" id="login-form">
-        <h2 style="font-family: 'Syncopate'; margin-bottom: 20px;">STAFF <span style="color:var(--primary)">LOGIN</span></h2>
-        <input type="text" id="user-in" placeholder="USUÁRIO">
-        <input type="password" id="pass-in" placeholder="SENHA">
-        <button class="btn-main" onclick="login()">ACESSAR SISTEMA</button>
-        <p style="margin-top:20px; font-size:12px; color:var(--dim); cursor:pointer" onclick="toggleAuth(true)">NÃO TEM CONTA? REGISTRE-SE</p>
-        <p style="margin-top:10px; font-size:11px; color:red; cursor:pointer" onclick="fecharModal()">CANCELAR</p>
+        <h2 style="font-family: 'Syncopate'; margin-bottom: 20px;">PORTAL <span style="color:var(--primary)">STAFF</span></h2>
+        <input type="text" id="user-in" placeholder="Usuário">
+        <input type="password" id="pass-in" placeholder="Senha">
+        <button class="btn" onclick="login()" style="width:100%">Entrar</button>
+        <p style="margin-top:20px; font-size:12px; color:var(--dim); cursor:pointer" onclick="toggleAuth(true)">Solicitar Acesso</p>
+        <p style="margin-top:10px; font-size:11px; color:red; cursor:pointer" onclick="fecharModal()">Fechar</p>
     </div>
-
     <div class="modal-box" id="reg-form" style="display:none">
-        <h2 style="font-family: 'Syncopate'; margin-bottom: 20px;">SOLICITAR <span style="color:var(--primary)">ACESSO</span></h2>
-        <input type="text" id="user-reg" placeholder="ESCOLHA UM USUÁRIO">
-        <input type="password" id="pass-reg" placeholder="CRIE UMA SENHA">
-        <button class="btn-main" onclick="registrar()">ENVIAR PEDIDO</button>
-        <p style="margin-top:20px; font-size:12px; color:var(--dim); cursor:pointer" onclick="toggleAuth(false)">VOLTAR AO LOGIN</p>
+        <h2 style="font-family: 'Syncopate'; margin-bottom: 20px;">SOLICITAR <span style="color:var(--primary)">VAGA</span></h2>
+        <input type="text" id="user-reg" placeholder="Escolha um Usuário">
+        <input type="password" id="pass-reg" placeholder="Escolha uma Senha">
+        <button class="btn" onclick="registrar()" style="width:100%">Enviar Solicitação</button>
+        <p style="margin-top:20px; font-size:12px; color:var(--dim); cursor:pointer" onclick="toggleAuth(false)">Já tenho cadastro</p>
     </div>
 </div>
 
 <aside class="sidebar">
     <div class="logo-area">
-        <img src="https://i.imgur.com/pUWtuIB.png">
+        <img src="https://i.imgur.com/pUWtuIB.png" alt="Logo">
         <h1>SÃO BERNARDO</h1>
     </div>
 
-    <div class="user-box">
-        <p id="txt-user">Visitante</p>
-        <p id="txt-role" style="color:var(--dim); font-size:10px; margin-top:5px">OFFLINE</p>
-    </div>
+    <span class="nav-label">Navegação</span>
+    <div class="nav-link active" onclick="go('inicio', this)">🏠 <span>Home Oficial</span></div>
+    <div class="nav-link" onclick="go('regras-gerais', this)">📜 <span>Regras Cidade</span></div>
+    <div class="nav-link" onclick="go('recrutamento', this)">📋 <span>Recrutamento</span></div>
     
-    <span class="nav-label">Dashboard</span>
-    <div class="nav-link active" onclick="go('inicio', this)">🏠 <span>Início</span></div>
-    <div class="nav-link" onclick="go('forms', this)">📋 <span>Recrutamento</span></div>
-    
-    <div id="nav-restrito" style="display:none">
-        <span class="nav-label">Staff Interno</span>
-        <div class="nav-link" onclick="go('hierarquia', this)">🏛️ <span>Hierarquia</span></div>
-        <div class="nav-link" onclick="go('conduta', this)">⚖️ <span>Conduta</span></div>
-        <div class="nav-link" onclick="go('tickets', this)">🎫 <span>Tickets</span></div>
-        <div class="nav-link" onclick="go('punicoes', this)">🚨 <span>Punições</span></div>
+    <div id="nav-staff" style="display:none">
+        <span class="nav-label">Painel Staff</span>
+        <div class="nav-link" onclick="go('conduta', this)">⚖️ <span>Conduta Staff</span></div>
+        <div class="nav-link" onclick="go('tickets', this)">🎫 <span>Suporte/Tickets</span></div>
+        <div class="nav-link" onclick="go('punicoes', this)">🚨 <span>Tabela Punições</span></div>
     </div>
 
-    <div id="nav-dono" style="display:none">
-        <span class="nav-label">Admin</span>
-        <div class="nav-link" style="color:var(--primary)" onclick="go('gestao', this)">⚙️ <span>Gerenciar Equipe</span></div>
+    <div id="nav-admin" style="display:none">
+        <span class="nav-label">Gestão</span>
+        <div class="nav-link" onclick="go('membros', this)">👥 <span>Membros</span></div>
+        <div class="nav-link" style="color:var(--primary)" onclick="go('config-cargos', this)">⚙️ <span>Config. Cargos</span></div>
     </div>
 
-    <div class="nav-link" id="btn-login-toggle" onclick="abrirModal()" style="margin-top:auto; color:var(--primary)">🔑 <span>LOGIN STAFF</span></div>
+    <div class="nav-link" id="btn-auth-toggle" onclick="abrirModal()" style="margin-top:auto; color:var(--primary)">🔑 <span>LOGIN STAFF</span></div>
 </aside>
 
 <main>
     <section id="inicio" class="active">
         <div class="hero">
-            <h2>SÃO BERNARDO <span style="color:var(--primary)">OFFICIAL</span></h2>
-            <p>Seja bem-vindo. Este é o site oficial do São Bernardo RP. Mantenha a ética e bom trabalho.</p>
+            <h2>SÃO BERNARDO <span style="color:var(--primary)">RP</span></h2>
+            <p>O melhor simulador de vida real. Uma experiência única e imersiva.</p>
         </div>
         <div class="card">
-            <h3>📢 Avisos Recentes</h3>
-            <p style="color:var(--dim)">• Sistema de contas integrado com Realtime Database.<br>• Painel de gerenciamento exclusivo para Donos.<br>• Mantenha seus dados de login em segurança.</p>
+            <h3>Bem-vindo ao Site Oficial</h3>
+            <p style="color:var(--dim); margin-top:10px">Explore as regras da nossa cidade, conheça nossa história ou aplique para a nossa equipe administrativa através do recrutamento.</p>
         </div>
     </section>
 
-    <section id="forms">
+    <section id="regras-gerais">
+        <h2>Regras da Cidade</h2>
+        <div class="card">
+            <h3 style="color:var(--primary)">1. Safe Zone</h3>
+            <p>Áreas de hospitais e delegacias são zonas protegidas. Proibido qualquer ato criminoso.</p>
+        </div>
+        <div class="card">
+            <h3 style="color:var(--primary)">2. Anti-RP</h3>
+            <p>Atitudes que fogem da realidade (como voar com carros ou ignorar o valor à vida) são proibidas.</p>
+        </div>
+    </section>
+
+    <section id="recrutamento">
         <div class="hero" style="text-align:center">
-            <h2 style="font-size:2rem">RECRUTAMENTO</h2>
-            <p>Envie sua candidatura oficial abaixo. O prazo de resposta é indefinido.</p><br>
-            <a href="https://docs.google.com/forms/d/1M8Cx3Q5vvE-ASwhhHplxfKTimguoMrQ1szQoncluQO8/edit" target="_blank" class="btn-main">ABRIR FORMULÁRIO</a>
-        </div>
-    </section>
-
-    <section id="hierarquia">
-        <h2>Estrutura de Cargos</h2>
-        <div class="card">
-            <table>
-                <tr><th>Cargo</th><th>Poder</th><th>Responsabilidade</th></tr>
-                <tr><td style="color:red; font-weight:bold">DONO</td><td>SUPREMO</td><td>Responsável STAFF</td></tr>
-                <tr><td style="color:#ff0055; font-weight:bold">MANAGER</td><td>MÁXIMO</td><td>Direção Geral</td></tr>
-                <tr><td style="color:#ff8c00; font-weight:bold">COORDENADOR</td><td>ALTO</td><td>Gestão de Equipe</td></tr>
-                <tr><td style="color:#f4c430; font-weight:bold">ADMINISTRADOR</td><td>MÉDIO</td><td>Eventos e Denúncias</td></tr>
-                <tr><td style="color:#00ffff; font-weight:bold">MODERADOR</td><td>PADRÃO</td><td>Jogo e Suporte</td></tr>
-                <tr><td style="color:#9d00ff; font-weight:bold">HELPER</td><td>AUXILIAR</td><td>Apoio a novatos</td></tr>
-                <tr><td style="color:#00ff88; font-weight:bold">SUPORTE</td><td>SUPORTE</td><td>Tickets e Atendimentos</td></tr>
-            </table>
+            <h2>QUER SER STAFF?</h2>
+            <p>Estamos em busca de pessoas comprometidas para ajudar a cidade a crescer.</p><br>
+            <a href="https://docs.google.com/forms/d/1M8Cx3Q5vvE-ASwhhHplxfKTimguoMrQ1szQoncluQO8/edit" target="_blank" class="btn" style="text-decoration:none">Formulário de Inscrição</a>
         </div>
     </section>
 
     <section id="conduta">
-        <h2>Regras de Ouro</h2>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-            <div class="card"><h3>01. Respeito</h3><p>Mesmo com players tóxicos, mantenha a calma. Você representa a imagem da cidade.</p></div>
-            <div class="card"><h3>02. Sigilo</h3><p>Vazar prints de chats administrativos resulta em banimento imediato e Blacklist.</p></div>
-            <div class="card"><h3>03. Abuso</h3><p>Comandos de Staff são para TRABALHO. Usar para benefício próprio é expulsão.</p></div>
-            <div class="card"><h3>04. Proatividade</h3><p>Não espere ordens. Viu algo errado ou um ticket aberto? Atenda.</p></div>
+        <h2>Código de Conduta Staff</h2>
+        <div class="card">
+            <p>• Proibido uso de cargo para benefício próprio.<br>• Sigilo absoluto sobre o conteúdo deste painel.<br>• Respeito acima de tudo com a comunidade.</p>
         </div>
     </section>
 
     <section id="tickets">
-        <h2>Agilidade no Atendimento</h2>
+        <h2>Mensagens Padrão</h2>
         <div class="card">
-            <h4 style="margin-bottom:10px">Saudação Inicial</h4>
-            <div class="copy-box" id="c1">
-                "Olá! Sou membro da Staff do São Bernardo. Como posso te ajudar hoje?"
-                <button class="copy-btn" onclick="cp('c1')">COPIAR</button>
-            </div>
-            <br>
-            <h4 style="margin-bottom:10px">Finalização</h4>
-            <div class="copy-box" id="c2">
-                "Obrigado pelo contato! Se tiver mais dúvidas, sinta-se à vontade. Bom RP!"
-                <button class="copy-btn" onclick="cp('c2')">COPIAR</button>
+            <p style="margin-bottom:10px">Saudação Staff:</p>
+            <div style="background:#000; padding:15px; border-radius:10px; color:#00ff88; font-family:monospace">
+                "Olá, sou da Staff São Bernardo. Como posso te auxiliar no seu atendimento?"
             </div>
         </div>
     </section>
 
     <section id="punicoes">
-        <h2>Tabela de Crimes Internos</h2>
+        <h2>Tabela de Punições Atualizada</h2>
         <div class="card">
             <table>
-                <tr><th>Motivo</th><th>Punição</th></tr>
-                <tr><td>Inatividade injustificada</td><td>Advertência / Rebaixamento</td></tr>
-                <tr><td>Corrupção Staff</td><td>Remoção + Banimento Permanente</td></tr>
-                <tr><td>Mentir para Coordenação</td><td>Suspensão de 7 dias</td></tr>
-                <tr><td>Discussão em Chat Staff</td><td>Advertência Verbal</td></tr>
+                <tr><th>Infração</th><th>Punição</th></tr>
+                <tr><td>RDM / VDM</td><td>120 Minutos</td></tr>
+                <tr><td>Combat Logging</td><td>Banimento 48h</td></tr>
+                <tr><td>Uso de Mod Menu</td><td>Banimento Permanente</td></tr>
             </table>
         </div>
     </section>
 
-    <section id="gestao">
-        <h2>Gerenciamento de Membros</h2>
+    <section id="membros">
+        <h2>Gerenciar Membros da Staff</h2>
         <div class="card">
             <table>
-                <thead><tr><th>Usuário</th><th>Cargo</th><th>Novo Cargo</th><th>Ação</th></tr></thead>
-                <tbody id="lista-equipe"></tbody>
+                <thead><tr><th>Usuário</th><th>Cargo</th><th>Alterar Para</th><th>Ação</th></tr></thead>
+                <tbody id="lista-membros"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="config-cargos">
+        <h2>Gestão de Cargos Suprema</h2>
+        <div class="card">
+            <h3>Adicionar Novo Cargo à Estrutura</h3>
+            <div style="display:flex; gap:10px">
+                <input type="text" id="novo-cargo-nome" placeholder="Nome do Cargo">
+                <button class="btn" onclick="addCargo()" style="margin-top:10px">Adicionar</button>
+            </div>
+        </div>
+        <div class="card">
+            <table>
+                <thead><tr><th>Nome do Cargo</th><th>Ações</th></tr></thead>
+                <tbody id="lista-cargos-config"></tbody>
             </table>
         </div>
     </section>
@@ -203,79 +207,21 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    let currentStaff = null;
 
+    // Inicialização de Cargos caso o banco esteja novo
+    const defaultCargos = ["brennin_semxit", "Manager", "Coordenador", "Administrador", "Moderador", "Helper", "Suporte"];
+    db.ref('configuracoes/cargos').once('value', s => {
+        if(!s.exists()) defaultCargos.forEach(c => db.ref('configuracoes/cargos').push({nome: c}));
+    });
+
+    // Funções de UI
     function abrirModal() { document.getElementById('modal-auth').style.display = 'flex'; }
     function fecharModal() { document.getElementById('modal-auth').style.display = 'none'; }
     function toggleAuth(reg) {
         document.getElementById('login-form').style.display = reg ? 'none' : 'block';
         document.getElementById('reg-form').style.display = reg ? 'block' : 'none';
     }
-
-    async function registrar() {
-        const u = document.getElementById('user-reg').value.trim();
-        const p = document.getElementById('pass-reg').value.trim();
-        if(!u || !p) return alert("Preencha tudo!");
-        await db.ref('contas').push({ usuario: u, senha: p, cargo: "Pendente" });
-        alert("Solicitação enviada! Peça para um Dono aprovar.");
-        location.reload();
-    }
-
-    function login() {
-        const u = document.getElementById('user-in').value.trim();
-        const p = document.getElementById('pass-in').value.trim();
-        db.ref('contas').once('value', (snap) => {
-            let user = null;
-            snap.forEach(c => { if(c.val().usuario === u && c.val().senha === p) user = c.val(); });
-            if(user) {
-                if(user.cargo === "Pendente") return alert("Aguarde aprovação!");
-                setSession(user);
-            } else alert("Incorreto!");
-        });
-    }
-
-    function setSession(user) {
-        document.getElementById('txt-user').innerText = user.usuario;
-        document.getElementById('txt-role').innerText = user.cargo;
-        document.getElementById('nav-restrito').style.display = 'block';
-        document.getElementById('btn-login-toggle').innerText = 'SAIR';
-        document.getElementById('btn-login-toggle').onclick = () => location.reload();
-        if(user.cargo === "Dono") { document.getElementById('nav-dono').style.display = 'block'; carregarEquipe(); }
-        fecharModal(); go('inicio');
-    }
-
-    function carregarEquipe() {
-        const tbody = document.getElementById('lista-equipe');
-        db.ref('contas').on('value', (snap) => {
-            tbody.innerHTML = "";
-            snap.forEach(c => {
-                const d = c.val();
-                tbody.innerHTML += `<tr>
-                    <td>${d.usuario}</td>
-                    <td><span class="badge">${d.cargo}</span></td>
-                    <td>
-                        <select id="sel-${c.key}" style="background:#000; color:#fff; border:1px solid #333">
-                            <option value="Pendente">Pendente</option>
-                            <option value="Suporte">Suporte</option>
-                            <option value="Helper">Helper</option>
-                            <option value="Moderador">Moderador</option>
-                            <option value="Administrador">Administrador</option>
-                            <option value="Coordenador">Coordenador</option>
-                            <option value="Manager">Manager</option>
-                            <option value="Dono">Dono</option>
-                        </select>
-                    </td>
-                    <td><button onclick="mudarCargo('${c.key}')" style="background:var(--primary); border:none; padding:5px; cursor:pointer; font-weight:bold; border-radius:4px">SALVAR</button></td>
-                </tr>`;
-            });
-        });
-    }
-
-    function mudarCargo(id) {
-        const n = document.getElementById('sel-'+id).value;
-        db.ref('contas/'+id).update({ cargo: n });
-        alert("Cargo atualizado com sucesso!");
-    }
-
     function go(id, el) {
         document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -283,15 +229,107 @@
         if(el) el.classList.add('active');
     }
 
-    function cp(id) {
-        const text = document.getElementById(id).innerText.replace('COPIAR', '').trim();
-        navigator.clipboard.writeText(text);
-        alert("Texto Copiado!");
+    // Login e Registro
+    async function registrar() {
+        const u = document.getElementById('user-reg').value;
+        const p = document.getElementById('pass-reg').value;
+        if(!u || !p) return alert("Preencha tudo!");
+        await db.ref('contas').push({ usuario: u, senha: p, cargo: "Pendente" });
+        alert("Solicitação enviada!"); location.reload();
     }
 
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) return false;
-    };
+    function login() {
+        const u = document.getElementById('user-in').value;
+        const p = document.getElementById('pass-in').value;
+        db.ref('contas').once('value', snap => {
+            let found = false;
+            snap.forEach(c => {
+                const d = c.val();
+                if(d.usuario === u && d.senha === p) {
+                    if(d.cargo === "Pendente") return alert("Seu acesso ainda não foi aprovado.");
+                    currentStaff = d; found = true;
+                    showPrivateUI();
+                }
+            });
+            if(!found) alert("Credenciais incorretas.");
+        });
+    }
+
+    function showPrivateUI() {
+        document.getElementById('nav-staff').style.display = 'block';
+        document.getElementById('btn-auth-toggle').innerText = 'SAIR';
+        document.getElementById('btn-auth-toggle').onclick = () => location.reload();
+        
+        // Cargos com poder administrativo
+        const highRank = ["brennin_semxit", "Manager", "Coordenador"];
+        if(highRank.includes(currentStaff.cargo)) {
+            document.getElementById('nav-admin').style.display = 'block';
+            renderMembros();
+            renderCargosConfig();
+        }
+        fecharModal();
+        go('inicio');
+    }
+
+    // Gerenciamento
+    function renderMembros() {
+        db.ref('contas').on('value', snap => {
+            const tbody = document.getElementById('lista-membros');
+            tbody.innerHTML = "";
+            db.ref('configuracoes/cargos').once('value', cSnap => {
+                let options = "";
+                cSnap.forEach(cs => { options += `<option value="${cs.val().nome}">${cs.val().nome}</option>`; });
+                
+                snap.forEach(c => {
+                    const d = c.val();
+                    tbody.innerHTML += `<tr>
+                        <td>${d.usuario}</td>
+                        <td><span class="badge">${d.cargo}</span></td>
+                        <td><select id="sel-${c.key}">${options}</select></td>
+                        <td><button class="btn" onclick="saveMembroRole('${c.key}')">Salvar</button></td>
+                    </tr>`;
+                });
+            });
+        });
+    }
+
+    function saveMembroRole(id) {
+        const novo = document.getElementById('sel-'+id).value;
+        db.ref('contas/'+id).update({ cargo: novo });
+        alert("Cargo atualizado!");
+    }
+
+    function renderCargosConfig() {
+        db.ref('configuracoes/cargos').on('value', snap => {
+            const tbody = document.getElementById('lista-cargos-config');
+            tbody.innerHTML = "";
+            snap.forEach(c => {
+                tbody.innerHTML += `<tr>
+                    <td><input type="text" id="edit-c-${c.key}" value="${c.val().nome}"></td>
+                    <td>
+                        <button class="btn" onclick="updateCargoName('${c.key}')">Salvar</button>
+                        <button class="btn btn-red" onclick="delCargo('${c.key}')">X</button>
+                    </td>
+                </tr>`;
+            });
+        });
+    }
+
+    function addCargo() {
+        const n = document.getElementById('novo-cargo-nome').value;
+        if(n) db.ref('configuracoes/cargos').push({ nome: n });
+        document.getElementById('novo-cargo-nome').value = "";
+    }
+
+    function updateCargoName(id) {
+        const val = document.getElementById('edit-c-'+id).value;
+        db.ref('configuracoes/cargos/'+id).update({ nome: val });
+        alert("Nome do cargo alterado!");
+    }
+
+    function delCargo(id) {
+        if(confirm("Excluir este cargo?")) db.ref('configuracoes/cargos/'+id).remove();
+    }
 </script>
 </body>
 </html>
