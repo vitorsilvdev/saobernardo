@@ -3,248 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SÃO BERNARDO RP | COMPLEXO STYLE</title>
+    <title>SÃO BERNARDO RP | OFICIAL</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #f4c430;
-            --bg: #050505;
-            --glass: rgba(15, 15, 15, 0.8);
+            --primary-glow: rgba(244, 196, 48, 0.3);
+            --bg: #020202;
+            --glass-dark: rgba(5, 5, 5, 0.85);
+            --glass-light: rgba(20, 20, 20, 0.6);
             --border: rgba(255, 255, 255, 0.08);
             --text: #ffffff;
-            --dim: #a0a0a0;
+            --dim: #888888;
+            --red: #ff3333;
+            --green: #00ffa3;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
             background: var(--bg);
-            background-image: radial-gradient(circle at top right, rgba(244, 196, 48, 0.05), transparent),
-                              url('https://i.imgur.com/Jnc3xf7.png');
+            /* Camada de Contraste para o Banner do Roblox */
+            background: linear-gradient(rgba(0,0,0,0.92), rgba(0,0,0,0.92)), url('https://i.imgur.com/Jnc3xf7.png');
             background-size: cover;
             background-attachment: fixed;
             background-position: center;
             color: var(--text);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* --- SIDEBAR GLASS --- */
+        /* --- LOGIN CENTRALIZADO (FIX) --- */
+        .modal-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); 
+            backdrop-filter: blur(15px); z-index: 9999; 
+            display: flex; align-items: center; justify-content: center; 
+            padding: 20px; display: none;
+        }
+        .login-container {
+            width: 100%; max-width: 380px; background: var(--glass-dark);
+            border: 1px solid var(--primary); border-radius: 24px;
+            padding: 40px 30px; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        /* --- SIDEBAR ELITE --- */
         .sidebar {
-            width: 280px;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border-right: 1px solid var(--border);
-            padding: 40px 25px;
-            display: flex;
-            flex-direction: column;
-            z-index: 1000;
+            width: 280px; height: 100vh; position: fixed; left: 0; top: 0;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(30px);
+            border-right: 1px solid var(--border); padding: 40px 25px;
+            display: flex; flex-direction: column; z-index: 1000;
         }
-
         .main-content { margin-left: 280px; padding: 50px; min-height: 100vh; }
 
-        /* --- LOGO --- */
-        .logo-box { text-align: center; margin-bottom: 50px; }
-        .logo-box img { width: 110px; border-radius: 50%; border: 3px solid var(--primary); padding: 5px; box-shadow: 0 0 20px rgba(244, 196, 48, 0.2); }
-        .logo-box h1 { font-family: 'Syncopate'; font-size: 12px; margin-top: 15px; letter-spacing: 2px; color: var(--primary); }
+        .logo-box { text-align: center; margin-bottom: 40px; }
+        .logo-box img { width: 95px; border-radius: 50%; border: 3px solid var(--primary); padding: 5px; box-shadow: 0 0 20px var(--primary-glow); }
+        .logo-box h1 { font-family: 'Syncopate'; font-size: 11px; margin-top: 15px; color: var(--primary); letter-spacing: 3px; }
 
-        /* --- NAV --- */
-        .nav-item {
-            padding: 15px 20px;
-            margin-bottom: 8px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            font-weight: 600;
-            color: var(--dim);
-            letter-spacing: 0.5px;
+        /* --- NAVIGATION --- */
+        .nav-link {
+            padding: 16px 20px; margin-bottom: 10px; border-radius: 14px;
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center;
+            font-weight: 700; color: var(--dim); font-size: 12px;
         }
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .nav-item.active { background: var(--primary); color: #000; box-shadow: 0 10px 20px rgba(244, 196, 48, 0.2); }
+        .nav-link:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .nav-link.active { background: var(--primary); color: #000; box-shadow: 0 10px 25px var(--primary-glow); }
 
-        /* --- CARDS STYLE --- */
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 30px;
-            margin-bottom: 25px;
+        /* --- GLASS CARDS --- */
+        .card {
+            background: var(--glass-light); backdrop-filter: blur(10px);
+            border: 1px solid var(--border); border-radius: 22px;
+            padding: 30px; margin-bottom: 25px;
         }
 
-        /* --- DASHBOARD --- */
-        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .stat-card { text-align: center; }
-        .stat-val { font-size: 40px; font-weight: 800; color: var(--primary); font-family: 'Syncopate'; }
+        /* --- REGRAS ACORDEÃO --- */
+        .rule-card { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); }
+        .rule-card h4 { font-family: 'Syncopate'; font-size: 10px; color: var(--primary); margin-bottom: 8px; }
+        .rule-card p { font-size: 14px; color: var(--dim); line-height: 1.6; }
 
-        /* --- HIERARQUIA --- */
-        .rank-title { 
-            font-family: 'Syncopate'; font-size: 11px; color: var(--primary); 
-            margin: 40px 0 15px; display: flex; align-items: center; 
-        }
-        .rank-title::after { content: ""; flex: 1; height: 1px; background: var(--border); margin-left: 15px; }
-        .staff-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .staff-name { 
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-            padding: 15px; border-radius: 12px; text-align: center; font-weight: 700;
-        }
+        /* --- DASHBOARD STATS --- */
+        .dash-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .stat-box { text-align: center; padding: 25px; }
+        .stat-box h2 { font-size: 45px; font-weight: 900; color: var(--primary); font-family: 'Syncopate'; }
 
-        /* --- MOBILE ADJUSTS --- */
+        /* --- MOBILE DESIGN --- */
         @media (max-width: 1024px) {
             .sidebar { display: none; }
-            .main-content { margin-left: 0; padding: 20px 20px 100px; }
+            .main-content { margin-left: 0; padding: 30px 20px 100px; }
             .mobile-nav {
                 position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-                width: 90%; background: rgba(10,10,10,0.9); backdrop-filter: blur(20px);
-                border-radius: 20px; border: 1px solid var(--border); height: 70px;
+                width: 90%; background: rgba(5,5,5,0.95); backdrop-filter: blur(20px);
+                border-radius: 25px; border: 1px solid var(--border); height: 75px;
                 display: flex; justify-content: space-around; align-items: center; z-index: 2000;
             }
-            .mob-btn { color: var(--dim); font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+            .mob-btn { color: var(--dim); font-size: 10px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
             .mob-btn.active { color: var(--primary); }
         }
 
-        .page { display: none; animation: slideUp 0.4s ease; }
+        /* --- PAGE ANIMATIONS --- */
+        .page { display: none; animation: fadeIn 0.4s ease-out; }
         .page.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- INPUTS & BUTTONS --- */
         input, textarea { 
-            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
-            padding: 15px; border-radius: 12px; color: #fff; margin-bottom: 15px; outline: none;
+            width: 100%; background: #000; border: 1px solid var(--border); 
+            padding: 16px; border-radius: 12px; color: #fff; margin-bottom: 15px; outline: none; transition: 0.3s;
         }
-        .btn-main { 
-            background: var(--primary); color: #000; border: none; padding: 18px; 
-            border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase;
+        input:focus { border-color: var(--primary); }
+        .btn-core { 
+            background: var(--primary); color: #000; border: none; padding: 16px; 
+            border-radius: 12px; font-weight: 900; cursor: pointer; width: 100%; text-transform: uppercase;
         }
+        .btn-core:hover { filter: brightness(1.2); transform: scale(1.02); }
 
-        .log-row { 
-            padding: 15px; border-bottom: 1px solid var(--border); display: flex; 
-            justify-content: space-between; font-size: 13px;
+        /* --- STAFF HIERARCHY --- */
+        .staff-tag { 
+            background: rgba(255,255,255,0.05); padding: 12px 20px; border-radius: 12px;
+            font-size: 13px; font-weight: 700; border-bottom: 2px solid var(--primary);
+            display: inline-block; margin: 5px;
         }
     </style>
 </head>
 <body>
 
+    <div class="modal-overlay" id="modal-auth">
+        <div class="login-container">
+            <div id="login-box">
+                <img src="https://i.imgur.com/wwe9yIs.png" style="width: 80px; margin-bottom: 20px;">
+                <h3 style="font-family:'Syncopate'; font-size: 12px; margin-bottom: 25px; color: var(--primary);">ACESSO AO NÚCLEO</h3>
+                <input id="l-u" placeholder="Username Roblox">
+                <input id="l-p" type="password" placeholder="Senha do Painel">
+                <button class="btn-core" onclick="doLogin()">ENTRAR</button>
+                <p onclick="toggleAuth()" style="font-size: 11px; margin-top: 20px; cursor:pointer; color: var(--dim);">CRIAR NOVA CONTA</p>
+            </div>
+            <div id="cad-box" style="display:none">
+                <h3 style="font-family:'Syncopate'; font-size: 12px; margin-bottom: 25px;">CADASTRO STAFF</h3>
+                <input id="c-u" placeholder="Nome no Roblox">
+                <input id="c-p" type="password" placeholder="Crie sua Senha">
+                <button class="btn-core" onclick="doCad()">SOLICITAR ACESSO</button>
+                <p onclick="toggleAuth()" style="font-size: 11px; margin-top: 20px; cursor:pointer; color: var(--dim);">VOLTAR AO LOGIN</p>
+            </div>
+            <button onclick="closeModal()" style="background:none; border:none; color:var(--red); font-weight:800; margin-top:15px; cursor:pointer; font-size:10px;">FECHAR JANELA</button>
+        </div>
+    </div>
+
     <aside class="sidebar">
         <div class="logo-box">
-            <img src="https://i.imgur.com/wwe9yIs.png" alt="Logo">
+            <img src="https://i.imgur.com/wwe9yIs.png">
             <h1>SÃO BERNARDO</h1>
         </div>
         
-        <div class="nav-item active" onclick="go('home', this)">🏠 INÍCIO</div>
-        <div class="nav-item" onclick="go('regras', this)">📜 REGRAS</div>
+        <div class="nav-link active" onclick="go('home', this)">🏠 INÍCIO</div>
+        <div class="nav-link" onclick="go('regras', this)">📜 REGRAS RP</div>
         
-        <div id="staff-menu" style="display:none; margin-top:30px;">
-            <p style="font-size:10px; color:var(--dim); margin-left:20px; margin-bottom:10px; font-family:'Syncopate'">PAINEL STAFF</p>
-            <div class="nav-item" onclick="go('dash', this)">📊 DASHBOARD</div>
-            <div class="nav-item" onclick="go('hierarquia', this)">👑 EQUIPE</div>
-            <div class="nav-item" onclick="go('logs', this)">📁 LOGS</div>
-            <div class="nav-item" onclick="go('ticket', this)">📝 TICKET</div>
+        <div id="staff-section" style="display:none; margin-top:20px; border-top: 1px solid var(--border); padding-top:20px;">
+            <p style="font-size:9px; color:var(--primary); font-family:'Syncopate'; margin-bottom:15px;">TERMINAL STAFF</p>
+            <div class="nav-link" onclick="go('dash', this)">📊 ESTATÍSTICAS</div>
+            <div class="nav-link" onclick="go('hierarquia', this)">👑 HIERARQUIA</div>
+            <div class="nav-link" onclick="go('logs', this)">📁 LOGS GERAIS</div>
+            <div class="nav-link" onclick="go('ticket', this)">📝 REGISTRAR TICKET</div>
         </div>
 
-        <div id="admin-menu" style="display:none; margin-top:10px;">
-            <div class="nav-item" onclick="go('gestao', this)">👥 GESTÃO</div>
-            <div class="nav-item" onclick="go('config', this)">⚙️ RESET</div>
+        <div id="admin-section" style="display:none;">
+            <div class="nav-link" onclick="go('gestao', this)">👤 EQUIPE</div>
+            <div class="nav-link" onclick="go('config', this)" style="color:var(--red)">⚠️ RESETAR BANCO</div>
         </div>
 
-        <button class="btn-main" id="login-trigger" style="margin-top:auto;" onclick="openModal()">LOGIN STAFF</button>
+        <button class="btn-core" id="btn-auth-pc" style="margin-top:auto;" onclick="openModal()">LOGIN</button>
     </aside>
 
     <nav class="mobile-nav">
         <div class="mob-btn active" onclick="go('home', this)">Home</div>
         <div class="mob-btn" onclick="go('regras', this)">Regras</div>
-        <div class="mob-btn staff-only" style="display:none" onclick="go('dash', this)">Painel</div>
-        <div class="mob-btn staff-only" style="display:none" onclick="go('logs', this)">Logs</div>
-        <div class="mob-btn" id="mob-login-trigger" onclick="openModal()">Login</div>
+        <div class="mob-btn s-view" style="display:none" onclick="go('dash', this)">Painel</div>
+        <div class="mob-btn" id="mob-login-btn" onclick="openModal()">Login</div>
     </nav>
 
     <main class="main-content">
         <section id="p-home" class="page active">
-            <div style="margin-top:10vh;">
-                <h2 style="font-family:'Syncopate'; font-size:12px; color:var(--primary); letter-spacing:5px;">BEM-VINDO À</h2>
-                <h1 style="font-family:'Syncopate'; font-size:4rem; line-height:1; margin:10px 0;">SÃO BERNARDO</h1>
-                <p style="color:var(--dim); max-width:500px; line-height:1.6;">O servidor de GTA RP onde sua história é levada a sério. Entre agora e viva a experiência máxima em Roleplay.</p>
+            <div style="margin-top: 12vh;">
+                <h3 style="font-family:'Syncopate'; color:var(--primary); letter-spacing:8px; font-size: 14px;">COMUNIDADE</h3>
+                <h1 style="font-family:'Syncopate'; font-size: clamp(3rem, 10vw, 5.5rem); font-weight:900; line-height:1;">SÃO<br>BERNARDO</h1>
+                <p style="color:var(--dim); max-width:550px; font-size:17px; margin-top: 20px; line-height: 1.8;">
+                    O maior servidor de Roleplay no Roblox. Imersão total, economia balanceada e staff ativa 24/7.
+                </p>
+            </div>
+        </section>
+
+        <section id="p-regras" class="page">
+            <h2 style="font-family:'Syncopate'; margin-bottom:30px;">📜 REGRAS DO ROBLOX RP</h2>
+            <div class="card">
+                <div class="rule-card">
+                    <h4>01. ANTI-RP (LUA NO PERSONAGEM)</h4>
+                    <p>Proibido qualquer atitude que não condiz com a vida real. Roblox é diversão, mas no RP a simulação é séria.</p>
+                </div>
+                <div class="rule-card">
+                    <h4>02. RDM E VDM</h4>
+                    <p>Não mate por diversão. Não use veículos como armas de arremesso. Respeite o espaço dos outros jogadores.</p>
+                </div>
+                <div class="rule-card">
+                    <h4>03. METAGAMING</h4>
+                    <p>É proibido usar informações de fora (Discord/Live) dentro do jogo. O que seu personagem não viu, você não sabe.</p>
+                </div>
             </div>
         </section>
 
         <section id="p-dash" class="page">
-            <div class="dash-grid">
-                <div class="glass-card stat-card">
-                    <p style="font-size:11px; color:var(--dim)">TICKETS TOTAIS</p>
-                    <div class="stat-val" id="total-tickets">0</div>
+            <div class="dash-row">
+                <div class="card stat-box">
+                    <p style="font-size:10px; color:var(--dim); font-family:'Syncopate'">TICKETS SEMANAIS</p>
+                    <h2 id="total-tickets">0</h2>
                 </div>
-                <div class="glass-card stat-card">
-                    <p style="font-size:11px; color:var(--dim)">PRODUTIVIDADE</p>
-                    <div class="stat-val" id="total-meta">0%</div>
+                <div class="card stat-box">
+                    <p style="font-size:10px; color:var(--dim); font-family:'Syncopate'">EFICIÊNCIA STAFF</p>
+                    <h2 id="total-meta">0%</h2>
                 </div>
             </div>
+            <h3 style="font-family:'Syncopate'; font-size:12px; margin: 30px 0 20px;">RANKING DE PRODUTIVIDADE</h3>
             <div id="render-metas"></div>
         </section>
 
         <section id="p-hierarquia" class="page">
+            <h2 style="font-family:'Syncopate'; margin-bottom:40px;">👑 ADMINISTRAÇÃO ROBLOX</h2>
             <div id="render-hierarquia"></div>
         </section>
 
         <section id="p-logs" class="page">
-            <h2 style="font-family:'Syncopate'; font-size:18px; margin-bottom:30px;">📁 HISTÓRICO DE LOGS</h2>
-            <div class="glass-card" style="padding:0;" id="render-logs"></div>
-        </section>
-
-        <section id="p-regras" class="page">
-            <h2 style="font-family:'Syncopate'; font-size:18px; margin-bottom:30px;">📜 REGRAS GERAIS</h2>
-            <div id="render-regras"></div>
+            <h2 style="font-family:'Syncopate'; margin-bottom:30px;">📁 LOGS DE SEGURANÇA</h2>
+            <div class="card" style="padding:0; overflow:hidden;" id="render-logs"></div>
         </section>
 
         <section id="p-ticket" class="page">
-            <div class="glass-card" style="max-width:600px;">
-                <h2 style="font-family:'Syncopate'; font-size:15px; margin-bottom:20px;">REGISTRAR ATENDIMENTO</h2>
-                <input id="f-alvo" placeholder="Nome ou ID do Cidadão">
-                <textarea id="f-desc" placeholder="Descreva o motivo do ticket..." style="height:150px;"></textarea>
-                <button class="btn-main" onclick="saveTicket()">SALVAR LOG</button>
+            <div class="card" style="max-width: 650px; margin: auto;">
+                <h3 style="font-family:'Syncopate'; text-align:center; margin-bottom:30px; font-size:14px;">REGISTRO DE ATENDIMENTO</h3>
+                <input id="f-alvo" placeholder="ID do Jogador no Roblox">
+                <textarea id="f-desc" placeholder="Relatório da ocorrência..." style="height:180px;"></textarea>
+                <button class="btn-core" onclick="saveTicket()">SALVAR NO BANCO</button>
             </div>
         </section>
 
         <section id="p-gestao" class="page">
-            <h2 style="font-family:'Syncopate'; font-size:18px; margin-bottom:30px;">👥 EQUIPE</h2>
+            <h2 style="font-family:'Syncopate'; margin-bottom:30px;">👤 GESTÃO DE CONTAS</h2>
             <div id="render-gestao"></div>
         </section>
 
         <section id="p-config" class="page">
-            <div class="glass-card">
-                <h2 style="color:var(--red); font-family:'Syncopate'; font-size:15px;">ZONA DE PERIGO</h2>
-                <p style="margin:15px 0; color:var(--dim)">Ao clicar no botão abaixo, todos os tickets da semana serão apagados permanentemente.</p>
-                <button class="btn-main" style="background:var(--red); color:#fff;" onclick="resetData()">RESETAR SEMANA</button>
+            <div class="card" style="border-color:var(--red); text-align:center;">
+                <h2 style="color:var(--red); font-family:'Syncopate';">ZONA DE WIPEOUT</h2>
+                <p style="margin:20px 0; color:var(--dim)">Esta ação deletará todos os dados de tickets acumulados.</p>
+                <button class="btn-core" style="background:var(--red); color:#fff;" onclick="resetData()">CONFIRMAR WIPE</button>
             </div>
         </section>
     </main>
-
-    <div class="modal" id="modal-auth">
-        <div class="glass-card" style="width:100%; max-width:350px;">
-            <div id="login-box">
-                <h3 style="text-align:center; font-family:'Syncopate'; margin-bottom:25px;">ACESSO STAFF</h3>
-                <input id="l-u" placeholder="Usuário">
-                <input id="l-p" type="password" placeholder="Senha">
-                <button class="btn-main" onclick="doLogin()">ENTRAR</button>
-                <p onclick="toggleAuth()" style="text-align:center; font-size:12px; margin-top:20px; cursor:pointer; color:var(--dim)">Criar conta</p>
-            </div>
-            <div id="cad-box" style="display:none">
-                <h3 style="text-align:center; font-family:'Syncopate'; margin-bottom:25px;">NOVO STAFF</h3>
-                <input id="c-u" placeholder="Usuário">
-                <input id="c-p" type="password" placeholder="Senha">
-                <button class="btn-main" onclick="doCad()">CADASTRAR</button>
-                <p onclick="toggleAuth()" style="text-align:center; font-size:12px; margin-top:20px; cursor:pointer; color:var(--dim)">Voltar ao login</p>
-            </div>
-            <button onclick="closeModal()" style="background:none; border:none; color:var(--red); width:100%; margin-top:15px; cursor:pointer; font-weight:700;">FECHAR</button>
-        </div>
-    </div>
 
     <script>
         // CONFIG FIREBASE
@@ -268,7 +282,7 @@
 
         function go(id, btn) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item, .mob-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.nav-link, .mob-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('p-'+id).classList.add('active');
             if(btn) btn.classList.add('active');
         }
@@ -284,20 +298,20 @@
             const u = document.getElementById('l-u').value.trim();
             const p = document.getElementById('l-p').value.trim();
             db.ref('contas').once('value', snap => {
-                let found = null;
-                snap.forEach(c => { if(c.val().usuario === u && c.val().senha === p) found = { key: c.key, ...c.val() }; });
-                if(found) {
-                    userLogado = found;
-                    document.getElementById('staff-menu').style.display = 'block';
-                    document.querySelectorAll('.staff-only').forEach(el => el.style.display = 'block');
-                    document.getElementById('mob-login-trigger').style.display = 'none';
-                    if(PODER[found.cargo.toLowerCase()] >= 80) document.getElementById('admin-menu').style.display = 'block';
-                    document.getElementById('login-trigger').innerText = "LOGOUT";
-                    document.getElementById('login-trigger').onclick = () => location.reload();
+                let user = null;
+                snap.forEach(c => { if(c.val().usuario === u && c.val().senha === p) user = { key: c.key, ...c.val() }; });
+                if(user) {
+                    userLogado = user;
+                    document.getElementById('staff-section').style.display = 'block';
+                    document.querySelectorAll('.s-view').forEach(e => e.style.display = 'block');
+                    document.getElementById('mob-login-btn').style.display = 'none';
+                    if(PODER[user.cargo.toLowerCase()] >= 80) document.getElementById('admin-section').style.display = 'block';
+                    document.getElementById('btn-auth-pc').innerText = "SAIR";
+                    document.getElementById('btn-auth-pc').onclick = () => location.reload();
                     closeModal();
                     go('dash');
-                    startSync();
-                } else alert("Erro: Usuário ou senha inválidos.");
+                    sync();
+                } else alert("USUÁRIO NÃO RECONHECIDO NO BANCO.");
             });
         }
 
@@ -306,12 +320,12 @@
             const p = document.getElementById('c-p').value.trim();
             if(!u || !p) return;
             db.ref('contas').push({ usuario: u, senha: p, cargo: "Suporte" }).then(() => {
-                alert("Cadastrado! Peça ao Dono para te promover.");
+                alert("PEDIDO DE ACESSO ENVIADO.");
                 toggleAuth();
             });
         }
 
-        function startSync() {
+        function sync() {
             db.ref('relatorios').on('value', relSnap => {
                 db.ref('contas').on('value', staffSnap => {
                     const hDiv = document.getElementById('render-hierarquia'); hDiv.innerHTML = "";
@@ -320,37 +334,44 @@
                     const lDiv = document.getElementById('render-logs'); lDiv.innerHTML = "";
                     let total = 0; let somaP = 0; let count = 0;
 
-                    // Logs
-                    let logsArr = [];
-                    relSnap.forEach(r => logsArr.unshift(r.val()));
-                    logsArr.slice(0, 20).forEach(l => {
-                        lDiv.innerHTML += `<div class="log-row"><b>${l.staff}</b><span>${l.alvo}</span><span style="color:var(--dim)">${l.desc}</span></div>`;
+                    let logs = []; relSnap.forEach(r => logs.unshift(r.val()));
+                    logs.slice(0, 40).forEach(l => {
+                        lDiv.innerHTML += `<div style="padding:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; font-size:12px;">
+                            <span style="color:var(--primary); font-weight:800;">${l.staff}</span>
+                            <span>ID: ${l.alvo}</span>
+                            <span style="color:var(--dim)">${l.desc}</span>
+                        </div>`;
                     });
 
                     CARGOS.forEach(rank => {
-                        let members = [];
+                        let mbs = [];
                         staffSnap.forEach(s => {
                             if(s.val().cargo.toLowerCase() === rank.toLowerCase()) {
-                                members.push(s.val().usuario);
+                                mbs.push(s.val().usuario);
                                 count++;
-                                let tickets = 0; relSnap.forEach(r => { if(r.val().staff === s.val().usuario) tickets++; });
-                                total += tickets;
-                                let p = Math.min((tickets/20)*100, 100); somaP += p;
-                                mDiv.innerHTML += `<div class="glass-card" style="display:flex; align-items:center; padding:15px; margin-bottom:10px;">
-                                    <div style="width:120px; font-weight:800;">${s.val().usuario}</div>
-                                    <div style="flex:1; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:0 20px;">
-                                        <div style="width:${p}%; background:var(--primary); height:100%; border-radius:10px; box-shadow:0 0 10px var(--primary);"></div>
+                                let tks = 0; relSnap.forEach(r => { if(r.val().staff === s.val().usuario) tks++; });
+                                total += tks;
+                                let pct = Math.min((tks/20)*100, 100); somaP += pct;
+
+                                mDiv.innerHTML += `<div class="card" style="padding:15px; display:flex; align-items:center; margin-bottom:10px;">
+                                    <div style="width:110px; font-weight:900; font-size:12px;">${s.val().usuario}</div>
+                                    <div style="flex:1; height:8px; background:rgba(255,255,255,0.05); border-radius:10px; margin:0 20px; overflow:hidden;">
+                                        <div style="width:${pct}%; background:var(--primary); height:100%;"></div>
                                     </div>
-                                    <div style="font-weight:900;">${tickets}/20</div>
+                                    <div style="font-weight:900; font-size:12px;">${tks}/20</div>
                                 </div>`;
-                                gDiv.innerHTML += `<div class="glass-card" style="display:flex; justify-content:space-between; padding:15px; margin-bottom:10px;">
-                                    <span>${s.val().usuario} (${s.val().cargo})</span>
-                                    <button onclick="setRank('${s.key}', '${s.val().cargo}')" style="background:var(--primary); border:none; border-radius:5px; padding:5px 10px; font-weight:800; cursor:pointer;">SETAR</button>
+
+                                gDiv.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; padding:15px; margin-bottom:10px;">
+                                    <span>${s.val().usuario} <small>(${s.val().cargo})</small></span>
+                                    <button onclick="upRank('${s.key}')" class="btn-core" style="width:auto; padding:5px 15px; font-size:10px;">PROMOVER</button>
                                 </div>`;
                             }
                         });
-                        if(members.length > 0 || rank === "Fundador & Dono") {
-                            hDiv.innerHTML += `<div class="rank-title">${rank}</div><div class="staff-list">${members.map(m => `<div class="staff-name">${m}</div>`).join('') || '<div class="staff-name" style="opacity:0.3">Vago</div>'}</div>`;
+                        if(mbs.length > 0 || rank === "Fundador & Dono") {
+                            hDiv.innerHTML += `<div style="font-family:'Syncopate'; font-size:10px; color:var(--primary); margin:35px 0 15px;">${rank}</div>
+                                <div style="display:flex; flex-wrap:wrap;">
+                                    ${mbs.map(m => `<div class="staff-tag">${m}</div>`).join('') || '<div style="opacity:0.2; font-size:11px;">VAGO</div>'}
+                                </div>`;
                         }
                     });
                     document.getElementById('total-tickets').innerText = total;
@@ -359,34 +380,24 @@
             });
         }
 
-        function setRank(key, atual) {
-            const n = prompt("Novo cargo (Manager, Coordenador, Administrador, Moderador, Suporte):");
-            if(n && PODER[n.toLowerCase()]) db.ref('contas/'+key).update({ cargo: n });
+        function upRank(k) {
+            const r = prompt("Novo cargo:");
+            if(r && CARGOS.includes(r)) db.ref('contas/'+k).update({ cargo: r });
         }
 
         function saveTicket() {
             const a = document.getElementById('f-alvo').value;
             const d = document.getElementById('f-desc').value;
-            if(!a || !d) return alert("Preencha os campos!");
+            if(!a || !d) return alert("PREENCHA TUDO!");
             db.ref('relatorios').push({ staff: userLogado.usuario, alvo: a, desc: d }).then(() => {
-                alert("Ticket Enviado!");
+                alert("TICKET ARQUIVADO!");
                 document.getElementById('f-alvo').value = ""; document.getElementById('f-desc').value = "";
             });
         }
 
         function resetData() {
-            if(userLogado.usuario === DONO_NOME && confirm("Deseja mesmo zerar todos os tickets?")) {
-                db.ref('relatorios').remove();
-            }
+            if(userLogado.usuario === DONO_NOME && confirm("WIPE TOTAL?")) db.ref('relatorios').remove();
         }
-
-        // Regras Iniciais
-        db.ref('regras').on('value', snap => {
-            const div = document.getElementById('render-regras'); div.innerHTML = "";
-            snap.forEach(r => {
-                div.innerHTML += `<div class="glass-card"><b>${r.val().titulo || 'REGRA'}</b><p style="color:var(--dim); margin-top:10px;">${r.val().descricao || r.val()}</p></div>`;
-            });
-        });
     </script>
 </body>
 </html>
