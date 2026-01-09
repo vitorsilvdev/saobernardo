@@ -14,52 +14,37 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* SIDEBAR */
         .sidebar { width: 280px; background: var(--nav); height: 100vh; position: fixed; border-right: 1px solid var(--border); padding: 30px 20px; z-index: 1000; display: flex; flex-direction: column; }
-        .main { margin-left: 280px; padding: 40px; min-height: 100vh; transition: 0.3s; }
+        .main { margin-left: 280px; padding: 40px; min-height: 100vh; }
         
         .logo-area { text-align: center; margin-bottom: 30px; }
         .logo-area img { width: 80px; border-radius: 50%; border: 2px solid var(--primary); padding: 3px; }
 
-        /* NAVIGATION */
         .nav-group { margin-bottom: 25px; }
         .nav-label { font-size: 10px; color: #444; font-weight: 800; text-transform: uppercase; margin-left: 10px; margin-bottom: 8px; display: block; }
         .nav-item { padding: 12px 15px; color: var(--dim); cursor: pointer; border-radius: 10px; display: flex; align-items: center; gap: 10px; transition: 0.2s; font-size: 14px; margin-bottom: 4px; }
         .nav-item:hover { background: #111; color: #fff; }
         .nav-item.active { background: var(--primary); color: #000; font-weight: 700; }
 
-        /* CARDS & UI */
         .card { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 15px; margin-bottom: 20px; }
         .btn { background: var(--primary); color: #000; border: none; padding: 14px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 11px; width: 100%; transition: 0.2s; margin-top: 10px; }
-        .btn-red { background: #ff4444; color: white; }
         
         input, select, textarea { background: #000; border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: #fff; width: 100%; margin: 8px 0; outline: none; }
-        textarea { height: 100px; resize: none; }
-
-        /* DASHBOARD STATS */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .stat-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; border-top: 3px solid var(--primary); }
-        .stat-card h2 { font-size: 28px; color: var(--primary); }
-        .stat-card p { font-size: 10px; color: var(--dim); text-transform: uppercase; margin-top: 5px; }
-
-        /* PREVIEW RELATORIO */
-        .report-preview { background: #000; padding: 20px; border-radius: 10px; border: 1px dashed var(--primary); font-family: monospace; white-space: pre-wrap; margin-top: 15px; color: #eee; }
-
-        /* MODAIS */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
         
-        @media (max-width: 992px) {
-            .sidebar { transform: translateX(-100%); transition: 0.3s; }
-            .sidebar.open { transform: translateX(0); }
-            .main { margin-left: 0; padding: 80px 15px; }
-        }
+        .report-preview { background: #000; padding: 20px; border-radius: 10px; border: 1px dashed var(--primary); font-family: monospace; white-space: pre-wrap; margin-top: 15px; color: #eee; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+
+        /* Estilo para o JSON de Regras */
+        .regra-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #1a1a1a; }
+        .regra-titulo { color: var(--primary); font-weight: 700; text-transform: uppercase; font-size: 13px; }
+        .regra-desc { color: var(--dim); font-size: 14px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar">
         <div class="logo-area">
-            <img src="https://i.imgur.com/pUWtuIB.png" alt="Logo">
+            <img src="https://i.imgur.com/pUWtuIB.png">
             <h1 style="font-family:'Syncopate'; font-size:10px; color:var(--primary); margin-top:12px;">SÃO BERNARDO RP</h1>
             <div id="user-info" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #1a1a1a;">
                 <p id="u-nome" style="font-weight:700; font-size:14px;"></p>
@@ -69,29 +54,26 @@
 
         <nav id="main-nav">
             <div class="nav-group">
-                <span class="nav-label">Portal Oficial</span>
+                <span class="nav-label">Portal</span>
                 <div class="nav-item active" onclick="go('home', this)">🏠 Início</div>
-                <div class="nav-item" onclick="go('regras', this)">📜 Regras da Cidade</div>
+                <div class="nav-item" onclick="go('regras', this)">📜 Regras</div>
                 <div class="nav-item" onclick="go('edital', this)">📩 Edital Staff</div>
             </div>
 
-            <div id="nav-suporte" class="nav-group" style="display:none">
-                <span class="nav-label">Operacional Staff</span>
+            <div id="nav-suporte" style="display:none" class="nav-group">
+                <span class="nav-label">Operacional</span>
                 <div class="nav-item" onclick="go('atendimento', this)">🎧 Atendimento</div>
-                <div class="nav-item" onclick="go('relatorios', this)">📝 Enviar Relatórios</div>
-                <div class="nav-item" onclick="go('dashboard', this)">📊 Meu Desempenho</div>
+                <div class="nav-item" onclick="go('relatorios', this)">📝 Relatórios</div>
             </div>
 
-            <div id="nav-direcao" class="nav-group" style="display:none">
-                <span class="nav-label">Administrativo</span>
-                <div class="nav-item" onclick="go('gestao-equipe', this)">👥 Gestão de Equipe</div>
-                <div class="nav-item" onclick="go('auditoria', this)">📑 Auditoria Geral</div>
+            <div id="nav-direcao" style="display:none" class="nav-group">
+                <span class="nav-label">Administração</span>
+                <div class="nav-item" onclick="go('gestao-equipe', this)">👥 Gestão Equipe</div>
             </div>
         </nav>
 
         <div style="margin-top:auto;" id="auth-actions">
-            <button class="btn" style="background:transparent; border:1px solid var(--primary); color:var(--primary); margin-bottom:8px;" onclick="openModal('modal-reg')">Criar Conta</button>
-            <button class="btn" onclick="openModal('modal-login')">Entrar</button>
+            <button class="btn" onclick="openModal('modal-login')">Acessar Sistema</button>
         </div>
     </aside>
 
@@ -99,89 +81,55 @@
         <section id="page-home" class="page">
             <div class="card" style="padding:100px 20px; text-align:center;">
                 <h2 style="font-family:'Syncopate'; color:var(--primary); font-size:2.5rem;">BEM-VINDO</h2>
-                <p style="color:var(--dim); font-size:1.1rem; margin-top:10px;">Portal de Serviços e Gestão Oficial São Bernardo RP.</p>
+                <p style="color:var(--dim); margin-top:10px;">Portal Oficial São Bernardo RP.</p>
             </div>
         </section>
 
-        <section id="page-dashboard" class="page" style="display:none">
-            <h2>📊 Minhas Estatísticas</h2>
-            <div class="stats-grid">
-                <div class="stat-card"><h2 id="st-ticket">0</h2><p>Tickets Atendidos</p></div>
-                <div class="stat-card"><h2 id="st-ban">0</h2><p>Bans Solicitados</p></div>
-                <div class="stat-card"><h2 id="st-outros">0</h2><p>Outros Relatos</p></div>
-            </div>
-            <div class="card">
-                <h3>Relatórios Recentes</h3>
-                <div id="recent-list" style="margin-top:15px; font-size:13px; color:var(--dim);">Nenhum dado registrado.</div>
-            </div>
+        <section id="page-regras" class="page" style="display:none">
+            <h2>📜 Regulamento da Cidade</h2>
+            <div class="card" id="regras-content">Carregando regulamento...</div>
         </section>
 
-        <section id="page-atendimento" class="page" style="display:none">
-            <h2>🎧 Mensagens de Atendimento</h2>
-            <div class="card">
-                <p style="margin-bottom:20px; color:var(--dim);">Copie as frases oficiais para usar no ticket:</p>
-                <button class="btn" onclick="copyText('at-ent')">Copiar: Início de Atendimento</button>
-                <button class="btn" onclick="copyText('at-pro')">Copiar: Solicitação de Provas</button>
-                <button class="btn" style="background:#222; color:#fff" onclick="copyText('at-sai')">Copiar: Conclusão de Ticket</button>
+        <section id="page-edital" class="page" style="display:none">
+            <h2>📩 Edital Staff</h2>
+            <div class="card" style="padding:0; overflow:hidden; height: 80vh;">
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfp63T5YmRz0YJ6u_pLz5uL6u/viewform?embedded=true" width="100%" height="100%" frameborder="0">Carregando...</iframe>
             </div>
         </section>
 
         <section id="page-relatorios" class="page" style="display:none">
-            <h2>📝 Enviar Novo Relatório</h2>
+            <h2>📝 Enviar Relatório</h2>
             <div class="card">
                 <select id="rel-tipo" onchange="renderPreview()">
-                    <option value="Ticket">Atendimento de Ticket</option>
-                    <option value="Banimento">Solicitação de Banimento</option>
-                    <option value="Inatividade">Aviso de Inatividade</option>
-                    <option value="Promocao">Promoção Staff</option>
-                    <option value="Rebaixamento">Rebaixamento Staff</option>
-                    <option value="Demissao">Demissão Staff</option>
+                    <option value="Ticket">Atendimento Ticket</option>
+                    <option value="Banimento">Solicitação Banimento</option>
+                    <option value="Promocao">Promoção</option>
+                    <option value="Rebaixamento">Rebaixamento</option>
+                    <option value="Demissao">Demissão</option>
                 </select>
-                <input type="text" id="rel-alvo" placeholder="Nome/ID de quem foi atendido ou alvo" oninput="renderPreview()">
-                <textarea id="rel-provas" placeholder="Links de Provas (Imgur/YouTube/Discord)" oninput="renderPreview()"></textarea>
-                
-                <div class="report-preview" id="rel-preview">
-Responsável: ---
-Atendido: ---
-Provas: ---
-                </div>
-                <button class="btn" style="margin-top:20px;" onclick="enviarRelatorio()">Registrar Relatório no Sistema</button>
+                <input type="text" id="rel-alvo" placeholder="Atendido / Alvo" oninput="renderPreview()">
+                <textarea id="rel-provas" placeholder="Link das provas" oninput="renderPreview()"></textarea>
+                <div class="report-preview" id="rel-preview">Responsável: ---\nAtendido: ---\nProvas: ---</div>
+                <button class="btn" onclick="enviarRelatorio()">Enviar</button>
             </div>
         </section>
 
         <section id="page-gestao-equipe" class="page" style="display:none">
-            <h2>👥 Controle de Hierarquia</h2>
-            <div id="staff-list" style="margin-top:20px;"></div>
-        </section>
-
-        <section id="page-regras" class="page" style="display:none">
-            <h2>📜 Regulamento Interno</h2>
-            <div class="card">Confira as regras atualizadas em nosso Discord oficial.</div>
+            <h2>👥 Gestão de Equipe</h2>
+            <div id="staff-list"></div>
         </section>
     </main>
 
     <div class="modal" id="modal-login">
-        <div class="card" style="width:100%; max-width:350px;">
-            <h3 style="text-align:center; color:var(--primary); margin-bottom:20px;">ENTRAR NO PORTAL</h3>
+        <div class="card" style="width:350px;">
+            <h3 style="text-align:center; color:var(--primary);">LOGIN</h3>
             <input type="text" id="log-u" placeholder="Usuário">
             <input type="password" id="log-p" placeholder="Senha">
-            <button class="btn" onclick="login()">Acessar</button>
-            <p onclick="closeModal('modal-login')" style="text-align:center; margin-top:15px; font-size:12px; cursor:pointer;">Cancelar</p>
-        </div>
-    </div>
-
-    <div class="modal" id="modal-reg">
-        <div class="card" style="width:100%; max-width:350px;">
-            <h3 style="text-align:center; color:var(--primary); margin-bottom:20px;">SOLICITAR ACESSO</h3>
-            <input type="text" id="reg-u" placeholder="Defina seu Usuário">
-            <input type="password" id="reg-p" placeholder="Crie sua Senha">
-            <button class="btn" onclick="registro()">Criar Conta</button>
-            <p onclick="closeModal('modal-reg')" style="text-align:center; margin-top:15px; font-size:12px; cursor:pointer;">Voltar</p>
+            <button class="btn" onclick="login()">Entrar</button>
         </div>
     </div>
 
     <script>
-        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDNxdh4OtaZN_5dB-nzsccqFAYbitmn_-A",
             authDomain: "saobernardo-8c986.firebaseapp.com",
@@ -194,178 +142,110 @@ Provas: ---
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // JSON DE REGRAS
+        const regrasJSON = [
+            { "t": "RDM", "d": "Matar outro jogador sem motivo aparente ou história prévia." },
+            { "t": "VDM", "d": "Utilizar o veículo como arma para atropelar jogadores." },
+            { "t": "Combat Log", "d": "Sair do jogo durante uma ação ou abordagem." },
+            { "t": "Meta Gaming", "d": "Utilizar informações de fora do jogo (Discord/Live) dentro do RP." }
+        ];
+
+        function carregarRegras() {
+            const container = document.getElementById('regras-content');
+            container.innerHTML = regrasJSON.map(r => `
+                <div class="regra-item">
+                    <div class="regra-titulo">${r.t}</div>
+                    <div class="regra-desc">${r.d}</div>
+                </div>
+            `).join('');
+        }
+
         let userLogado = null;
 
-        // SISTEMA DE NAVEGAÇÃO
         function go(id, el) {
             document.querySelectorAll('.page').forEach(p => p.style.display='none');
             document.getElementById('page-'+id).style.display='block';
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            if(el) el.classList.add('active');
+            if(el) {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                el.classList.add('active');
+            }
+            if(id === 'regras') carregarRegras();
         }
 
         function openModal(id) { document.getElementById(id).style.display='flex'; }
         function closeModal(id) { document.getElementById(id).style.display='none'; }
 
-        // REGISTRO (PADRÃO MEMBRO)
-        function registro() {
-            const u = document.getElementById('reg-u').value.trim();
-            const p = document.getElementById('reg-p').value.trim();
-            if(!u || !p) return alert("Preencha os campos!");
-
-            db.ref('contas').push({
-                usuario: u,
-                senha: p,
-                cargo: "Membro"
-            }).then(() => {
-                alert("Conta criada como Membro! Aguarde promoção de um Responsável.");
-                closeModal('modal-reg');
-            });
-        }
-
-        // LOGIN COM LEITURA DE CARGO RESPONSÁVEL
         function login() {
             const u = document.getElementById('log-u').value.trim();
             const p = document.getElementById('log-p').value.trim();
 
-            db.ref('contas').once('value', async snap => {
-                let userFound = null;
+            db.ref('contas').once('value', snap => {
+                let found = null;
                 snap.forEach(c => {
                     const d = c.val();
-                    if(d.usuario === u && d.senha === p) userFound = { id: c.key, ...d };
+                    if(d.usuario === u && d.senha === p) found = { id: c.key, ...d };
                 });
 
-                if(userFound) {
-                    // Checa se tem cargo personalizado em configuracoes
-                    const cargoExtra = await db.ref(`configuracoes/cargos/${userFound.id}/nome`).get();
-                    if(cargoExtra.exists()) userFound.cargo = cargoExtra.val();
-                    
-                    userLogado = userFound;
-                    liberarAcesso();
-                } else {
-                    alert("Dados incorretos!");
-                }
+                if(found) {
+                    userLogado = found;
+                    closeModal('modal-login');
+                    liberarMenus();
+                } else { alert("Erro no login!"); }
             });
         }
 
-        function liberarAcesso() {
-            closeModal('modal-login');
-            document.getElementById('auth-actions').innerHTML = `<button class="btn btn-red" onclick="location.reload()">SAIR DO SITE</button>`;
-            
-            // Perfil
+        function liberarMenus() {
+            document.getElementById('auth-actions').innerHTML = `<button class="btn" style="background:red;color:white" onclick="location.reload()">SAIR</button>`;
             document.getElementById('user-info').style.display = 'block';
             document.getElementById('u-nome').innerText = userLogado.usuario;
             document.getElementById('u-cargo').innerText = userLogado.cargo;
 
             const cargo = userLogado.cargo;
-            const ehStaff = ["Suporte", "Moderador", "Administrador", "Coordenador", "Manager", "Responsável STAFF", "Dono"].includes(cargo);
-            const ehDirecao = ["Responsável STAFF", "Manager", "Dono", "Coordenador"].includes(cargo);
+            const ehStaff = ["Suporte", "Moderador", "Administrador", "Coordenador", "Manager", "Responsável Staff", "Dono"].includes(cargo);
+            const ehDirecao = ["Responsável Staff", "Manager", "Dono", "Coordenador"].includes(cargo);
 
-            if(ehStaff) {
-                document.getElementById('nav-suporte').style.display = 'block';
-                atualizarMinhaDash();
-            }
+            if(ehStaff) document.getElementById('nav-suporte').style.display = 'block';
             if(ehDirecao) {
                 document.getElementById('nav-direcao').style.display = 'block';
-                carregarListaEquipe();
+                carregarStaff();
             }
-
             go('home');
-            renderPreview();
         }
 
-        // MENSAGENS DE ATENDIMENTO
-        function copyText(tipo) {
-            let m = "";
-            if(tipo === 'at-ent') m = `Olá, me chamo ${userLogado.usuario}. Como posso ser útil em seu ticket?`;
-            if(tipo === 'at-pro') m = `Para agilizar seu caso, por favor envie as provas (vídeo ou imagem) do ocorrido.`;
-            if(tipo === 'at-sai') m = `Seu atendimento foi finalizado. Caso precise de algo mais, abra um novo ticket. Bom RP!`;
-            navigator.clipboard.writeText(m);
-            alert("Texto de atendimento copiado!");
-        }
-
-        // RELATÓRIOS
         function renderPreview() {
             if(!userLogado) return;
             const tipo = document.getElementById('rel-tipo').value;
             const alvo = document.getElementById('rel-alvo').value || "---";
             const provas = document.getElementById('rel-provas').value || "---";
-            
-            let labelAlvo = "Atendido";
-            if(["Promocao", "Rebaixamento", "Demissao", "Banimento"].includes(tipo)) labelAlvo = "Alvo";
-
-            document.getElementById('rel-preview').innerText = `Responsável: ${userLogado.usuario}\n${labelAlvo}: ${alvo}\nProvas: ${provas}`;
+            document.getElementById('rel-preview').innerText = `Responsável: ${userLogado.usuario}\n${tipo === 'Ticket' ? 'Atendido' : 'Alvo'}: ${alvo}\nProvas: ${provas}`;
         }
 
         function enviarRelatorio() {
-            const tipo = document.getElementById('rel-tipo').value;
-            const alvo = document.getElementById('rel-alvo').value;
-            const provas = document.getElementById('rel-provas').value;
-
-            if(!alvo || !provas) return alert("Preencha todos os campos!");
-
             db.ref('relatorios').push({
-                staffID: userLogado.id,
-                staffNome: userLogado.usuario,
-                tipo: tipo,
-                alvo: alvo,
-                provas: provas,
+                staff: userLogado.usuario,
+                tipo: document.getElementById('rel-tipo').value,
+                alvo: document.getElementById('rel-alvo').value,
+                provas: document.getElementById('rel-provas').value,
                 data: new Date().toLocaleString()
-            }).then(() => {
-                alert("Relatório enviado com sucesso!");
-                document.getElementById('rel-alvo').value = "";
-                document.getElementById('rel-provas').value = "";
-                atualizarMinhaDash();
-                renderPreview();
-            });
+            }).then(() => { alert("Enviado!"); go('home'); });
         }
 
-        // DASHBOARD
-        function atualizarMinhaDash() {
-            db.ref('relatorios').orderByChild('staffID').equalTo(userLogado.id).on('value', snap => {
-                let t = 0, b = 0, o = 0;
-                let html = "";
-                snap.forEach(c => {
-                    const r = c.val();
-                    if(r.tipo === "Ticket") t++;
-                    else if(r.tipo === "Banimento") b++;
-                    else o++;
-                    html = `<div>[${r.data}] ${r.tipo} -> ${r.alvo}</div>` + html;
-                });
-                document.getElementById('st-ticket').innerText = t;
-                document.getElementById('st-ban').innerText = b;
-                document.getElementById('st-outros').innerText = o;
-                document.getElementById('recent-list').innerHTML = html || "Sem relatórios.";
-            });
-        }
-
-        // GESTÃO EQUIPE
-        function carregarListaEquipe() {
+        function carregarStaff() {
             db.ref('contas').on('value', snap => {
                 const div = document.getElementById('staff-list');
                 div.innerHTML = "";
                 snap.forEach(c => {
-                    const id = c.key;
-                    db.ref(`configuracoes/cargos/${id}/nome`).once('value', s => {
-                        const cargo = s.val() || c.val().cargo;
-                        div.innerHTML += `
-                            <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-                                <div><b>${c.val().usuario}</b><br><small style="color:var(--primary)">${cargo}</small></div>
-                                <button class="btn" style="width:auto; padding:5px 15px;" onclick="mudarCargo('${id}')">Setar</button>
-                            </div>
-                        `;
-                    });
+                    div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between;">
+                        <span>${c.val().usuario} - <b>${c.val().cargo}</b></span>
+                        <button onclick="setar('${c.key}')" style="width:auto; padding:5px 10px; background:var(--primary); border:none; cursor:pointer">SETAR</button>
+                    </div>`;
                 });
             });
         }
 
-        function mudarCargo(id) {
-            const novo = prompt("Digite o novo cargo:");
-            if(novo) {
-                db.ref(`configuracoes/cargos/${id}`).update({ nome: novo });
-                db.ref(`contas/${id}`).update({ cargo: novo });
-                alert("Cargo alterado!");
-            }
+        function setar(id) {
+            const n = prompt("Novo Cargo:");
+            if(n) db.ref(`contas/${id}`).update({ cargo: n });
         }
     </script>
 </body>
