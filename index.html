@@ -33,14 +33,13 @@
             .mobile-nav { 
                 position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav); 
                 border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); 
-                padding: 10px; z-index: 2000; height: 70px;
+                padding: 10px; z-index: 2000; height: 75px;
             }
-            .mobile-item { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: var(--dim); text-decoration: none; font-weight: 700; text-transform: uppercase; }
+            .mobile-item { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: var(--dim); cursor: pointer; text-transform: uppercase; font-weight: 700; text-align: center; }
             .mobile-item.active { color: var(--primary); }
-            .mobile-item i { font-size: 20px; margin-bottom: 4px; }
         }
 
-        /* DASHBOARD - QUADRADOS ARREDONDADOS */
+        /* DASHBOARD */
         .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .dash-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
         .dash-square { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
@@ -49,6 +48,10 @@
         .rank-header { background: linear-gradient(90deg, var(--primary), transparent); color: #000; padding: 10px 15px; font-weight: 900; font-family: 'Syncopate'; font-size: 10px; border-radius: 4px; margin: 25px 0 10px; text-transform: uppercase; }
         .rank-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
         .staff-tag { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 10px; text-align: center; font-size: 12px; font-weight: 700; border-bottom: 3px solid var(--primary); }
+
+        /* LOGS */
+        .log-item { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 10px; margin-bottom: 10px; font-size: 13px; }
+        .log-header { display: flex; justify-content: space-between; margin-bottom: 5px; color: var(--primary); font-weight: 800; font-size: 11px; }
 
         /* METAS */
         .meta-box { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; }
@@ -59,7 +62,6 @@
         .regra-card { border-left: 4px solid var(--primary); padding: 15px; background: var(--card); margin-bottom: 12px; border-radius: 0 10px 10px 0; }
         .regra-card b { color: var(--primary); font-family: 'Syncopate'; font-size: 11px; display: block; margin-bottom: 5px; }
 
-        /* UI */
         .page { display: none; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -86,7 +88,7 @@
         <div id="pc-staff-area" style="display:none; margin-top:20px; border-top:1px solid #222; padding-top:20px;">
             <div class="nav-item" onclick="go('dash')">📊 DASHBOARD</div>
             <div class="nav-item" onclick="go('hierarquia')">👑 HIERARQUIA</div>
-            <div class="nav-item" onclick="go('metas')">📈 METAS</div>
+            <div class="nav-item" onclick="go('logs')">📁 LOGS GERAIS</div>
             <div class="nav-item" onclick="go('ticket')">📝 TICKET</div>
         </div>
         <div id="pc-admin-area" style="display:none; margin-top:10px;">
@@ -97,11 +99,11 @@
     </aside>
 
     <nav class="mobile-nav">
-        <a class="mobile-item active" onclick="go('home')">Início</a>
-        <a class="mobile-item" onclick="go('regras')">Regras</a>
-        <a class="mobile-item" id="mob-login-btn" onclick="openLogin()">Login</a>
-        <a class="mobile-item staff-only" style="display:none" onclick="go('dash')">Painel</a>
-        <a class="mobile-item staff-only" style="display:none" onclick="go('ticket')">Ticket</a>
+        <div class="mobile-item active" onclick="go('home')">Início</div>
+        <div class="mobile-item" onclick="go('regras')">Regras</div>
+        <div class="mobile-item staff-only" style="display:none" onclick="go('dash')">Painel</div>
+        <div class="mobile-item staff-only" style="display:none" onclick="go('logs')">Logs</div>
+        <div class="mobile-item" id="mob-login-btn" onclick="openLogin()">Login</div>
     </nav>
 
     <main class="main-content">
@@ -112,16 +114,13 @@
             </div>
         </section>
 
-        <section id="p-regras" class="page">
-            <h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">📜 REGRAS DO SERVIDOR</h2>
-            <div id="render-regras">Carregando...</div>
-        </section>
+        <section id="p-regras" class="page"><h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">📜 REGRAS</h2><div id="render-regras"></div></section>
 
         <section id="p-dash" class="page">
-            <h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">📊 DASHBOARD STAFF</h2>
+            <h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">📊 DASHBOARD</h2>
             <div class="dash-grid">
                 <div class="dash-card">
-                    <div><h4 style="font-size:9px; color:var(--dim)">TICKETS</h4><p>Total Semanal</p></div>
+                    <div><h4 style="font-size:9px; color:var(--dim)">TICKETS</h4><p>Total Geral</p></div>
                     <div class="dash-square" style="background:var(--blue)" id="val-total">0</div>
                 </div>
                 <div class="dash-card">
@@ -129,16 +128,14 @@
                     <div class="dash-square" style="background:var(--green)" id="val-media">0%</div>
                 </div>
             </div>
-        </section>
-
-        <section id="p-hierarquia" class="page">
-            <h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">👑 HIERARQUIA OFICIAL</h2>
-            <div id="render-hierarquia"></div>
-        </section>
-
-        <section id="p-metas" class="page">
-            <h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">📈 METAS SEMANAIS</h2>
             <div id="render-metas"></div>
+        </section>
+
+        <section id="p-hierarquia" class="page"><div id="render-hierarquia"></div></section>
+
+        <section id="p-logs" class="page">
+            <h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">📁 LOGS DE ATENDIMENTO</h2>
+            <div id="render-logs"></div>
         </section>
 
         <section id="p-ticket" class="page">
@@ -150,17 +147,11 @@
             </div>
         </section>
 
-        <section id="p-gestao" class="page">
-            <h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">👥 GESTÃO DE EQUIPE</h2>
-            <div id="render-gestao"></div>
-        </section>
+        <section id="p-gestao" class="page"><h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">👥 GESTÃO DE EQUIPE</h2><div id="render-gestao"></div></section>
 
         <section id="p-config" class="page">
             <h2 style="font-family:'Syncopate'; color:var(--red); margin-bottom:20px; font-size:18px;">⚙️ ZERAR SEMANA</h2>
-            <div class="card">
-                <p style="font-size:13px; margin-bottom:20px; color:var(--dim);">Apenas o Fundador pode resetar todos os tickets da semana para iniciar a próxima.</p>
-                <button class="btn btn-red" onclick="resetData()">RESETAR TUDO AGORA</button>
-            </div>
+            <div class="card"><button class="btn btn-red" onclick="resetData()">RESETAR TUDO AGORA</button></div>
         </section>
     </main>
 
@@ -171,21 +162,20 @@
                 <input id="l-u" placeholder="Usuário">
                 <input id="l-p" type="password" placeholder="Senha">
                 <button class="btn" onclick="doLogin()">ENTRAR</button>
-                <p style="text-align:center; margin-top:15px; font-size:12px; color:var(--dim);" onclick="toggleAuth()">Novo? <b>Crie uma conta</b></p>
+                <p style="text-align:center; margin-top:15px; font-size:12px; color:var(--dim); cursor:pointer;" onclick="toggleAuth()">Novo? <b>Crie uma conta</b></p>
             </div>
             <div id="box-cad" style="display:none">
-                <h3 style="text-align:center; font-family:'Syncopate'; margin-bottom:20px;">CRIAR CONTA</h3>
-                <input id="c-u" placeholder="Escolha Usuário">
-                <input id="c-p" type="password" placeholder="Escolha Senha">
+                <h3 style="text-align:center; font-family:'Syncopate'; margin-bottom:20px;">CADASTRO</h3>
+                <input id="c-u" placeholder="Usuário">
+                <input id="c-p" type="password" placeholder="Senha">
                 <button class="btn" onclick="doCad()">CADASTRAR</button>
-                <p style="text-align:center; margin-top:15px; font-size:12px; color:var(--dim);" onclick="toggleAuth()">Já tem conta? <b>Login</b></p>
+                <p style="text-align:center; margin-top:15px; font-size:12px; color:var(--dim); cursor:pointer;" onclick="toggleAuth()">Já tem conta? <b>Login</b></p>
             </div>
             <button class="btn btn-red" style="margin-top:10px; background:transparent;" onclick="closeLogin()">VOLTAR</button>
         </div>
     </div>
 
     <script>
-        // CONFIG FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDNxdh4OtaZN_5dB-nzsccqFAYbitmn_-A",
             authDomain: "saobernardo-8c986.firebaseapp.com",
@@ -198,7 +188,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // TRAVA DONO
         const DONO_NOME = "vhxprime."; 
         const CARGOS = ["Fundador & Dono", "Responsável Staff", "Manager", "Coordenador", "Administrador", "Moderador", "Suporte"];
         const PODER = { "fundador & dono": 100, "responsável staff": 90, "manager": 80, "coordenador": 70, "administrador": 60, "moderador": 50, "suporte": 40 };
@@ -209,29 +198,20 @@
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('p-'+id).classList.add('active');
             document.querySelectorAll('.nav-item, .mobile-item').forEach(i => i.classList.remove('active'));
-            // Marca ativo
-            try { 
-                event.currentTarget.classList.add('active'); 
-            } catch(e){}
         }
 
         function openLogin() { document.getElementById('m-login').style.display='flex'; }
         function closeLogin() { document.getElementById('m-login').style.display='none'; }
         function toggleAuth() {
-            const loginBox = document.getElementById('box-login');
-            const cadBox = document.getElementById('box-cad');
-            loginBox.style.display = loginBox.style.display === 'none' ? 'block' : 'none';
-            cadBox.style.display = cadBox.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('box-login').style.display = document.getElementById('box-login').style.display === 'none' ? 'block' : 'none';
+            document.getElementById('box-cad').style.display = document.getElementById('box-cad').style.display === 'none' ? 'block' : 'none';
         }
 
         function doCad() {
             const u = document.getElementById('c-u').value.trim();
             const p = document.getElementById('c-p').value.trim();
-            if(!u || !p) return alert("Preencha!");
-            db.ref('contas').push({ usuario: u, senha: p, cargo: "Suporte" }).then(() => {
-                alert("Criado! Peça para um superior te setar.");
-                toggleAuth();
-            });
+            if(!u || !p) return;
+            db.ref('contas').push({ usuario: u, senha: p, cargo: "Suporte" }).then(() => { alert("Criado! Peça para vhxprime. te setar."); toggleAuth(); });
         }
 
         function doLogin() {
@@ -241,8 +221,7 @@
                 let user = null;
                 snap.forEach(c => { if(c.val().usuario === u && c.val().senha === p) user = { key: c.key, ...c.val() }; });
                 if(user) {
-                    userLogado = user;
-                    closeLogin();
+                    userLogado = user; closeLogin();
                     document.getElementById('pc-staff-area').style.display = 'block';
                     document.querySelectorAll('.staff-only').forEach(el => el.style.display='flex');
                     document.getElementById('mob-login-btn').style.display='none';
@@ -250,14 +229,14 @@
                     document.getElementById('btn-login-pc').onclick = () => location.reload();
                     if(PODER[user.cargo.toLowerCase()] >= 80) document.getElementById('pc-admin-area').style.display = 'block';
                     go('dash');
+                    mainSync();
                 } else alert("Incorreto!");
             });
         }
 
         function carregarRegras() {
             db.ref('regras').on('value', snap => {
-                const div = document.getElementById('render-regras');
-                div.innerHTML = "";
+                const div = document.getElementById('render-regras'); div.innerHTML = "";
                 snap.forEach(r => {
                     const d = r.val();
                     div.innerHTML += `<div class="regra-card"><b>${d.titulo || 'Regra'}</b><p style="font-size:13px; color:var(--dim)">${d.descricao || d}</p></div>`;
@@ -268,21 +247,27 @@
         function mainSync() {
             db.ref('relatorios').on('value', relSnap => {
                 db.ref('contas').on('value', staffSnap => {
-                    const hDiv = document.getElementById('render-hierarquia'); hDiv.innerHTML = "";
+                    const hDiv = document.getElementById('render-hierarquia'); hDiv.innerHTML = `<h2 style="font-family:'Syncopate'; margin-bottom:20px; font-size:18px;">👑 HIERARQUIA</h2>`;
                     const mDiv = document.getElementById('render-metas'); mDiv.innerHTML = "";
                     const gDiv = document.getElementById('render-gestao'); gDiv.innerHTML = "";
+                    const lDiv = document.getElementById('render-logs'); lDiv.innerHTML = "";
                     let total = 0; let somaP = 0; let nS = 0;
+
+                    // Logs Reais
+                    let logsArr = [];
+                    relSnap.forEach(r => logsArr.unshift(r.val()));
+                    logsArr.forEach(l => {
+                        lDiv.innerHTML += `<div class="log-item"><div class="log-header"><span>${l.staff}</span><span>ALVO: ${l.alvo}</span></div><p>${l.desc}</p></div>`;
+                    });
 
                     CARGOS.forEach(rank => {
                         let mbs = [];
                         staffSnap.forEach(s => {
                             if(s.val().cargo.toLowerCase() === rank.toLowerCase()) {
-                                mbs.push(s.val().usuario);
-                                nS++;
+                                mbs.push(s.val().usuario); nS++;
                                 let c = 0; relSnap.forEach(r => { if(r.val().staff === s.val().usuario) c++; });
-                                total += c;
-                                let p = Math.min((c/20)*100, 100); somaP += p;
-                                mDiv.innerHTML += `<div class="meta-box"><div style="width:100px; font-weight:800; font-size:12px;">${s.val().usuario}</div><div class="bar-bg"><div class="bar-fill" style="width:${p}%"></div></div><div style="font-weight:900; font-size:12px;">${c}/20</div></div>`;
+                                total += c; let p = Math.min((c/20)*100, 100); somaP += p;
+                                mDiv.innerHTML += `<div class="meta-box"><div style="width:100px; font-weight:800; font-size:12px;">${s.val().usuario}</div><div class="bar-bg"><div class="bar-fill" style="width:${p}%"></div></div><div style="font-weight:900;">${c}/20</div></div>`;
                                 gDiv.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><span>${s.val().usuario} (${s.val().cargo})</span><button class="btn" style="width:auto; padding:5px 15px;" ${s.val().usuario === DONO_NOME ? 'disabled' : `onclick="setarCargo('${s.key}','${s.val().cargo}')"`}>SETAR</button></div>`;
                             }
                         });
@@ -298,17 +283,14 @@
 
         function setarCargo(key, atual) {
             const pMeu = PODER[userLogado.cargo.toLowerCase()];
-            if(pMeu <= PODER[atual.toLowerCase()]) return alert("Sem poder!");
-            const n = prompt("Novo Cargo (Manager, Coordenador, Administrador, Moderador, Suporte):");
+            const n = prompt("Novo Cargo (Responsável Staff, Manager, Coordenador, Administrador, Moderador, Suporte):");
             if(n && PODER[n.toLowerCase()] < pMeu) db.ref('contas/'+key).update({ cargo: n });
             else alert("Acesso negado!");
         }
 
         function saveTicket() {
-            if(!userLogado) return;
             db.ref('relatorios').push({ staff: userLogado.usuario, alvo: document.getElementById('f-alvo').value, desc: document.getElementById('f-desc').value });
-            alert("Salvo!");
-            document.getElementById('f-alvo').value = ""; document.getElementById('f-desc').value = "";
+            alert("Salvo!"); document.getElementById('f-alvo').value = ""; document.getElementById('f-desc').value = "";
         }
 
         function resetData() {
@@ -316,7 +298,6 @@
         }
 
         carregarRegras();
-        mainSync();
     </script>
 </body>
 </html>
